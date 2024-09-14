@@ -14,8 +14,7 @@
     "@vercel/node": "^2.9.1",
     "axios": "^1.5.0",
     "mongodb": "^5.7.0",
-    "qs": "^6.11.2",
-    "raw-body": "^3.0.0"
+    "qs": "^6.11.2"
   },
   "devDependencies": {
     "@types/node": "^20.5.7",

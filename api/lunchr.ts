@@ -12,8 +12,6 @@ const SLACK_VERIFICATION_TOKEN =
 const MONGO_DB_NAME = "lunchroulette";
 const MONGO_COLLECTION_NAME = "selectedplaces";
 
-const MILES_PER_METER = 0.000621371;
-
 // MongoDB setup
 let cachedDb: Db;
 
@@ -175,19 +173,26 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       }
     });
 
-    blocks.push({
-      type: "actions",
-      elements: selectedRestaurants.map((restaurant) => ({
-        type: "button",
-        text: {
-          type: "plain_text",
-          emoji: true,
-          text: restaurant.name,
-        },
-        action_id: "vote",
-        value: restaurant.id,
-      })),
-    });
+    // Optionally, add actions at the end
+    blocks.push(
+      {
+        type: "divider",
+      },
+      {
+        type: "actions",
+        elements: [
+          {
+            type: "button",
+            text: {
+              type: "plain_text",
+              emoji: true,
+              text: "Pick Other Places?",
+            },
+            value: "pick_another",
+          },
+        ],
+      },
+    );
 
     // Respond to Slack
     res.json({
@@ -238,7 +243,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
     attributes: { menu_url },
   } = restaurant;
 
-  const distanceInMiles = (distance * MILES_PER_METER).toFixed(2);
+  const distanceInMiles = (distance * 0.000621371192).toFixed(2);
   const categoryNames = categories.map((c) => c.title).join(", ");
   const menuDisplay = menu_url ? `*<${menu_url}|View menu>*` : "";
 
