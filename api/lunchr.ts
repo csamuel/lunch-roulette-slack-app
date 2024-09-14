@@ -152,19 +152,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       ),
     );
 
-    // // Randomly select a restaurant
-    // const restaurant =
-    //   filteredRestaurants[
-    //     Math.floor(Math.random() * filteredRestaurants.length)
-    //   ];
-
-    // // Save the selection to MongoDB
-    // await collection.updateOne(
-    //   { restaurantId: restaurant.id },
-    //   { $set: { lastVisited: new Date() } },
-    //   { upsert: true },
-    // );
-    //
     const blocks: Block[] = [
       {
         type: "section",
@@ -187,20 +174,25 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     });
 
     // Optionally, add actions at the end
-    blocks.push({
-      type: "actions",
-      elements: [
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            emoji: true,
-            text: "Pick Other Places?",
+    blocks.push(
+      {
+        type: "divider",
+      },
+      {
+        type: "actions",
+        elements: [
+          {
+            type: "button",
+            text: {
+              type: "plain_text",
+              emoji: true,
+              text: "Pick Other Places?",
+            },
+            value: "pick_another",
           },
-          value: "pick_another",
-        },
-      ],
-    });
+        ],
+      },
+    );
 
     // Respond to Slack
     res.json({
@@ -253,13 +245,14 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
 
   const distanceInMiles = (distance * 0.000621371192).toFixed(2);
   const categoryNames = categories.map((c) => c.title).join(", ");
+  const menuDisplay = menu_url ? `*<${menu_url}|View menu>*` : "";
 
   return [
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*<${url}|${name}>*\n_${categoryNames}_\n\n*<${menu_url}|Menu>*`,
+        text: `*<${url}|${name}>*\n_${categoryNames}_\n\n${menuDisplay}`,
       },
       accessory: {
         type: "image",
