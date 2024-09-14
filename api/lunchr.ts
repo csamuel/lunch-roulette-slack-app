@@ -238,6 +238,7 @@ function getRandomElements<T>(array: T[], count: number): T[] {
 
 function toSlackBlocks(restaurant: Restaurant): Array<Block> {
   const {
+    id,
     name,
     url,
     image_url,
@@ -266,17 +267,6 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         alt_text: name,
       },
     },
-    // {
-    //   type: "button",
-    //   text: {
-    //     type: "plain_text",
-    //     emoji: true,
-    //     text: restaurant.name,
-    //   },
-    //   action_id: "vote",
-    //   value: restaurant.id,
-    // },
-
     {
       type: "context",
       elements: [
@@ -296,6 +286,23 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
           text: `📍 ${display_address.join(", ")} (${distanceInMiles} miles away)`,
         },
       ],
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "Would you like to eat here?",
+      },
+      accessory: {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: "Select",
+          emoji: true,
+        },
+        value: "click_me_123",
+        action_id: id,
+      },
     },
   ];
 }
