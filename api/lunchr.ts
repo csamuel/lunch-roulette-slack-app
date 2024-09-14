@@ -107,10 +107,32 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       { upsert: true },
     );
 
+    const blocks = [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: "• Detective Chimp\n• Bouncing Boy\n• Aqualad",
+        },
+      },
+      {
+        type: "image",
+        title: {
+          type: "plain_text",
+          text: "I love tacos",
+          emoji: true,
+        },
+        image_url:
+          "https://assets3.thrillist.com/v1/image/1682388/size/tl-horizontal_main.jpg",
+        alt_text: "delicious tacos",
+      },
+    ];
+
     // Respond to Slack
     res.json({
       response_type: "in_channel",
-      text: `How about *${restaurant.name}*?\n${restaurant.location.address1}, ${restaurant.location.city}\n<${restaurant.url}|View on Yelp>`,
+      // text: `How about *${restaurant.name}*?\n${restaurant.location.address1}, ${restaurant.location.city}\n<${restaurant.url}|View on Yelp>`,
+      blocks: blocks,
     });
   } catch (error) {
     console.error("Error:", error);
