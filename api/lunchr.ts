@@ -289,10 +289,10 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
     },
     {
       type: "section",
-      text: {
-        type: "mrkdwn",
-        text: "Would you like to eat here?",
-      },
+      // text: {
+      //   type: "mrkdwn",
+      //   text: "Would you like to eat here?",
+      // },
       accessory: {
         type: "button",
         text: {
