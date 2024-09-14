@@ -138,49 +138,69 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    // Randomly select a restaurant
-    const restaurant =
-      filteredRestaurants[
-        Math.floor(Math.random() * filteredRestaurants.length)
-      ];
+    // Randomly select up to 3 restaurants
+    const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
 
-    // Save the selection to MongoDB
-    await collection.updateOne(
-      { restaurantId: restaurant.id },
-      { $set: { lastVisited: new Date() } },
-      { upsert: true },
+    // Save the selections to MongoDB
+    await Promise.all(
+      selectedRestaurants.map((restaurant) =>
+        collection.updateOne(
+          { restaurantId: restaurant.id },
+          { $set: { lastVisited: new Date() } },
+          { upsert: true },
+        ),
+      ),
     );
 
-    const blocks = [
+    // // Randomly select a restaurant
+    // const restaurant =
+    //   filteredRestaurants[
+    //     Math.floor(Math.random() * filteredRestaurants.length)
+    //   ];
+
+    // // Save the selection to MongoDB
+    // await collection.updateOne(
+    //   { restaurantId: restaurant.id },
+    //   { $set: { lastVisited: new Date() } },
+    //   { upsert: true },
+    // );
+    //
+    const blocks: Block[] = [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Found ${filteredRestaurants.length} places near 211 E 7th St. Here's one you might like:`,
+          text: `Found ${filteredRestaurants.length} places near 211 E 7th St. Here are some options:`,
         },
       },
       {
         type: "divider",
       },
-      ...toSlackBlocks(restaurant),
-      {
-        type: "divider",
-      },
-      {
-        type: "actions",
-        elements: [
-          {
-            type: "button",
-            text: {
-              type: "plain_text",
-              emoji: true,
-              text: "Pick Another Place?",
-            },
-            value: "click_me_123",
-          },
-        ],
-      },
     ];
+
+    // Add blocks for each selected restaurant
+    selectedRestaurants.forEach((restaurant, index) => {
+      blocks.push(...toSlackBlocks(restaurant));
+      if (index < selectedRestaurants.length - 1) {
+        blocks.push({ type: "divider" });
+      }
+    });
+
+    // Optionally, add actions at the end
+    blocks.push({
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            emoji: true,
+            text: "Pick Other Places?",
+          },
+          value: "pick_another",
+        },
+      ],
+    });
 
     // Respond to Slack
     res.json({
@@ -206,6 +226,16 @@ async function connectToDatabase(): Promise<Db> {
   await client.connect();
   cachedDb = client.db(MONGO_DB_NAME);
   return cachedDb;
+}
+
+// Function to get up to 'count' random elements from an array
+function getRandomElements<T>(array: T[], count: number): T[] {
+  const shuffled = array.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
 }
 
 function toSlackBlocks(restaurant: Restaurant): Array<Block> {
@@ -240,12 +270,6 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
     {
       type: "context",
       elements: [
-        // {
-        //   type: "image",
-        //   image_url:
-        //     "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-        //   alt_text: "Location Pin Icon",
-        // },
         {
           type: "plain_text",
           emoji: true,
