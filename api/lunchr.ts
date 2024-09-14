@@ -173,6 +173,21 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       }
     });
 
+    // Add voting buttons
+    blocks.push({
+      type: "actions",
+      elements: selectedRestaurants.map((restaurant) => ({
+        type: "button",
+        text: {
+          type: "plain_text",
+          emoji: true,
+          text: restaurant.name,
+        },
+        action_id: "vote",
+        value: restaurant.id,
+      })),
+    });
+
     // Optionally, add actions at the end
     blocks.push(
       {
