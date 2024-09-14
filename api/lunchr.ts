@@ -38,6 +38,9 @@ interface Restaurant {
   rating: number;
   location: { display_address: string[] };
   categories: { title: string }[];
+  attributes: {
+    menu_url?: string;
+  };
 }
 
 export default async (req: VercelRequest, res: VercelResponse) => {
@@ -159,7 +162,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       {
         type: "divider",
       },
-      ...getRestaurantBlocks(restaurant),
+      ...toSlackBlocks(restaurant),
       {
         type: "divider",
       },
@@ -205,7 +208,7 @@ async function connectToDatabase(): Promise<Db> {
   return cachedDb;
 }
 
-function getRestaurantBlocks(restaurant: Restaurant): Array<Block> {
+function toSlackBlocks(restaurant: Restaurant): Array<Block> {
   const {
     name,
     url,
@@ -215,16 +218,18 @@ function getRestaurantBlocks(restaurant: Restaurant): Array<Block> {
     distance,
     categories,
     location: { display_address },
+    attributes: { menu_url },
   } = restaurant;
 
   const distanceInMiles = (distance * 0.000621371192).toFixed(2);
+  const categoryNames = categories.map((c) => c.title).join(", ");
 
   return [
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*<${url}|${name}>*\nCategory: ${categories.map((c) => c.title).join(", ")}\nPrice: ${price}\nDistance: ${distanceInMiles} miles \nRating: ${rating}`,
+        text: `*<${url}|${name}>*\n🍴 ${categories}\n💰 ${price}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
       },
       accessory: {
         type: "image",
@@ -244,7 +249,7 @@ function getRestaurantBlocks(restaurant: Restaurant): Array<Block> {
         {
           type: "plain_text",
           emoji: true,
-          text: `Location: ${display_address.join(", ")}`,
+          text: `Address: ${display_address.join(", ")}`,
         },
       ],
     },
