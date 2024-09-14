@@ -15,6 +15,19 @@ interface SelectedPlace {
   lastVisited: Date;
 }
 
+interface Restaurant {
+  id: string;
+  name: string;
+  url: string;
+  image_url: string;
+  distance: number;
+  price: string;
+  display_address: string[];
+  rating: number;
+  location: { display_address: string[] };
+  categories: { title: string }[];
+}
+
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Only accept POST requests
   if (req.method !== "POST") {
@@ -41,6 +54,14 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const LONGITUDE = -97.7404;
   const RADIUS = 1000; // in meters
 
+  // Yelp API parameters
+  const LIMIT = 50; // Max limit per request
+  const MAX_RESULTS = 200; // Adjust as needed (max 1000)
+  const offsets = [];
+  for (let offset = 0; offset < MAX_RESULTS; offset += LIMIT) {
+    offsets.push(offset);
+  }
+
   try {
     // Connect to MongoDB
     const db = await connectToDatabase();
@@ -56,10 +77,20 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    // Fetch restaurants from Yelp
-    const yelpResponse = await axios.get(
-      "https://api.yelp.com/v3/businesses/search",
-      {
+    const totalResults = 200;
+
+    const totalOffsets = [];
+    for (
+      let offset = 0;
+      offset < totalResults && offset < MAX_RESULTS;
+      offset += LIMIT
+    ) {
+      totalOffsets.push(offset);
+    }
+
+    // Fetch all pages in parallel
+    const requests = totalOffsets.map((offset) =>
+      axios.get("https://api.yelp.com/v3/businesses/search", {
         headers: {
           Authorization: `Bearer ${YELP_API_KEY}`,
         },
@@ -68,12 +99,22 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           latitude: LATITUDE,
           longitude: LONGITUDE,
           radius: RADIUS,
-          limit: 50,
+          limit: LIMIT,
+          offset: offset,
         },
-      },
+      }),
     );
 
-    let restaurants = yelpResponse.data.businesses;
+    // Wait for all requests to complete
+    const responses = await Promise.all(requests);
+
+    // Aggregate all businesses
+    let restaurants: Restaurant[] = [];
+    responses.forEach((response) => {
+      restaurants = restaurants.concat(response.data.businesses);
+    });
+
+    console.log("total results:", restaurants.length);
 
     // Fetch restaurant IDs visited in the last 14 days
     const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
@@ -100,23 +141,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const restaurant =
       restaurants[Math.floor(Math.random() * restaurants.length)];
 
-    const {
-      id,
-      name,
-      url,
-      image_url,
-      rating,
-      price,
-      distance,
-      categories,
-      location: { display_address },
-    } = restaurant;
-
-    const distanceInMiles = (distance * 0.000621371192).toFixed(2);
-
     // Save the selection to MongoDB
     await collection.updateOne(
-      { restaurantId: id },
+      { restaurantId: restaurant.id },
       { $set: { lastVisited: new Date() } },
       { upsert: true },
     );
@@ -126,40 +153,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `We found ${restaurants.length} places to eat near 211 E 7th St. Here's one you might like:`,
+          text: `Found ${restaurants.length} places to eat near 211 E 7th St. Here's one you might like:`,
         },
       },
       {
         type: "divider",
       },
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: `*<${url}|${name}>*\n★★★★★\n${price}\nDistance: ${distanceInMiles} miles \nRating: ${rating}`,
-        },
-        accessory: {
-          type: "image",
-          image_url: image_url,
-          alt_text: name,
-        },
-      },
-      {
-        type: "context",
-        elements: [
-          {
-            type: "image",
-            image_url:
-              "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-            alt_text: "Location Pin Icon",
-          },
-          {
-            type: "plain_text",
-            emoji: true,
-            text: `Location: ${display_address.join(", ")}`,
-          },
-        ],
-      },
+      ...getRestaurantBlocks(restaurant),
       {
         type: "divider",
       },
@@ -182,7 +182,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Respond to Slack
     res.json({
       response_type: "in_channel",
-      // text: `How about *${restaurant.name}*?\n${restaurant.location.address1}, ${restaurant.location.city}\n<${restaurant.url}|View on Yelp>`,
       blocks: blocks,
     });
   } catch (error) {
@@ -204,4 +203,50 @@ async function connectToDatabase(): Promise<Db> {
   await client.connect();
   cachedDb = client.db("lunchroulette");
   return cachedDb;
+}
+
+function getRestaurantBlocks(restaurant: Restaurant): Array<any> {
+  const {
+    name,
+    url,
+    image_url,
+    rating,
+    price,
+    distance,
+    categories,
+    location: { display_address },
+  } = restaurant;
+
+  const distanceInMiles = (distance * 0.000621371192).toFixed(2);
+
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `*<${url}|${name}>*\nCategory: ${categories.map((c) => c.title).join(", ")}\nPrice: ${price}\nDistance: ${distanceInMiles} miles \nRating: ${rating}`,
+      },
+      accessory: {
+        type: "image",
+        image_url: image_url,
+        alt_text: name,
+      },
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "image",
+          image_url:
+            "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
+          alt_text: "Location Pin Icon",
+        },
+        {
+          type: "plain_text",
+          emoji: true,
+          text: `Location: ${display_address.join(", ")}`,
+        },
+      ],
+    },
+  ];
 }
