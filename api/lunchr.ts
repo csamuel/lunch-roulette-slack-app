@@ -6,9 +6,21 @@ import qs from "qs";
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
+const SLACK_VERIFICATION_TOKEN =
+  process.env.SLACK_VERIFICATION_TOKEN || "YOUR_SLACK_VERIFICATION_TOKEN";
+
+const MONGO_DB_NAME = "lunchroulette";
+const MONGO_COLLECTION_NAME = "selectedplaces";
 
 // MongoDB setup
 let cachedDb: Db;
+
+type Block = {
+  type: "section" | "divider" | "actions" | "context" | "image";
+  text?: {};
+  elements?: {}[];
+  accessory?: {};
+};
 
 interface SelectedPlace {
   restaurantId: string;
@@ -39,8 +51,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const body = typeof req.body === "string" ? qs.parse(req.body) : req.body;
 
   // Validate Slack token (optional but recommended)
-  const SLACK_VERIFICATION_TOKEN =
-    process.env.SLACK_VERIFICATION_TOKEN || "YOUR_SLACK_VERIFICATION_TOKEN";
   if (body.token !== SLACK_VERIFICATION_TOKEN) {
     res.status(401).send("Unauthorized");
     return;
@@ -55,17 +65,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const RADIUS = 1000; // in meters
 
   // Yelp API parameters
-  const LIMIT = 50; // Max limit per request
+  const PAGE_LIMIT = 50; // Max limit per request
   const MAX_RESULTS = 200; // Adjust as needed (max 1000)
-  const offsets = [];
-  for (let offset = 0; offset < MAX_RESULTS; offset += LIMIT) {
-    offsets.push(offset);
-  }
 
   try {
     // Connect to MongoDB
     const db = await connectToDatabase();
-    const collection = db.collection<SelectedPlace>("selectedplaces");
+    const collection = db.collection<SelectedPlace>(MONGO_COLLECTION_NAME);
 
     if (subcommand === "reset") {
       // Handle the reset subcommand
@@ -77,16 +83,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    const totalResults = 200;
-
-    const totalOffsets = [];
-    for (
-      let offset = 0;
-      offset < totalResults && offset < MAX_RESULTS;
-      offset += LIMIT
-    ) {
-      totalOffsets.push(offset);
-    }
+    // Create an array of offsets based on page limit and max results
+    const totalOffsets = Array.from(
+      { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
+      (_, i) => i * PAGE_LIMIT,
+    );
 
     // Fetch all pages in parallel
     const requests = totalOffsets.map((offset) =>
@@ -99,7 +100,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           latitude: LATITUDE,
           longitude: LONGITUDE,
           radius: RADIUS,
-          limit: LIMIT,
+          limit: PAGE_LIMIT,
           offset: offset,
         },
       }),
@@ -109,12 +110,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const responses = await Promise.all(requests);
 
     // Aggregate all businesses
-    let restaurants: Restaurant[] = [];
-    responses.forEach((response) => {
-      restaurants = restaurants.concat(response.data.businesses);
-    });
-
-    console.log("total results:", restaurants.length);
+    const restaurants: Restaurant[] = responses.flatMap(
+      (response) => response.data.businesses,
+    );
 
     // Fetch restaurant IDs visited in the last 14 days
     const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
@@ -124,12 +122,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       .toArray();
 
     // Filter out recently visited restaurants
-    restaurants = restaurants.filter(
+    const filteredRestaurants = restaurants.filter(
       (restaurant: { id: string }) =>
         !recentlyVisitedIds.includes(restaurant.id),
     );
 
-    if (restaurants.length === 0) {
+    if (filteredRestaurants.length === 0) {
       res.json({
         response_type: "ephemeral",
         text: "No new restaurants available within the past two weeks!",
@@ -139,7 +137,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Randomly select a restaurant
     const restaurant =
-      restaurants[Math.floor(Math.random() * restaurants.length)];
+      filteredRestaurants[
+        Math.floor(Math.random() * filteredRestaurants.length)
+      ];
 
     // Save the selection to MongoDB
     await collection.updateOne(
@@ -153,7 +153,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Found ${restaurants.length} places to eat near 211 E 7th St. Here's one you might like:`,
+          text: `Found ${filteredRestaurants.length} places near 211 E 7th St. Here's one you might like:`,
         },
       },
       {
@@ -201,11 +201,11 @@ async function connectToDatabase(): Promise<Db> {
 
   const client = new MongoClient(MONGODB_URI);
   await client.connect();
-  cachedDb = client.db("lunchroulette");
+  cachedDb = client.db(MONGO_DB_NAME);
   return cachedDb;
 }
 
-function getRestaurantBlocks(restaurant: Restaurant): Array<any> {
+function getRestaurantBlocks(restaurant: Restaurant): Array<Block> {
   const {
     name,
     url,
