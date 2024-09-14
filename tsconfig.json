@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES6", // Use ES6 for modern features
     "module": "commonjs", // CommonJS module system for Node.js
-    "outDir": "./dist", // Output directory for compiled JS
+    "outDir": "./public", // Output directory for compiled JS
     "rootDir": "./", // Root directory of source code
     "esModuleInterop": true, // Enables default imports for commonjs modules
     "strict": true, // Enable strict type-checking options
