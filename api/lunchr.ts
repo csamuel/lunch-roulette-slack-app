@@ -240,16 +240,16 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
     {
       type: "context",
       elements: [
-        {
-          type: "image",
-          image_url:
-            "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-          alt_text: "Location Pin Icon",
-        },
+        // {
+        //   type: "image",
+        //   image_url:
+        //     "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
+        //   alt_text: "Location Pin Icon",
+        // },
         {
           type: "plain_text",
           emoji: true,
-          text: `Address: ${display_address.join(", ")}`,
+          text: `📍 ${display_address.join(", ")}`,
         },
       ],
     },
