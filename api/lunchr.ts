@@ -4,12 +4,8 @@ import { MongoClient, Db, Collection } from "mongodb";
 import qs from "qs";
 
 // Environment variables
-const YELP_API_KEY =
-  process.env.YELP_API_KEY ||
-  "cjADwaJuOwPL0DDrwxu9E5lagebxqbfNqXshZTg36dQespRFhUIRPQDRRT7NtgQ0dB2L5cNNOLi6Db6PHOdDwIqE50o2SqhVno84NpA5-O6OoZAzlEjOxcHtbrLlZnYx";
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://csamuel:xipi5Lz1S1gYUswi@lunchroulette.uck09.mongodb.net/?retryWrites=true&w=majority&appName=lunchroulette";
+const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
+const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
 
 // MongoDB setup
 let cachedDb: Db = null;
@@ -31,7 +27,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
   // Validate Slack token (optional but recommended)
   const SLACK_VERIFICATION_TOKEN =
-    process.env.SLACK_VERIFICATION_TOKEN || "UohKAQbfsnhg1PQzzINvOmy2";
+    process.env.SLACK_VERIFICATION_TOKEN || "YOUR_SLACK_VERIFICATION_TOKEN";
   if (body.token !== SLACK_VERIFICATION_TOKEN) {
     res.status(401).send("Unauthorized");
     return;
