@@ -1,12 +1,23 @@
 {
   "name": "slackbot",
   "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node app.ts"
+  },
   "dependencies": {
-    "@slack/web-api": "7.0.1",
-    "openai": "4.26.0"
+    "axios": "^1.7.7",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^4.17.21",
     "@types/node": "20.11.16",
+    "ts-node": "^10.9.2",
     "typescript": "5.3.3"
-  }
+  },
+  "packageManager": "pnpm@8.7.5+sha1.735d4d0e6fc66c4d2d64b269b08e5995b19230ca"
 }
