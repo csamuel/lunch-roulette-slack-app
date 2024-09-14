@@ -100,9 +100,23 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const restaurant =
       restaurants[Math.floor(Math.random() * restaurants.length)];
 
+    const {
+      id,
+      name,
+      url,
+      image_url,
+      rating,
+      price,
+      distance,
+      categories,
+      location: { display_address },
+    } = restaurant;
+
+    const distanceInMiles = (distance * 0.000621371192).toFixed(2);
+
     // Save the selection to MongoDB
     await collection.updateOne(
-      { restaurantId: restaurant.id },
+      { restaurantId: id },
       { $set: { lastVisited: new Date() } },
       { upsert: true },
     );
@@ -112,44 +126,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "We found *205 Hotels* in New Orleans, LA from *12/14 to 12/17*",
-        },
-        accessory: {
-          type: "overflow",
-          options: [
-            {
-              text: {
-                type: "plain_text",
-                emoji: true,
-                text: "Option One",
-              },
-              value: "value-0",
-            },
-            {
-              text: {
-                type: "plain_text",
-                emoji: true,
-                text: "Option Two",
-              },
-              value: "value-1",
-            },
-            {
-              text: {
-                type: "plain_text",
-                emoji: true,
-                text: "Option Three",
-              },
-              value: "value-2",
-            },
-            {
-              text: {
-                type: "plain_text",
-                emoji: true,
-                text: "Option Four",
-              },
-              value: "value-3",
-            },
-          ],
+          text: `We found ${restaurants.length} places to eat near 211 E 7th St. Here's one you might like:`,
         },
       },
       {
@@ -159,13 +136,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "*<fakeLink.toHotelPage.com|Windsor Court Hotel>*\n★★★★★\n$340 per night\nRated: 9.4 - Excellent",
+          text: `*<${url}|${name}>*\n★★★★★\n${price}\nDistance: ${distanceInMiles} miles \nRating: ${rating}`,
         },
         accessory: {
           type: "image",
-          image_url:
-            "https://api.slack.com/img/blocks/bkb_template_images/tripAgent_1.png",
-          alt_text: "Windsor Court Hotel thumbnail",
+          image_url: image_url,
+          alt_text: name,
         },
       },
       {
@@ -180,71 +156,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           {
             type: "plain_text",
             emoji: true,
-            text: "Location: Central Business District",
-          },
-        ],
-      },
-      {
-        type: "divider",
-      },
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: "*<fakeLink.toHotelPage.com|The Ritz-Carlton New Orleans>*\n★★★★★\n$340 per night\nRated: 9.1 - Excellent",
-        },
-        accessory: {
-          type: "image",
-          image_url:
-            "https://api.slack.com/img/blocks/bkb_template_images/tripAgent_2.png",
-          alt_text: "Ritz-Carlton New Orleans thumbnail",
-        },
-      },
-      {
-        type: "context",
-        elements: [
-          {
-            type: "image",
-            image_url:
-              "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-            alt_text: "Location Pin Icon",
-          },
-          {
-            type: "plain_text",
-            emoji: true,
-            text: "Location: French Quarter",
-          },
-        ],
-      },
-      {
-        type: "divider",
-      },
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: "*<fakeLink.toHotelPage.com|Omni Royal Orleans Hotel>*\n★★★★★\n$419 per night\nRated: 8.8 - Excellent",
-        },
-        accessory: {
-          type: "image",
-          image_url:
-            "https://api.slack.com/img/blocks/bkb_template_images/tripAgent_3.png",
-          alt_text: "Omni Royal Orleans Hotel thumbnail",
-        },
-      },
-      {
-        type: "context",
-        elements: [
-          {
-            type: "image",
-            image_url:
-              "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-            alt_text: "Location Pin Icon",
-          },
-          {
-            type: "plain_text",
-            emoji: true,
-            text: "Location: French Quarter",
+            text: `Location: ${display_address.join(", ")}`,
           },
         ],
       },
@@ -259,7 +171,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             text: {
               type: "plain_text",
               emoji: true,
-              text: "Next 2 Results",
+              text: "Pick Another Place?",
             },
             value: "click_me_123",
           },
