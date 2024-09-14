@@ -1,23 +1,25 @@
 {
-  "name": "slackbot",
-  "private": true,
+  "name": "lunch-roulette",
+  "version": "1.0.0",
+  "description": "A Slack app that randomly picks a lunch spot within walking distance.",
+  "main": "api/lunchr.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node public/app.js",
-    "dev": "ts-node app.ts"
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
   },
+  "author": "Chris Samuel",
+  "license": "MIT",
   "dependencies": {
-    "axios": "^1.7.7",
-    "body-parser": "^1.20.3",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0"
+    "@vercel/node": "^2.9.1",
+    "axios": "^1.5.0",
+    "mongodb": "^5.7.0",
+    "qs": "^6.11.2"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.19.5",
-    "@types/express": "^4.17.21",
-    "@types/node": "20.11.16",
-    "ts-node": "^10.9.2",
-    "typescript": "5.3.3"
+    "@types/node": "^20.5.7",
+    "@types/qs": "^6.9.7",
+    "typescript": "^5.2.2"
   },
   "packageManager": "pnpm@8.7.5+sha1.735d4d0e6fc66c4d2d64b269b08e5995b19230ca"
 }

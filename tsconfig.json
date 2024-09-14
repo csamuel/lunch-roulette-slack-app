@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Use ES6 for modern features
-    "module": "commonjs", // CommonJS module system for Node.js
-    "outDir": "./public", // Output directory for compiled JS
-    "rootDir": "./", // Root directory of source code
-    "esModuleInterop": true, // Enables default imports for commonjs modules
-    "strict": true, // Enable strict type-checking options
-    "skipLibCheck": true, // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true // Ensure consistent casing in imports
-  }
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es6"],
+    "types": ["node"]
+  },
+  "include": ["api/**/*"]
 }

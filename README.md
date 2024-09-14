@@ -1,75 +1,124 @@
-# OpenAI Slackbot with Node.js
+# Lunch Roulette Slack App
 
-This is a Slackbot you can ask questions and get answers from OpenAI's GPT model.
+**Lunch Roulette** is a Slack app that randomly selects a nearby restaurant for lunch, ensuring no repeats within two weeks. It's designed for teams located at **211 E 7th St, Austin, TX 78701**.
 
-### Environment Variables
+---
 
-After completing the setup instructions below, you will have the following `.env` file in your project for testing locally, and the same environment variables added on Vercel:
+## Features
 
-```bash
-OPENAI_API_KEY=
-SLACK_BOT_TOKEN=
-SLACK_SIGNING_SECRET=
-SLACK_ADMIN_MEMBER_ID=
-```
+- **Random Restaurant Selection**: Picks a lunch spot within walking distance suitable for a 1-hour lunch.
+- **No Recent Repeats**: Avoids suggesting places visited in the last two weeks.
+- **Slack Integration**: Accessible via the `/lunchr` slash command.
+- **Yelp Integration**: Fetches restaurant data from the Yelp API.
+- **Cloud Deployment**: Deployed on Vercel with serverless functions.
+- **Persistent Storage**: Uses MongoDB Atlas for data storage.
 
-#### OpenAI API Key
+---
 
-- Create a new key on [OpenAI API Keys](https://platform.openai.com/api-keys) and "Create new secret key", optionally naming the key.
-- Add the key to Vercel's environment variables as `OPENAI_API_KEY`.
+## Quick Start
 
-#### Slack Bot Token & Signing Secret
+### Prerequisites
 
-Go to [Slack API Apps Page](https://api.slack.com/apps):
+- **Node.js** (v14+)
+- **pnpm**
+- **Vercel CLI**
+- **Slack Workspace**
+- **Yelp API Key**
+- **MongoDB Atlas Account**
 
-- Create new App
-  - From Scratch
-  - Name your app & pick a workspace
-- Go to OAuth & Permissions
-  - Scroll to scopes
-  - Add the following scopes
-    - `app_mentions:read`
-    - `channels:history`
-    - `chat:write`
-    - `commands`
-  - Click "Install to Workplace"
-  - Copy **Bot User OAuth Token**
-  - Add the token to Vercel's environment variables as `SLACK_BOT_TOKEN`
-- Getting signing secret
-  - Basic Information --> App Credentials --> Copy **Signing Secret**
-  - Add the secret to Vercel's environment variables as `SLACK_SIGNING_SECRET`
+### Installation
 
-#### Admin's Slack Member ID
+1. **Clone the Repository**:
 
-- Click on your profile picture in Slack and click **Profile**.
-- Click on the three dots in the middle right corner and select **Copy member ID**.
-- Add the ID to Vercel's environment variables as `SLACK_ADMIN_MEMBER_ID`.
+   ```bash
+   git clone https://github.com/yourusername/lunch-roulette.git
+   cd lunch-roulette
+   ```
 
-### Enable Slack Events
+2. **Install Dependencies**:
 
-After successfully deploying the app, go to [Slack API Apps Page](https://api.slack.com/apps) and select your app:
+   ```bash
+   pnpm install
+   ```
 
-- Go to **Event Subscriptions** and enable events.
-- Add the following URL to **Request URL**:
-  - `https://<your-vercel-app>.vercel.app/api/events`
-  - Make sure the URL is verified, otherwise check out [Vercel Logs](https://vercel.com/docs/observability/runtime-logs) for troubleshooting.
-  - Subscribe to bot events by adding:
-    - `app_mention`
-    - `channel_created`
-  - Click **Save Changes**.
-- Slack requires you to reinstall the app to apply the changes.
+3. **Set Up Environment Variables**:
 
-## Local Development
+   Create a `.env` file and add:
 
-Use the [Vercel CLI](https://vercel.com/docs/cli) and [localtunnel](https://github.com/localtunnel/localtunnel) to test out this project locally:
+   ```dotenv
+   YELP_API_KEY=your_yelp_api_key
+   MONGODB_URI=your_mongodb_connection_string
+   SLACK_VERIFICATION_TOKEN=your_slack_verification_token
+   ```
 
-```sh
-pnpm i -g vercel
-pnpm vercel dev --listen 3000 --yes
-```
+---
 
-```sh
-npx localtunnel --port 3000
-```
+## Running Locally
 
-Make sure to modify the [subscription URL](./README.md/#enable-slack-events) to the `localtunnel` URL.
+1. **Start the Development Server**:
+
+   ```bash
+   pnpm start
+   ```
+
+2. **Test the Endpoint**:
+
+   Use `curl` to send a POST request to `http://localhost:3000/api/lunchr`.
+
+---
+
+## Deploying to Vercel
+
+1. **Install Vercel CLI**:
+
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy the App**:
+
+   ```bash
+   pnpm run deploy
+   ```
+
+3. **Set Environment Variables** on Vercel:
+
+   - `YELP_API_KEY`
+   - `MONGODB_URI`
+   - `SLACK_VERIFICATION_TOKEN`
+
+---
+
+## Setting Up Slack
+
+1. **Create a Slack App** at [Slack API Apps](https://api.slack.com/apps).
+2. **Configure the `/lunchr` Slash Command** with your Vercel endpoint.
+3. **Install the App** to your workspace.
+
+---
+
+## Usage
+
+In Slack, type `/lunchr` to get a lunch suggestion.
+
+---
+
+## Technologies Used
+
+- **TypeScript**
+- **pnpm**
+- **Vercel**
+- **Slack API**
+- **Yelp Fusion API**
+- **MongoDB Atlas**
+- **Node.js**
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+**Enjoy your lunch with Lunch Roulette!**

@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/lunchr.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/lunchr.ts"
+    }
+  ],
+  "env": {
+    "YELP_API_KEY": "@yelp_api_key",
+    "MONGODB_URI": "@mongodb_uri",
+    "SLACK_VERIFICATION_TOKEN": "@slack_verification_token"
+  }
+}
