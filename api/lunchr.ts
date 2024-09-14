@@ -16,10 +16,12 @@ const MONGO_COLLECTION_NAME = "selectedplaces";
 let cachedDb: Db;
 
 type Block = {
-  type: "section" | "divider" | "actions" | "context" | "image";
+  type: "section" | "divider" | "actions" | "context" | "image" | "button";
   text?: {};
   elements?: {}[];
   accessory?: {};
+  action_id?: string;
+  value?: string;
 };
 
 interface SelectedPlace {
@@ -42,6 +44,10 @@ interface Restaurant {
     menu_url?: string;
   };
 }
+
+// export const config = {
+//   runtime: "nodejs", // this is a pre-requisite
+// };
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Only accept POST requests
@@ -275,6 +281,17 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         alt_text: name,
       },
     },
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        emoji: true,
+        text: restaurant.name,
+      },
+      action_id: "vote",
+      value: restaurant.id,
+    },
+
     {
       type: "context",
       elements: [
