@@ -229,7 +229,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*<${url}|${name}>*\n🍴 ${categoryNames}\n💰 ${price}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
+        text: `*<${url}|${name}>*\n_${categoryNames}_\n💰 ${price}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
       },
       accessory: {
         type: "image",
@@ -246,6 +246,11 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         //     "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
         //   alt_text: "Location Pin Icon",
         // },
+        {
+          type: "plain_text",
+          emoji: true,
+          text: `⭐️ ${rating}`,
+        },
         {
           type: "plain_text",
           emoji: true,
