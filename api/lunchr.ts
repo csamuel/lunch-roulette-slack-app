@@ -8,7 +8,7 @@ const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
 
 // MongoDB setup
-let cachedDb: Db = null;
+let cachedDb: Db;
 
 interface SelectedPlace {
   restaurantId: string;
@@ -71,7 +71,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Filter out recently visited restaurants
     restaurants = restaurants.filter(
-      (restaurant) => !recentlyVisitedIds.includes(restaurant.id),
+      (restaurant: { id: string }) =>
+        !recentlyVisitedIds.includes(restaurant.id),
     );
 
     if (restaurants.length === 0) {
