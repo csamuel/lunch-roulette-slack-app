@@ -33,6 +33,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
+  // Get the subcommand from the text
+  const subcommand = (body.text || "").trim().toLowerCase();
+
   // Coordinates for 211 E 7th St, Austin, TX 78701
   const LATITUDE = 30.2682;
   const LONGITUDE = -97.7404;
@@ -42,6 +45,16 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Connect to MongoDB
     const db = await connectToDatabase();
     const collection = db.collection<SelectedPlace>("selectedplaces");
+
+    if (subcommand === "reset") {
+      // Handle the reset subcommand
+      await collection.deleteMany({});
+      res.json({
+        response_type: "ephemeral",
+        text: "All recently visited places have been reset.",
+      });
+      return;
+    }
 
     // Fetch restaurants from Yelp
     const yelpResponse = await axios.get(
