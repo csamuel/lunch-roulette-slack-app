@@ -266,16 +266,16 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         alt_text: name,
       },
     },
-    {
-      type: "button",
-      text: {
-        type: "plain_text",
-        emoji: true,
-        text: restaurant.name,
-      },
-      action_id: "vote",
-      value: restaurant.id,
-    },
+    // {
+    //   type: "button",
+    //   text: {
+    //     type: "plain_text",
+    //     emoji: true,
+    //     text: restaurant.name,
+    //   },
+    //   action_id: "vote",
+    //   value: restaurant.id,
+    // },
 
     {
       type: "context",
