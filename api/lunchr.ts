@@ -229,7 +229,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*<${url}|${name}>*\n🍴 ${categories}\n💰 ${price}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
+        text: `*<${url}|${name}>*\n🍴 ${categoryNames}\n💰 ${price}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
       },
       accessory: {
         type: "image",
