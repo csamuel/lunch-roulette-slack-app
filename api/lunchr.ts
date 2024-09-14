@@ -229,7 +229,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*<${url}|${name}>*\n_${categoryNames}_\n💰 ${price}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
+        text: `*<${url}|${name}>*\n_${categoryNames}_\n💰 ${price || "?"}\n📍 ${distanceInMiles} miles away\n⭐️ ${rating}\n📔 *<${menu_url}|Menu>*`,
       },
       accessory: {
         type: "image",
@@ -254,7 +254,12 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         {
           type: "plain_text",
           emoji: true,
-          text: `📍 ${display_address.join(", ")}`,
+          text: `💰 ${price || "?"}`,
+        },
+        {
+          type: "plain_text",
+          emoji: true,
+          text: `📍 ${display_address.join(", ")} (${distanceInMiles} miles away)`,
         },
       ],
     },
