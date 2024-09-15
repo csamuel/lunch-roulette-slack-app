@@ -193,6 +193,7 @@ function updateBlocksWithVotes(
     ) {
       const restaurantId = block.accessory.value;
       const voteCount = voteCounts[restaurantId] || 0;
+      console.log("voteCount", voteCount);
       const voteText = `\n*Votes: ${voteCount}*`;
 
       // Avoid duplicating vote counts
