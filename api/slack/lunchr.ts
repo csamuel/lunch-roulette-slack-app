@@ -9,8 +9,8 @@ import {
   DividerBlock,
   SectionBlock,
   MessageBlock,
-} from "./types/slack";
-import { Restaurant } from "./types/yelp";
+} from "../../types/slack";
+import { Restaurant } from "../../types/yelp";
 
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";

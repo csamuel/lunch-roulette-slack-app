@@ -3,6 +3,6 @@
   "builds": [{ "src": "api/**/*.ts", "use": "@vercel/node" }],
   "routes": [
     { "src": "/api/slack/actions", "dest": "/api/slack/actions.ts" },
-    { "src": "/api/lunchr", "dest": "/api/lunchr.ts" }
+    { "src": "/api/lunchr", "dest": "/api/slack/lunchr.ts" }
   ]
 }
