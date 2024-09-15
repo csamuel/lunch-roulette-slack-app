@@ -15,8 +15,9 @@ const MONGO_COLLECTION_NAME = "selectedplaces";
 // MongoDB setup
 let cachedDb: Db;
 
-type Block = {
+export type Block = {
   type: "section" | "divider" | "actions" | "context" | "image" | "button";
+  block_id?: string;
   text?: {};
   elements?: {}[];
   accessory?: {};
@@ -291,7 +292,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "Would you like to eat here?",
+        text: "Votes: 0",
       },
       accessory: {
         type: "button",

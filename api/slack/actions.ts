@@ -6,6 +6,7 @@ import axios from "axios";
 import crypto from "crypto";
 import getRawBody from "raw-body";
 import qs from "qs";
+import { Block } from "../lunchr";
 
 // Environment variables
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
@@ -87,9 +88,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     );
 
     // Update the original message with the vote counts
-    const originalBlocks = payload.message.blocks as any[];
+    const originalBlocks = payload.message.blocks as Block[];
+
+    console.log("voteCounts", voteCounts);
 
     const updatedBlocks = updateBlocksWithVotes(originalBlocks, voteCounts);
+
+    console.log("updatedBlocks", updatedBlocks);
 
     // Use Slack API to update the message
     await axios.post(
@@ -153,29 +158,45 @@ function isValidSlackRequest(req: VercelRequest, rawBody: Buffer): boolean {
   );
 }
 
+// {
+//   type: "section",
+//   text: {
+//     type: "mrkdwn",
+//     text: "Votes: 0",
+//   },
+//   accessory: {
+//     type: "button",
+//     text: {
+//       type: "plain_text",
+//       text: "Select",
+//       emoji: true,
+//     },
+//     value: id,
+//     action_id: "vote",
+//   },
+// },
+
 // Function to update blocks with vote counts
 function updateBlocksWithVotes(
   blocks: any[],
   voteCounts: { [key: string]: number },
 ): any[] {
   return blocks.map((block) => {
-    console.log(JSON.stringify(block));
-    console.log(JSON.stringify(voteCounts));
     if (
       block.type === "section" &&
       block.accessory &&
-      block.accessory.alt_text
+      block.accessory.action_id === "vote"
     ) {
-      const restaurantId = block.accessory.alt_text;
+      const restaurantId = block.accessory.value;
       const voteCount = voteCounts[restaurantId] || 0;
       const voteText = `\n*Votes: ${voteCount}*`;
 
       // Avoid duplicating vote counts
-      if (!block.text.text.includes("Votes:")) {
-        block.text.text += voteText;
-      } else {
-        block.text.text = block.text.text.replace(/(\*Votes:.*\*)/, voteText);
-      }
+      // if (!block.text.text.includes("Votes:")) {
+      //   block.text.text += voteText;
+      // } else {
+      block.text.text = block.text.text.replace(/(\*Votes:.*\*)/, voteText);
+      // }
     }
     return block;
   });
