@@ -9,7 +9,8 @@ import {
   DividerBlock,
   SectionBlock,
   MessageBlock,
-} from "./types";
+} from "./types/slack";
+import { Restaurant } from "./types/yelp";
 
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
@@ -28,22 +29,6 @@ let cachedDb: Db;
 interface SelectedPlace {
   restaurantId: string;
   lastVisited: Date;
-}
-
-interface Restaurant {
-  id: string;
-  name: string;
-  url: string;
-  image_url: string;
-  distance: number;
-  price: string;
-  display_address: string[];
-  rating: number;
-  location: { display_address: string[] };
-  categories: { title: string }[];
-  attributes: {
-    menu_url?: string;
-  };
 }
 
 export default async (req: VercelRequest, res: VercelResponse) => {

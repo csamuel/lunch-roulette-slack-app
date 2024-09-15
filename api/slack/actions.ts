@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { Db, MongoClient } from "mongodb";
 import qs from "qs";
 import getRawBody from "raw-body";
-import { ButtonElement, MessageBlock, SectionBlock } from "../types";
+import { ButtonElement, MessageBlock, SectionBlock } from "../types/slack";
 
 // Environment variables
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
