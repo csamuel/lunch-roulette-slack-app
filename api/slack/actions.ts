@@ -7,12 +7,15 @@ import crypto from "crypto";
 import getRawBody from "raw-body";
 import qs from "qs";
 import { Block } from "../lunchr";
+import { WebClient } from "@slack/web-api";
 
 // Environment variables
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
 const SLACK_SIGNING_SECRET =
   process.env.SLACK_SIGNING_SECRET || "YOUR_SLACK_SIGNING_SECRET";
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || "YOUR_SLACK_BOT_TOKEN";
+
+const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 const MONGO_DB_NAME = "lunchroulette";
 const MONGO_VOTES_COLLECTION = "votes";
@@ -108,25 +111,32 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const USER_OAUTH_TOKEN =
       "xoxp-790959918496-4850527054151-7731282723842-1daad94a93b41de14bc6b80466467779";
     try {
-      const { data } = await axios.post(
-        "https://slack.com/api/chat.update",
-        {
-          channel: channelId,
-          ts: messageTs,
-          blocks: updatedBlocks,
-          // text: payload.message.text,x
-          as_user: true,
-        },
-        {
-          headers: {
-            // Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-            Authorization: `Bearer ${USER_OAUTH_TOKEN}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      // const { data } = await axios.post(
+      //   "https://slack.com/api/chat.update",
+      //   {
+      //     channel: channelId,
+      //     ts: messageTs,
+      //     blocks: updatedBlocks,
+      //     // text: payload.message.text,x
+      //     as_user: true,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+      //       // Authorization: `Bearer ${USER_OAUTH_TOKEN}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   },
+      // );
 
-      console.log("responseData", JSON.stringify(data));
+      const result = await slackClient.chat.update({
+        channel: channelId,
+        ts: messageTs,
+        blocks: updatedBlocks,
+        as_user: true,
+      });
+
+      console.log("slackClientResult", JSON.stringify(result));
     } catch (error) {
       console.error("Error updating message:", JSON.stringify(error));
     }

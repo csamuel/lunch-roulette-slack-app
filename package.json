@@ -11,6 +11,7 @@
   "author": "Chris Samuel",
   "license": "MIT",
   "dependencies": {
+    "@slack/web-api": "^7.4.0",
     "@vercel/node": "^2.9.1",
     "axios": "^1.5.0",
     "mongodb": "^5.7.0",
