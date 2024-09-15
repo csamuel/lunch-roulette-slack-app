@@ -242,8 +242,13 @@ function updateBlocksWithVotes(
       const restaurantId = block.accessory.value;
       const voteCount = voteCounts[restaurantId] || 0;
       const voters = votesByRestaurant[restaurantId] || [];
+
+      const voterNames = voters.map((voter) => {
+        return `<@${voter}>`;
+      });
+
       // console.log("voteCount", JSON.stringify(voteCount));
-      const voteText = `\n*Votes: ${voteCount}*\n${voters.length > 0 ? voters.join(",") : ""}`;
+      const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join(",") : ""}`;
 
       // Avoid duplicating vote counts
       // if (!block.text.text.includes("Votes:")) {
