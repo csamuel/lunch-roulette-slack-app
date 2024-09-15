@@ -159,6 +159,7 @@ function updateBlocksWithVotes(
   voteCounts: { [key: string]: number },
 ): any[] {
   return blocks.map((block) => {
+    console.log(JSON.stringify(block));
     if (
       block.type === "section" &&
       block.accessory &&
