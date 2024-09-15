@@ -98,12 +98,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    // Respond immediately with an ephemeral message
-    res.json({
-      response_type: "ephemeral",
-      text: "Looking for lunch options... I'll post them in the channel shortly!",
-    });
-
     // Create an array of offsets based on page limit and max results
     const totalOffsets = Array.from(
       { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
@@ -221,6 +215,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     });
 
     console.log("result: ", JSON.stringify(result, null, 2));
+
+    // Respond with an ephemeral message
+    res.json({
+      response_type: "ephemeral",
+      text: "Looking for lunch options... I'll post them in the channel shortly!",
+    });
 
     // // Respond to Slack
     // res.json({
