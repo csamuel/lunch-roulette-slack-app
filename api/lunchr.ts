@@ -212,6 +212,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       channel: channelId,
       blocks: blocks,
       text: "Here are some restaurant options!",
+      unfurl_links: false,
+      unfurl_media: false,
     });
 
     console.log("result: ", JSON.stringify(result, null, 2));
