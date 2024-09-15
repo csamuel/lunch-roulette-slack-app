@@ -90,11 +90,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Update the original message with the vote counts
     const originalBlocks = payload.message.blocks as Block[];
 
-    console.log("voteCounts", voteCounts);
+    console.log("orignalBlocks", JSON.stringify(originalBlocks));
+
+    console.log("voteCounts", JSON.stringify(voteCounts));
 
     const updatedBlocks = updateBlocksWithVotes(originalBlocks, voteCounts);
 
-    console.log("updatedBlocks", updatedBlocks);
+    console.log("updatedBlocks", JSON.stringify(updatedBlocks));
 
     // Use Slack API to update the message
     await axios.post(
