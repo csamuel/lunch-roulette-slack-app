@@ -115,8 +115,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 };
 
-// async function voteCountForRestaurant(payload: string, res: VercelResponse) {}
-
 // Function to connect to MongoDB
 async function connectToDatabase(): Promise<Db> {
   if (cachedDb) {
