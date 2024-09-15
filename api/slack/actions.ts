@@ -94,29 +94,35 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // console.log("orignalBlocks", JSON.stringify(originalBlocks));
 
-    console.log("voteCounts", JSON.stringify(voteCounts));
+    // console.log("voteCounts", JSON.stringify(voteCounts));
 
     const updatedBlocks = updateBlocksWithVotes(originalBlocks, voteCounts);
 
-    // console.log("updatedBlocks", JSON.stringify(updatedBlocks));
+    console.log("updatedBlocks", JSON.stringify(updatedBlocks));
 
     // Use Slack API to update the message
-    await axios.post(
-      "https://slack.com/api/chat.update",
-      {
-        channel: channelId,
-        ts: messageTs,
-        blocks: updatedBlocks,
-        text: payload.message.text,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-          "Content-Type": "application/json",
+    //
+    try {
+      const { data } = await axios.post(
+        "https://slack.com/api/chat.update",
+        {
+          channel: channelId,
+          ts: messageTs,
+          blocks: updatedBlocks,
+          text: payload.message.text,
         },
-      },
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
+      console.log("responseData", JSON.stringify(data));
+    } catch (error) {
+      console.error("Error updating message:", JSON.stringify(error));
+    }
     // Respond to Slack (empty 200 response to acknowledge)
     res.status(200).send("");
   } catch (error) {
@@ -193,7 +199,7 @@ function updateBlocksWithVotes(
     ) {
       const restaurantId = block.accessory.value;
       const voteCount = voteCounts[restaurantId] || 0;
-      console.log("voteCount", JSON.stringify(voteCount));
+      // console.log("voteCount", JSON.stringify(voteCount));
       const voteText = `\n*Votes: ${voteCount}*`;
 
       // Avoid duplicating vote counts
