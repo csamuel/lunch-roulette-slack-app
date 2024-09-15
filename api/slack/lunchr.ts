@@ -138,7 +138,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "header",
         text: {
           type: "plain_text",
-          text: "Lunch?",
+          text: `<@${userId}> spun the wheel!`,
           emoji: true,
         },
       },
@@ -146,7 +146,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Croupier <@${userId}> spun the wheel! Here are *3* options out of *${filteredRestaurants.length}* that are walking distance from *211 E 7th St.*`,
+          text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from *211 E 7th St.*`,
         },
       } as SectionBlock,
       {
