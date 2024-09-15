@@ -300,8 +300,8 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
           text: "Select",
           emoji: true,
         },
-        value: "click_me_123",
-        action_id: id,
+        value: id,
+        action_id: "vote",
       },
     },
   ];
