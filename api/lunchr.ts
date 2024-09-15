@@ -2,12 +2,15 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import axios from "axios";
 import { MongoClient, Db, Collection } from "mongodb";
 import qs from "qs";
+import { WebClient } from "@slack/web-api";
 
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
 const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || "YOUR_SLACK_VERIFICATION_TOKEN";
+
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || "YOUR_SLACK_BOT_TOKEN";
 
 const MONGO_DB_NAME = "lunchroulette";
 const MONGO_COLLECTION_NAME = "selectedplaces";
@@ -69,6 +72,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   // Get the subcommand from the text
   const subcommand = (body.text || "").trim().toLowerCase();
 
+  const { channel_id: channelId, user_id: userId } = body;
+
   // Coordinates for 211 E 7th St, Austin, TX 78701
   const LATITUDE = 30.2682;
   const LONGITUDE = -97.7404;
@@ -92,6 +97,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       });
       return;
     }
+
+    // Respond immediately with an ephemeral message
+    res.json({
+      response_type: "ephemeral",
+      text: "Looking for lunch options... I'll post them in the channel shortly!",
+    });
 
     // Create an array of offsets based on page limit and max results
     const totalOffsets = Array.from(
@@ -201,11 +212,21 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       },
     );
 
-    // Respond to Slack
-    res.json({
-      response_type: "in_channel",
+    const slackClient = new WebClient(SLACK_BOT_TOKEN);
+
+    const result = await slackClient.chat.postMessage({
+      channel: channelId,
       blocks: blocks,
+      text: "Here are some restaurant options!",
     });
+
+    console.log("result: ", JSON.stringify(result, null, 2));
+
+    // // Respond to Slack
+    // res.json({
+    //   response_type: "in_channel",
+    //   blocks: blocks,
+    // });
   } catch (error) {
     console.error("Error:", error);
     res.json({
@@ -307,3 +328,21 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
     },
   ];
 }
+
+// // Function to post a message to the channel
+// async function postMessageToChannel(channelId: string, blocks: Block[]) {
+//   await axios.post(
+//     "https://slack.com/api/chat.postMessage",
+//     {
+//       channel: channelId,
+//       blocks: blocks,
+//       text: "Lunch options", // Fallback text
+//     },
+//     {
+//       headers: {
+//         Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+//         "Content-Type": "application/json",
+//       },
+//     },
+//   );
+// }
