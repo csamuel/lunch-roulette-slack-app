@@ -91,6 +91,20 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     console.log("votes", JSON.stringify(votes));
 
+    // Group votes by restaurant using functional programming style
+    const votesByRestaurant = votes.reduce(
+      (acc, vote) => {
+        const { restaurantId, userId } = vote;
+        return {
+          ...acc,
+          [restaurantId]: [...(acc[restaurantId] || []), userId],
+        };
+      },
+      {} as { [key: string]: string[] },
+    );
+
+    console.log("votesByRestaurant", JSON.stringify(votesByRestaurant));
+
     // Count votes per restaurant
     const voteCounts = votes.reduce(
       (acc, vote) => {
@@ -107,7 +121,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // console.log("voteCounts", JSON.stringify(voteCounts));
 
-    const updatedBlocks = updateBlocksWithVotes(originalBlocks, voteCounts);
+    const updatedBlocks = updateBlocksWithVotes(
+      originalBlocks,
+      voteCounts,
+      votesByRestaurant,
+    );
 
     // console.log("updatedBlocks", JSON.stringify(updatedBlocks));
 
@@ -213,6 +231,7 @@ function isValidSlackRequest(req: VercelRequest, rawBody: Buffer): boolean {
 function updateBlocksWithVotes(
   blocks: any[],
   voteCounts: { [key: string]: number },
+  votesByRestaurant: { [key: string]: string[] },
 ): any[] {
   return blocks.map((block) => {
     if (
@@ -222,8 +241,9 @@ function updateBlocksWithVotes(
     ) {
       const restaurantId = block.accessory.value;
       const voteCount = voteCounts[restaurantId] || 0;
+      const voters = votesByRestaurant[restaurantId] || [];
       // console.log("voteCount", JSON.stringify(voteCount));
-      const voteText = `\n*Votes: ${voteCount}*`;
+      const voteText = `\n*Votes: ${voteCount}*\n${voters.length > 0 ? voters.join(",") : ""}`;
 
       // Avoid duplicating vote counts
       // if (!block.text.text.includes("Votes:")) {
