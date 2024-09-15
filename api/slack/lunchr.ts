@@ -17,8 +17,11 @@ const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
 const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || "YOUR_SLACK_VERIFICATION_TOKEN";
-
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || "YOUR_SLACK_BOT_TOKEN";
+
+// Yelp API parameters
+const PAGE_LIMIT = 50; // Max limit per request
+const MAX_RESULTS = 200; // Adjust as needed (max 1000)
 
 const MONGO_DB_NAME = "lunchroulette";
 const MONGO_COLLECTION_NAME = "selectedplaces";
@@ -50,16 +53,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   // Get the subcommand from the text
   const subcommand = (body.text || "").trim().toLowerCase();
 
-  const { channel_id: channelId, user_id: userId } = body;
+  const { channel_id: channelId } = body;
 
   // Coordinates for 211 E 7th St, Austin, TX 78701
   const LATITUDE = 30.2682;
   const LONGITUDE = -97.7404;
   const RADIUS = 1000; // in meters
-
-  // Yelp API parameters
-  const PAGE_LIMIT = 50; // Max limit per request
-  const MAX_RESULTS = 200; // Adjust as needed (max 1000)
 
   try {
     // Connect to MongoDB
