@@ -2,7 +2,6 @@
 
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient, Db } from "mongodb";
-import axios from "axios";
 import crypto from "crypto";
 import getRawBody from "raw-body";
 import qs from "qs";
@@ -58,20 +57,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const body = qs.parse(bodyString);
     const payload = JSON.parse(body.payload as string);
 
-    // console.log("payload", JSON.stringify(payload));
-
     // Extract necessary information
     const userId = payload.user.id;
     const action = payload.actions[0];
     const restaurantId = action.value;
     const messageTs = payload.message.ts;
     const channelId = payload.channel.id;
-
-    console.log("userId", userId);
-    console.log("action", action);
-    console.log("restaurantId", restaurantId);
-    console.log("messageTs", messageTs);
-    console.log("channelId", channelId);
 
     // Connect to MongoDB
     const db = await connectToDatabase();
@@ -103,8 +94,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       {} as { [key: string]: string[] },
     );
 
-    console.log("votesByRestaurant", JSON.stringify(votesByRestaurant));
-
     // Count votes per restaurant
     const voteCounts = votes.reduce(
       (acc, vote) => {
@@ -116,51 +105,20 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Update the original message with the vote counts
     const originalBlocks = payload.message.blocks as Block[];
-
-    // console.log("orignalBlocks", JSON.stringify(originalBlocks));
-
-    // console.log("voteCounts", JSON.stringify(voteCounts));
-
     const updatedBlocks = updateBlocksWithVotes(
       originalBlocks,
       voteCounts,
       votesByRestaurant,
     );
 
-    // console.log("updatedBlocks", JSON.stringify(updatedBlocks));
-
     // Use Slack API to update the message
-    //
-
-    const USER_OAUTH_TOKEN =
-      "xoxp-790959918496-4850527054151-7731282723842-1daad94a93b41de14bc6b80466467779";
     try {
-      // const { data } = await axios.post(
-      //   "https://slack.com/api/chat.update",
-      //   {
-      //     channel: channelId,
-      //     ts: messageTs,
-      //     blocks: updatedBlocks,
-      //     // text: payload.message.text,x
-      //     as_user: true,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-      //       // Authorization: `Bearer ${USER_OAUTH_TOKEN}`,
-      //       "Content-Type": "application/json",
-      //     },
-      //   },
-      // );
-
-      const result = await slackClient.chat.update({
+      await slackClient.chat.update({
         channel: channelId,
         ts: messageTs,
         blocks: updatedBlocks,
         as_user: true,
       });
-
-      // console.log("slackClientResult", JSON.stringify(result));
     } catch (error) {
       console.error("Error updating message:", JSON.stringify(error));
     }
@@ -209,24 +167,6 @@ function isValidSlackRequest(req: VercelRequest, rawBody: Buffer): boolean {
   );
 }
 
-// {
-//   type: "section",
-//   text: {
-//     type: "mrkdwn",
-//     text: "Votes: 0",
-//   },
-//   accessory: {
-//     type: "button",
-//     text: {
-//       type: "plain_text",
-//       text: "Select",
-//       emoji: true,
-//     },
-//     value: id,
-//     action_id: "vote",
-//   },
-// },
-
 // Function to update blocks with vote counts
 function updateBlocksWithVotes(
   blocks: any[],
@@ -247,31 +187,7 @@ function updateBlocksWithVotes(
         return `<@${voter}>`;
       });
 
-      // console.log("voteCount", JSON.stringify(voteCount));
       const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join(",") : ""}`;
-
-      // Avoid duplicating vote counts
-      // if (!block.text.text.includes("Votes:")) {
-      //   block.text.text += voteText;
-      // } else {
-      // block.text.text = voteText;
-      // return {
-      //   type: "section",
-      //   text: {
-      //     type: "mrkdwn",
-      //     text: voteText,
-      //   },
-      //   accessory: {
-      //     type: "button",
-      //     text: {
-      //       type: "plain_text",
-      //       text: "Select",
-      //       emoji: true,
-      //     },
-      //     value: restaurantId,
-      //     action_id: "vote",
-      //   },
-      // };
       return {
         ...block,
         text: {

@@ -49,10 +49,6 @@ interface Restaurant {
   };
 }
 
-// export const config = {
-//   runtime: "nodejs", // this is a pre-requisite
-// };
-
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Only accept POST requests
   if (req.method !== "POST") {
@@ -86,11 +82,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   try {
     // Connect to MongoDB
     const db = await connectToDatabase();
-    const collection = db.collection<SelectedPlace>(MONGO_COLLECTION_NAME);
+    const selectedPlaceCollection = db.collection<SelectedPlace>(
+      MONGO_COLLECTION_NAME,
+    );
 
     if (subcommand === "reset") {
       // Handle the reset subcommand
-      await collection.deleteMany({});
+      await selectedPlaceCollection.deleteMany({});
       res.json({
         response_type: "ephemeral",
         text: "All recently visited places have been reset.",
@@ -131,7 +129,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Fetch restaurant IDs visited in the last 14 days
     const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-    const recentlyVisitedIds = await collection
+    const recentlyVisitedIds = await selectedPlaceCollection
       .find({ lastVisited: { $gte: twoWeeksAgo } })
       .map((doc) => doc.restaurantId)
       .toArray();
@@ -152,17 +150,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Randomly select up to 3 restaurants
     const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
-
-    // Save the selections to MongoDB
-    await Promise.all(
-      selectedRestaurants.map((restaurant) =>
-        collection.updateOne(
-          { restaurantId: restaurant.id },
-          { $set: { lastVisited: new Date() } },
-          { upsert: true },
-        ),
-      ),
-    );
 
     const blocks: Block[] = [
       {
@@ -216,7 +203,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       unfurl_media: false,
     });
 
-    console.log("result: ", JSON.stringify(result, null, 2));
+    // Save the selections to MongoDB
+    await Promise.all(
+      selectedRestaurants.map((restaurant) =>
+        selectedPlaceCollection.updateOne(
+          { restaurantId: restaurant.id, messageTs: result.ts },
+          { $set: { lastVisited: new Date() } },
+          { upsert: true },
+        ),
+      ),
+    );
+
+    // console.log("result: ", JSON.stringify(result, null, 2));
 
     // Respond with an ephemeral message
     res.json({
@@ -330,21 +328,3 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
     },
   ];
 }
-
-// // Function to post a message to the channel
-// async function postMessageToChannel(channelId: string, blocks: Block[]) {
-//   await axios.post(
-//     "https://slack.com/api/chat.postMessage",
-//     {
-//       channel: channelId,
-//       blocks: blocks,
-//       text: "Lunch options", // Fallback text
-//     },
-//     {
-//       headers: {
-//         Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-//         "Content-Type": "application/json",
-//       },
-//     },
-//   );
-// }
