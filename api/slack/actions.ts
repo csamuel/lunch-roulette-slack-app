@@ -1,10 +1,10 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
-import { MongoClient, Db } from "mongodb";
-import crypto from "crypto";
-import getRawBody from "raw-body";
-import qs from "qs";
-import { Block } from "../lunchr";
 import { WebClient } from "@slack/web-api";
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import crypto from "crypto";
+import { Db, MongoClient } from "mongodb";
+import qs from "qs";
+import getRawBody from "raw-body";
+import { ButtonElement, MessageBlock, SectionBlock } from "../types";
 
 // Environment variables
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
@@ -79,7 +79,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       .toArray();
 
     // Update the original message with the vote counts
-    const originalBlocks = payload.message.blocks as Block[];
+    const originalBlocks = payload.message.blocks as MessageBlock[];
     const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes);
 
     // Use Slack API to update the message
@@ -139,7 +139,10 @@ function isValidSlackRequest(req: VercelRequest, rawBody: Buffer): boolean {
 }
 
 // Function to update blocks with vote counts
-function updateBlocksWithVotes(blocks: Block[], votes: Vote[]): Block[] {
+function updateBlocksWithVotes(
+  blocks: MessageBlock[],
+  votes: Vote[],
+): MessageBlock[] {
   // Group votes by restaurant using functional programming style
   const votesByRestaurant = votes.reduce(
     (acc, vote) => {
@@ -162,12 +165,10 @@ function updateBlocksWithVotes(blocks: Block[], votes: Vote[]): Block[] {
   );
 
   return blocks.map((block) => {
-    if (
-      block.type === "section" &&
-      block.accessory &&
-      block.accessory.action_id === "vote"
-    ) {
-      const restaurantId = block.accessory.value || "";
+    if (isVotingSectionBlock(block)) {
+      const sectionBlock = block as SectionBlock;
+      const votingButton = sectionBlock.accessory as ButtonElement;
+      const restaurantId = votingButton.value || "";
       const voteCount = voteCounts[restaurantId] || 0;
       const voters = votesByRestaurant[restaurantId] || [];
 
@@ -182,8 +183,21 @@ function updateBlocksWithVotes(blocks: Block[], votes: Vote[]): Block[] {
           type: "mrkdwn",
           text: voteText,
         },
-      };
+      } as MessageBlock;
     }
     return block;
   });
+}
+
+function isVotingSectionBlock(block: MessageBlock): boolean {
+  if (block.type == "section") {
+    const sectionBlock = block as SectionBlock;
+    if (sectionBlock.accessory && sectionBlock.accessory.type === "button") {
+      const buttonElement = sectionBlock.accessory as ButtonElement;
+      if (buttonElement.action_id === "vote") {
+        return true;
+      }
+    }
+  }
+  return false;
 }

@@ -3,6 +3,13 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import axios from "axios";
 import { Db, MongoClient } from "mongodb";
 import qs from "qs";
+import {
+  ActionsBlock,
+  ContextBlock,
+  DividerBlock,
+  SectionBlock,
+  MessageBlock,
+} from "./types";
 
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
@@ -17,25 +24,6 @@ const MONGO_COLLECTION_NAME = "selectedplaces";
 
 // MongoDB setup
 let cachedDb: Db;
-
-export type Block = {
-  type: "section" | "divider" | "actions" | "context" | "image" | "button";
-  block_id?: string;
-  text?: {};
-  elements?: {}[];
-  action_id?: string;
-  value?: string;
-  accessory?: Accessory;
-};
-
-type Accessory = {
-  value?: string;
-  action_id?: string;
-  type: string;
-  image_url?: string;
-  alt_text?: string;
-  text?: {};
-};
 
 interface SelectedPlace {
   restaurantId: string;
@@ -160,17 +148,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Randomly select up to 3 restaurants
     const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
 
-    const blocks: Block[] = [
+    const blocks: MessageBlock[] = [
       {
         type: "section",
         text: {
           type: "mrkdwn",
           text: `Found ${filteredRestaurants.length} places near 211 E 7th St. Here are some options:`,
         },
-      },
+      } as SectionBlock,
       {
         type: "divider",
-      },
+      } as DividerBlock,
     ];
 
     // Add blocks for each selected restaurant
@@ -199,7 +187,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             value: "pick_another",
           },
         ],
-      },
+      } as ActionsBlock,
     );
 
     const slackClient = new WebClient(SLACK_BOT_TOKEN);
@@ -258,7 +246,7 @@ function getRandomElements<T>(array: T[], count: number): T[] {
   return shuffled.slice(0, count);
 }
 
-function toSlackBlocks(restaurant: Restaurant): Array<Block> {
+function toSlackBlocks(restaurant: Restaurant): Array<MessageBlock> {
   const {
     id,
     name,
@@ -288,7 +276,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         image_url: image_url,
         alt_text: name,
       },
-    },
+    } as SectionBlock,
     {
       type: "context",
       elements: [
@@ -308,7 +296,7 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
           text: `📍 ${display_address.join(", ")} (${distanceInMiles} miles away)`,
         },
       ],
-    },
+    } as ContextBlock,
     {
       type: "section",
       text: {
@@ -325,6 +313,6 @@ function toSlackBlocks(restaurant: Restaurant): Array<Block> {
         value: id,
         action_id: "vote",
       },
-    },
+    } as SectionBlock,
   ];
 }
