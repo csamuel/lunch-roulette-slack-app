@@ -17,6 +17,7 @@ const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
 const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || "YOUR_SLACK_VERIFICATION_TOKEN";
+1;
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || "YOUR_SLACK_BOT_TOKEN";
 
 // Yelp API parameters
@@ -53,7 +54,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   // Get the subcommand from the text
   const subcommand = (body.text || "").trim().toLowerCase();
 
-  const { channel_id: channelId } = body;
+  const { channel_id: channelId, user_id: userId } = body;
 
   // Coordinates for 211 E 7th St, Austin, TX 78701
   const LATITUDE = 30.2682;
@@ -137,7 +138,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Found ${filteredRestaurants.length} places near 211 E 7th St. Here are some options:`,
+          text: `<@${userId}> spun the wheel! Out of ${filteredRestaurants.length} places near 211 E 7th St, here are some options:`,
         },
       } as SectionBlock,
       {
