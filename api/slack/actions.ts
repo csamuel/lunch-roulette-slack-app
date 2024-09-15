@@ -142,7 +142,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         as_user: true,
       });
 
-      console.log("slackClientResult", JSON.stringify(result));
+      // console.log("slackClientResult", JSON.stringify(result));
     } catch (error) {
       console.error("Error updating message:", JSON.stringify(error));
     }
