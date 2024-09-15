@@ -15,9 +15,9 @@ const SLACK_SIGNING_SECRET =
   process.env.SLACK_SIGNING_SECRET || "YOUR_SLACK_SIGNING_SECRET";
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || "YOUR_SLACK_BOT_TOKEN";
 
-const slackClient = new WebClient(SLACK_BOT_TOKEN, {
-  logLevel: LogLevel.DEBUG,
-});
+// const slackClient = new WebClient(SLACK_BOT_TOKEN, {
+//   logLevel: LogLevel.DEBUG,
+// });
 
 const MONGO_DB_NAME = "lunchroulette";
 const MONGO_VOTES_COLLECTION = "votes";
@@ -68,6 +68,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const restaurantId = action.value;
     const messageTs = payload.message.ts;
     const channelId = payload.channel.id;
+
+    console.log("userId", userId);
+    console.log("action", action);
+    console.log("restaurantId", restaurantId);
+    console.log("messageTs", messageTs);
+    console.log("channelId", channelId);
 
     // Connect to MongoDB
     const db = await connectToDatabase();
