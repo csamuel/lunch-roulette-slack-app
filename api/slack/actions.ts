@@ -58,7 +58,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const body = qs.parse(bodyString);
     const payload = JSON.parse(body.payload as string);
 
-    console.log("payload", JSON.stringify(payload));
+    // console.log("payload", JSON.stringify(payload));
 
     // Extract necessary information
     const userId = payload.user.id;
