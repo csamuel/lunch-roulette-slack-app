@@ -58,6 +58,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Extract necessary information
     const userId = payload.user.id;
     const action = payload.actions[0];
+
+    console.log("action", JSON.stringify(action));
+
     const restaurantId = action.value;
     const messageTs = payload.message.ts;
     const channelId = payload.channel.id;
@@ -100,6 +103,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+// async function voteCountForRestaurant(payload: string, res: VercelResponse) {}
 
 // Function to connect to MongoDB
 async function connectToDatabase(): Promise<Db> {
