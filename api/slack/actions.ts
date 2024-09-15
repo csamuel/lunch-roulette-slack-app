@@ -7,7 +7,7 @@ import crypto from "crypto";
 import getRawBody from "raw-body";
 import qs from "qs";
 import { Block } from "../lunchr";
-import { LogLevel, WebClient } from "@slack/web-api";
+import { WebClient } from "@slack/web-api";
 
 // Environment variables
 const MONGODB_URI = process.env.MONGODB_URI || "YOUR_MONGODB_URI";
@@ -15,9 +15,7 @@ const SLACK_SIGNING_SECRET =
   process.env.SLACK_SIGNING_SECRET || "YOUR_SLACK_SIGNING_SECRET";
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || "YOUR_SLACK_BOT_TOKEN";
 
-// const slackClient = new WebClient(SLACK_BOT_TOKEN, {
-//   logLevel: LogLevel.DEBUG,
-// });
+const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 const MONGO_DB_NAME = "lunchroulette";
 const MONGO_VOTES_COLLECTION = "votes";
