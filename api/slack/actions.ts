@@ -1,5 +1,3 @@
-// File: api/slack/actions.ts
-
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { MongoClient, Db } from "mongodb";
 import crypto from "crypto";
@@ -80,36 +78,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       .find({ messageTs: messageTs })
       .toArray();
 
-    console.log("votes", JSON.stringify(votes));
-
-    // Group votes by restaurant using functional programming style
-    const votesByRestaurant = votes.reduce(
-      (acc, vote) => {
-        const { restaurantId, userId } = vote;
-        return {
-          ...acc,
-          [restaurantId]: [...(acc[restaurantId] || []), userId],
-        };
-      },
-      {} as { [key: string]: string[] },
-    );
-
-    // Count votes per restaurant
-    const voteCounts = votes.reduce(
-      (acc, vote) => {
-        acc[vote.restaurantId] = (acc[vote.restaurantId] || 0) + 1;
-        return acc;
-      },
-      {} as { [key: string]: number },
-    );
-
     // Update the original message with the vote counts
     const originalBlocks = payload.message.blocks as Block[];
-    const updatedBlocks = updateBlocksWithVotes(
-      originalBlocks,
-      voteCounts,
-      votesByRestaurant,
-    );
+    const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes);
 
     // Use Slack API to update the message
     try {
@@ -168,18 +139,35 @@ function isValidSlackRequest(req: VercelRequest, rawBody: Buffer): boolean {
 }
 
 // Function to update blocks with vote counts
-function updateBlocksWithVotes(
-  blocks: any[],
-  voteCounts: { [key: string]: number },
-  votesByRestaurant: { [key: string]: string[] },
-): any[] {
+function updateBlocksWithVotes(blocks: Block[], votes: Vote[]): Block[] {
+  // Group votes by restaurant using functional programming style
+  const votesByRestaurant = votes.reduce(
+    (acc, vote) => {
+      const { restaurantId, userId } = vote;
+      return {
+        ...acc,
+        [restaurantId]: [...(acc[restaurantId] || []), userId],
+      };
+    },
+    {} as { [key: string]: string[] },
+  );
+
+  // Count votes per restaurant
+  const voteCounts = votes.reduce(
+    (acc, vote) => {
+      acc[vote.restaurantId] = (acc[vote.restaurantId] || 0) + 1;
+      return acc;
+    },
+    {} as { [key: string]: number },
+  );
+
   return blocks.map((block) => {
     if (
       block.type === "section" &&
       block.accessory &&
       block.accessory.action_id === "vote"
     ) {
-      const restaurantId = block.accessory.value;
+      const restaurantId = block.accessory.value || "";
       const voteCount = voteCounts[restaurantId] || 0;
       const voters = votesByRestaurant[restaurantId] || [];
 

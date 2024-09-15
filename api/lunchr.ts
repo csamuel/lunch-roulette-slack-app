@@ -1,8 +1,8 @@
+import { WebClient } from "@slack/web-api";
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import axios from "axios";
-import { MongoClient, Db, Collection } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 import qs from "qs";
-import { WebClient } from "@slack/web-api";
 
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || "YOUR_YELP_API_KEY";
@@ -23,9 +23,18 @@ export type Block = {
   block_id?: string;
   text?: {};
   elements?: {}[];
-  accessory?: {};
   action_id?: string;
   value?: string;
+  accessory?: Accessory;
+};
+
+type Accessory = {
+  value?: string;
+  action_id?: string;
+  type: string;
+  image_url?: string;
+  alt_text?: string;
+  text?: {};
 };
 
 interface SelectedPlace {
@@ -214,19 +223,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       ),
     );
 
-    // console.log("result: ", JSON.stringify(result, null, 2));
-
-    // Respond with an ephemeral message
     res.json({
       response_type: "ephemeral",
       text: "Looking for lunch options... I'll post them in the channel shortly!",
     });
-
-    // // Respond to Slack
-    // res.json({
-    //   response_type: "in_channel",
-    //   blocks: blocks,
-    // });
   } catch (error) {
     console.error("Error:", error);
     res.json({
