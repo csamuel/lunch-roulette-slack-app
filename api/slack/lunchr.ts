@@ -33,6 +33,7 @@ let cachedDb: Db;
 interface SelectedPlace {
   restaurantId: string;
   lastVisited: Date;
+  messageTs: string;
 }
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
