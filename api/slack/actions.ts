@@ -110,6 +110,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           ts: messageTs,
           blocks: updatedBlocks,
           text: payload.message.text,
+          as_user: true,
         },
         {
           headers: {
