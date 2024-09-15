@@ -35,6 +35,8 @@ interface SelectedPlace {
   lastVisited: Date;
 }
 
+const slackClient = new WebClient(SLACK_BOT_TOKEN);
+
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Only accept POST requests
   if (req.method !== "POST") {
@@ -133,12 +135,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Randomly select up to 3 restaurants
     const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
 
+    const spinner = await slackClient.users.profile.get({
+      user: userId,
+    });
+
+    const displayName = spinner.profile?.display_name || "Unknown User";
+
     const blocks: MessageBlock[] = [
       {
         type: "header",
         text: {
           type: "plain_text",
-          text: `<@${userId}> spun the wheel!`,
+          text: `${displayName} spun the wheel!`,
           emoji: true,
         },
       },
@@ -156,7 +164,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Add blocks for each selected restaurant
     selectedRestaurants.forEach((restaurant, index) => {
-      blocks.push(...toSlackBlocks(restaurant));
+      blocks.push(...toMessageBlocks(restaurant));
       if (index < selectedRestaurants.length - 1) {
         blocks.push({ type: "divider" });
       }
@@ -182,8 +190,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         ],
       } as ActionsBlock,
     );
-
-    const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
     const result = await slackClient.chat.postMessage({
       channel: channelId,
@@ -239,7 +245,7 @@ function getRandomElements<T>(array: T[], count: number): T[] {
   return shuffled.slice(0, count);
 }
 
-function toSlackBlocks(restaurant: Restaurant): Array<MessageBlock> {
+function toMessageBlocks(restaurant: Restaurant): Array<MessageBlock> {
   const {
     id,
     name,
