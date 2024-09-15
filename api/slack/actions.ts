@@ -109,7 +109,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           channel: channelId,
           ts: messageTs,
           blocks: updatedBlocks,
-          text: payload.message.text,
+          // text: payload.message.text,
           as_user: true,
         },
         {
