@@ -33,6 +33,19 @@ interface Vote {
   userId: string;
 }
 
+interface Action {
+  action_id: "vote" | "finalize";
+  block_id: string;
+  text: {
+    type: string;
+    text: string;
+    emoji: boolean;
+  };
+  value: string;
+  type: string;
+  action_ts: string;
+}
+
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
     // Only accept POST requests
@@ -57,9 +70,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Extract necessary information
     const userId = payload.user.id;
-    const action = payload.actions[0];
-
-    console.log("action", JSON.stringify(action));
+    const action = payload.actions[0] as Action;
 
     const restaurantId = action.value;
     const messageTs = payload.message.ts;
