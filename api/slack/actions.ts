@@ -104,6 +104,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Use Slack API to update the message
     //
+
+    const USER_OAUTH_TOKEN =
+      "xoxp-790959918496-4850527054151-7731282723842-1daad94a93b41de14bc6b80466467779";
     try {
       const { data } = await axios.post(
         "https://slack.com/api/chat.update",
@@ -116,7 +119,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+            // Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+            Authorization: `Bearer ${USER_OAUTH_TOKEN}`,
             "Content-Type": "application/json",
           },
         },
