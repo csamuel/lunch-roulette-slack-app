@@ -135,10 +135,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     const blocks: MessageBlock[] = [
       {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: "Lunch?",
+          emoji: true,
+        },
+      },
+      {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `<@${userId}> spun the wheel! Out of ${filteredRestaurants.length} places near 211 E 7th St, here are some options:`,
+          text: `Croupier <@${userId}> spun the wheel! Here are *3* options out of *${filteredRestaurants.length}* that are walking distance from *211 E 7th St.*`,
         },
       } as SectionBlock,
       {
