@@ -193,15 +193,38 @@ function updateBlocksWithVotes(
     ) {
       const restaurantId = block.accessory.value;
       const voteCount = voteCounts[restaurantId] || 0;
-      console.log("voteCount", voteCount);
+      console.log("voteCount", JSON.stringify(voteCount));
       const voteText = `\n*Votes: ${voteCount}*`;
 
       // Avoid duplicating vote counts
       // if (!block.text.text.includes("Votes:")) {
       //   block.text.text += voteText;
       // } else {
-      block.text.text = block.text.text.replace(/(\*Votes:.*\*)/, voteText);
-      // }
+      // block.text.text = voteText;
+      // return {
+      //   type: "section",
+      //   text: {
+      //     type: "mrkdwn",
+      //     text: voteText,
+      //   },
+      //   accessory: {
+      //     type: "button",
+      //     text: {
+      //       type: "plain_text",
+      //       text: "Select",
+      //       emoji: true,
+      //     },
+      //     value: restaurantId,
+      //     action_id: "vote",
+      //   },
+      // };
+      return {
+        ...block,
+        text: {
+          type: "mrkdwn",
+          text: voteText,
+        },
+      };
     }
     return block;
   });
