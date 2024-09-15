@@ -55,6 +55,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const body = qs.parse(bodyString);
     const payload = JSON.parse(body.payload as string);
 
+    console.log("payload", JSON.stringify(payload));
+
     // Extract necessary information
     const userId = payload.user.id;
     const action = payload.actions[0];
@@ -98,7 +100,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     const updatedBlocks = updateBlocksWithVotes(originalBlocks, voteCounts);
 
-    console.log("updatedBlocks", JSON.stringify(updatedBlocks));
+    // console.log("updatedBlocks", JSON.stringify(updatedBlocks));
 
     // Use Slack API to update the message
     //
@@ -109,7 +111,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           channel: channelId,
           ts: messageTs,
           blocks: updatedBlocks,
-          // text: payload.message.text,
+          // text: payload.message.text,x
           as_user: true,
         },
         {
