@@ -62,7 +62,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     console.log('eventType', eventType);
 
     // Handle view submission
-    if (eventType === 'view-submission') {
+    if (eventType === 'view_submission') {
       res.json({
         response_type: 'ephemeral',
         text: 'Lunch Roulette is now configured!',
