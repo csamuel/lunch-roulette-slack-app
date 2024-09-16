@@ -1,4 +1,4 @@
-import { WebClient } from '@slack/web-api';
+import { ModalView, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { Db, MongoClient } from 'mongodb';
@@ -25,7 +25,12 @@ const PAGE_LIMIT = 50; // Max limit per request
 const MAX_RESULTS = 200; // Adjust as needed (max 1000)
 
 const MONGO_DB_NAME = 'lunchroulette';
-const MONGO_COLLECTION_NAME = 'selectedplaces';
+const MONGO_SELECTED_PLACES_COLLECTION = 'selectedplaces';
+
+// Coordinates for 211 E 7th St, Austin, TX 78701
+const LATITUDE = 30.2682;
+const LONGITUDE = -97.7404;
+const RADIUS = 1000; // in meters
 
 // MongoDB setup
 let cachedDb: Db;
@@ -57,18 +62,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   // Get the subcommand from the text
   const subcommand = (body.text || '').trim().toLowerCase();
 
-  const { channel_id: channelId, user_id: userId } = body;
-
-  // Coordinates for 211 E 7th St, Austin, TX 78701
-  const LATITUDE = 30.2682;
-  const LONGITUDE = -97.7404;
-  const RADIUS = 1000; // in meters
+  const {
+    channel_id: channelId,
+    user_id: userId,
+    trigger_id: triggerId,
+  } = body;
 
   try {
     // Connect to MongoDB
     const db = await connectToDatabase();
     const selectedPlaceCollection = db.collection<SelectedPlace>(
-      MONGO_COLLECTION_NAME,
+      MONGO_SELECTED_PLACES_COLLECTION,
     );
 
     if (subcommand === 'reset') {
@@ -79,6 +83,72 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         text: 'All recently visited places have been reset.',
       });
       return;
+    }
+
+    // Handle the configure subcommand
+    if (subcommand === 'configure') {
+      // const view = {
+      //   type: 'modal',
+      //   callback_id: 'modal-identifier',
+      //   title: {
+      //     type: 'plain_text',
+      //     text: 'Just a modal',
+      //   },
+      //   blocks: [
+      //     {
+      //       type: 'section',
+      //       block_id: 'section-identifier',
+      //       text: {
+      //         type: 'mrkdwn',
+      //         text: '*Welcome* to ~my~ Block Kit _modal_!',
+      //       },
+      //       accessory: {
+      //         type: 'button',
+      //         text: {
+      //           type: 'plain_text',
+      //           text: 'Just a button',
+      //         },
+      //         action_id: 'button-identifier',
+      //       },
+      //     },
+      //   ],
+      // };
+
+      await slackClient.views.open({
+        trigger_id: triggerId,
+        view: {
+          type: 'modal',
+          callback_id: 'modal-identifier',
+          title: {
+            type: 'plain_text',
+            text: 'Just a modal',
+          },
+          blocks: [
+            {
+              type: 'section',
+              block_id: 'section-identifier',
+              text: {
+                type: 'mrkdwn',
+                text: '*Welcome* to ~my~ Block Kit _modal_!',
+              },
+              accessory: {
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'Just a button',
+                },
+                action_id: 'button-identifier',
+              },
+            },
+          ],
+        },
+      });
+
+      return;
+      // res.json({
+      //   response_type: 'ephemeral',
+      //   text: 'All recently visited places have been reset.',
+      // });
     }
 
     // Create an array of offsets based on page limit and max results
