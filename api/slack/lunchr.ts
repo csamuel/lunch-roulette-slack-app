@@ -89,26 +89,39 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (subcommand === 'configure') {
       const view: ModalView = {
         type: 'modal',
-        callback_id: 'modal-identifier',
+        callback_id: 'view-helpdesk',
         title: {
           type: 'plain_text',
-          text: 'Just a modal',
+          text: 'Submit an issue',
+        },
+        submit: {
+          type: 'plain_text',
+          text: 'Submit',
         },
         blocks: [
           {
-            type: 'section',
-            block_id: 'section-identifier',
-            text: {
-              type: 'mrkdwn',
-              text: '*Welcome* to ~my~ Block Kit _modal_!',
+            type: 'input',
+            block_id: 'ticket-title',
+            label: {
+              type: 'plain_text',
+              text: 'Ticket title',
             },
-            accessory: {
-              type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'Just a button',
-              },
-              action_id: 'button-identifier',
+            element: {
+              type: 'plain_text_input',
+              action_id: 'ticket-title-value',
+            },
+          },
+          {
+            type: 'input',
+            block_id: 'ticket-desc',
+            label: {
+              type: 'plain_text',
+              text: 'Ticket description',
+            },
+            element: {
+              type: 'plain_text_input',
+              multiline: true,
+              action_id: 'ticket-desc-value',
             },
           },
         ],
