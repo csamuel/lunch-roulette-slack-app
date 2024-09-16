@@ -59,9 +59,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const payloadJson = JSON.parse(reqBodyPayload);
 
     const eventType = payloadJson.type;
+    console.log('eventType', eventType);
 
     // Handle view submission
-    //
     if (eventType === 'view-submission') {
       res.json({
         response_type: 'ephemeral',
