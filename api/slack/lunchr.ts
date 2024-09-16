@@ -26,6 +26,7 @@ const MAX_RESULTS = 200; // Adjust as needed (max 1000)
 
 const MONGO_DB_NAME = 'lunchroulette';
 const MONGO_SELECTED_PLACES_COLLECTION = 'selectedplaces';
+const MONGO_CONFIGURATION_COLLECTION = 'configurations';
 
 // Coordinates for 211 E 7th St, Austin, TX 78701
 const LATITUDE = 30.2682;
@@ -39,6 +40,13 @@ interface SelectedPlace {
   restaurantId: string;
   lastVisited: Date;
   messageTs: string;
+}
+
+interface Configuration {
+  latitude: number;
+  longitude: number;
+  radius: number;
+  channelId: string;
 }
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
@@ -92,7 +100,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         callback_id: 'view-helpdesk',
         title: {
           type: 'plain_text',
-          text: 'Submit an issue',
+          text: 'Lunch Roulette - Configuration',
         },
         submit: {
           type: 'plain_text',
@@ -101,27 +109,44 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         blocks: [
           {
             type: 'input',
-            block_id: 'ticket-title',
+            element: {
+              type: 'number_input',
+              is_decimal_allowed: true,
+              action_id: 'latitude-action',
+              initial_value: LATITUDE.toString(),
+            },
             label: {
               type: 'plain_text',
-              text: 'Ticket title',
-            },
-            element: {
-              type: 'plain_text_input',
-              action_id: 'ticket-title-value',
+              text: 'Latitude',
+              emoji: true,
             },
           },
           {
             type: 'input',
-            block_id: 'ticket-desc',
+            element: {
+              type: 'number_input',
+              is_decimal_allowed: true,
+              action_id: 'longitude-action',
+              initial_value: LONGITUDE.toString(),
+            },
             label: {
               type: 'plain_text',
-              text: 'Ticket description',
+              text: 'Longitude',
+              emoji: true,
             },
+          },
+          {
+            type: 'input',
             element: {
-              type: 'plain_text_input',
-              multiline: true,
-              action_id: 'ticket-desc-value',
+              type: 'number_input',
+              is_decimal_allowed: false,
+              action_id: 'radius-action',
+              initial_value: RADIUS.toString(),
+            },
+            label: {
+              type: 'plain_text',
+              text: 'Radius (in meters)',
+              emoji: true,
             },
           },
         ],
