@@ -100,7 +100,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         callback_id: 'view-helpdesk',
         title: {
           type: 'plain_text',
-          text: 'Lunch Roulette - Configuration',
+          text: 'Configuration',
         },
         submit: {
           type: 'plain_text',
