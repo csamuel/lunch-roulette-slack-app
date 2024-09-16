@@ -53,7 +53,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       res.status(405).send('Method Not Allowed');
       return;
     }
-    console.log('body:', JSON.stringify(req.body));
+    const reqBody = JSON.parse(req.body.toString());
+    console.log('reqBody.payload:', JSON.stringify(reqBody.payload));
     // Capture raw body
     const rawBody = await getRawBody(req);
 
