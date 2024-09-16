@@ -87,68 +87,41 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Handle the configure subcommand
     if (subcommand === 'configure') {
-      // const view = {
-      //   type: 'modal',
-      //   callback_id: 'modal-identifier',
-      //   title: {
-      //     type: 'plain_text',
-      //     text: 'Just a modal',
-      //   },
-      //   blocks: [
-      //     {
-      //       type: 'section',
-      //       block_id: 'section-identifier',
-      //       text: {
-      //         type: 'mrkdwn',
-      //         text: '*Welcome* to ~my~ Block Kit _modal_!',
-      //       },
-      //       accessory: {
-      //         type: 'button',
-      //         text: {
-      //           type: 'plain_text',
-      //           text: 'Just a button',
-      //         },
-      //         action_id: 'button-identifier',
-      //       },
-      //     },
-      //   ],
-      // };
+      const view: ModalView = {
+        type: 'modal',
+        callback_id: 'modal-identifier',
+        title: {
+          type: 'plain_text',
+          text: 'Just a modal',
+        },
+        blocks: [
+          {
+            type: 'section',
+            block_id: 'section-identifier',
+            text: {
+              type: 'mrkdwn',
+              text: '*Welcome* to ~my~ Block Kit _modal_!',
+            },
+            accessory: {
+              type: 'button',
+              text: {
+                type: 'plain_text',
+                text: 'Just a button',
+              },
+              action_id: 'button-identifier',
+            },
+          },
+        ],
+      };
 
       await slackClient.views.open({
         trigger_id: triggerId,
-        view: {
-          type: 'modal',
-          callback_id: 'modal-identifier',
-          title: {
-            type: 'plain_text',
-            text: 'Just a modal',
-          },
-          blocks: [
-            {
-              type: 'section',
-              block_id: 'section-identifier',
-              text: {
-                type: 'mrkdwn',
-                text: '*Welcome* to ~my~ Block Kit _modal_!',
-              },
-              accessory: {
-                type: 'button',
-                text: {
-                  type: 'plain_text',
-                  text: 'Just a button',
-                },
-                action_id: 'button-identifier',
-              },
-            },
-          ],
-        },
+        view: view,
       });
 
+      // Acknowledge the command
+      res.status(200).send('');
       return;
-      // res.json({
-      //   response_type: 'ephemeral',
-      //   text: 'All recently visited places have been reset.',
-      // });
     }
 
     // Create an array of offsets based on page limit and max results
