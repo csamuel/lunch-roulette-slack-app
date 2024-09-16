@@ -58,6 +58,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const { payload: reqBodyPayload } = reqBody;
     const payloadJson = JSON.parse(reqBodyPayload);
 
+    const eventType = payloadJson.type;
+
+    // Handle view submission
+    //
+    if (eventType === 'view-submission') {
+      res.json({
+        response_type: 'ephemeral',
+        text: 'Lunch Roulette is now configured!',
+      });
+      return;
+    }
+
     console.log('payloadJson', JSON.stringify(payloadJson));
     // Capture raw body
     const rawBody = await getRawBody(req);
@@ -80,15 +92,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const restaurantId = action.value;
     const messageTs = payload.message.ts;
     const channelId = payload.channel.id;
-
-    const eventType = payload.type;
-
-    if (eventType === 'view-submission') {
-      // Handle view submission
-      console.log('View submission:', JSON.stringify(payload));
-      res.status(200).send('');
-      return;
-    }
 
     // Connect to MongoDB
     const db = await connectToDatabase();
