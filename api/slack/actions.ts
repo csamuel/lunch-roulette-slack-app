@@ -76,6 +76,15 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const messageTs = payload.message.ts;
     const channelId = payload.channel.id;
 
+    const eventType = payload.type;
+
+    if (eventType === 'view-submission') {
+      // Handle view submission
+      console.log('View submission:', JSON.stringify(payload));
+      res.status(200).send('');
+      return;
+    }
+
     // Connect to MongoDB
     const db = await connectToDatabase();
     const votesCollection = db.collection<Vote>(MONGO_VOTES_COLLECTION);

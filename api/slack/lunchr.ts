@@ -97,7 +97,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (subcommand === 'configure') {
       const view: ModalView = {
         type: 'modal',
-        callback_id: 'view-helpdesk',
+        callback_id: 'configure-modal',
         title: {
           type: 'plain_text',
           text: 'Configuration',
