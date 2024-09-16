@@ -56,8 +56,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     const { body: reqBody } = req;
     const { payload: reqBodyPayload } = reqBody;
+    const payloadJson = JSON.parse(reqBodyPayload);
 
-    console.log('reqBodyPayload', JSON.stringify(reqBodyPayload));
+    console.log('payloadJson', JSON.stringify(payloadJson));
     // Capture raw body
     const rawBody = await getRawBody(req);
 
