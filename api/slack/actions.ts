@@ -63,11 +63,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Handle view submission
     if (eventType === 'view_submission') {
-      res.json({
-        response_type: 'ephemeral',
-        text: 'Lunch Roulette is now configured!',
-        response_action: 'clear',
-      });
+      // Respond to Slack (empty 200 response to acknowledge)
+      res.status(200).send('');
       return;
     }
 
