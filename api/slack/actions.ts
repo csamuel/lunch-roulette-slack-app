@@ -58,7 +58,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Parse URL-encoded body
     const body = typeof req.body === 'string' ? qs.parse(req.body) : req.body;
-    console.log('body', JSON.stringify(body));
+    console.log('body', JSON.stringify(JSON.parse(body)));
 
     // Validate Slack token (optional but recommended)
     // if (body.token !== SLACK_VERIFICATION_TOKEN) {
