@@ -62,9 +62,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    console.log('payload', JSON.stringify(payload));
-
     const eventType = payload.type;
+
+    console.log('Event type:', eventType);
 
     // Handle view submission
     if (eventType === 'view_submission') {
