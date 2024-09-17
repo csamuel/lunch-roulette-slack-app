@@ -1,6 +1,6 @@
 import { WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { Db, MongoClient } from 'mongodb';
+import { getVotes, recordVote } from '../../service/mongodb';
 import {
   ButtonElement,
   EventType,
@@ -10,17 +10,11 @@ import {
 import { Action, Message, Vote } from '../../types/lunchr';
 import { handleRespin } from './lunchr';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
 const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
-
-const MONGO_DB_NAME = 'lunchroulette';
-const MONGO_VOTES_COLLECTION = 'votes';
-
-let cachedDb: Db;
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
@@ -98,22 +92,13 @@ async function handleVote(
   restaurantId: string,
   channelId: string,
 ): Promise<void> {
-  const db = await connectToDatabase();
-  const votesCollection = db.collection<Vote>(MONGO_VOTES_COLLECTION);
-
   const { ts: messageTs } = message;
 
   // Record the vote
-  await votesCollection.updateOne(
-    { userId: userId, messageTs: messageTs },
-    { $set: { restaurantId: restaurantId } },
-    { upsert: true },
-  );
+  await recordVote(userId, messageTs, restaurantId);
 
   // Get all votes for this message
-  const votes: Vote[] = await votesCollection
-    .find({ messageTs: messageTs })
-    .toArray();
+  const votes: Vote[] = await getVotes(messageTs);
 
   // Update the original message with the vote counts
   const originalBlocks = message.blocks as MessageBlock[];
@@ -135,17 +120,6 @@ async function handleVote(
 async function respin(userId: string, channelId: string, message: Message) {
   const { ts: messageTs } = message;
   await handleRespin(userId, channelId, messageTs);
-}
-
-async function connectToDatabase(): Promise<Db> {
-  if (cachedDb) {
-    return cachedDb;
-  }
-
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  cachedDb = client.db(MONGO_DB_NAME);
-  return cachedDb;
 }
 
 function updateBlocksWithVotes(
