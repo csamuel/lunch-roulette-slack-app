@@ -76,7 +76,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       default:
         break;
     }
-    await handleNewGame(userId, triggerId, channelId, res);
+    await handleNewGame(userId, channelId, res);
     return;
   } catch (error) {
     console.error('Error:', error);
