@@ -2,7 +2,7 @@ import { ModalView, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { Db, MongoClient } from 'mongodb';
-import qs from 'qs';
+// import qs from 'qs';
 import {
   ActionsBlock,
   ContextBlock,
@@ -58,7 +58,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 
   // Parse URL-encoded body
-  const body = typeof req.body === 'string' ? qs.parse(req.body) : req.body;
+  const { body } = req;
 
   // Validate Slack token (optional but recommended)
   if (body.token !== SLACK_VERIFICATION_TOKEN) {
