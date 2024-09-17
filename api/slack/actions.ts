@@ -1,7 +1,14 @@
 import { WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Db, MongoClient } from 'mongodb';
-import { ButtonElement, MessageBlock, SectionBlock } from '../../types/slack';
+import {
+  Action,
+  ButtonElement,
+  Message,
+  MessageBlock,
+  SectionBlock,
+  Vote,
+} from '../../types/slack';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
@@ -13,27 +20,7 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 const MONGO_DB_NAME = 'lunchroulette';
 const MONGO_VOTES_COLLECTION = 'votes';
 
-// MongoDB setup
 let cachedDb: Db;
-
-interface Vote {
-  messageTs: string;
-  restaurantId: string;
-  userId: string;
-}
-
-interface Action {
-  action_id: 'vote' | 'finalize';
-  block_id: string;
-  text: {
-    type: string;
-    text: string;
-    emoji: boolean;
-  };
-  value: string;
-  type: string;
-  action_ts: string;
-}
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
@@ -46,22 +33,20 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const { body } = req;
     const payload = JSON.parse(body.payload);
 
+    const { token, type: eventType } = payload;
+
     // validate slack token
-    if (payload.token !== SLACK_VERIFICATION_TOKEN) {
+    if (token !== SLACK_VERIFICATION_TOKEN) {
       res.status(401).send('Unauthorized');
       return;
     }
-
-    const eventType = payload.type;
-
-    console.log('Event type:', eventType);
 
     switch (eventType) {
       case 'block_actions':
         await handleBlockActions(payload, res);
         return;
       case 'view_submission':
-        await handlViewSubmission(payload, res);
+        await handleViewSubmission(payload, res);
         return;
       default:
         res.status(400).send('Bad Request');
@@ -73,21 +58,39 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 };
 
-async function handlViewSubmission(payload: any, res: VercelResponse) {
+async function handleViewSubmission(payload: any, res: VercelResponse) {
   res.status(200).send('');
   return;
 }
 
 async function handleBlockActions(payload: any, res: VercelResponse) {
-  const userId = payload.user.id;
   const action = payload.actions[0] as Action;
-
+  const userId = payload.user.id;
   const restaurantId = action.value;
-  const messageTs = payload.message.ts;
   const channelId = payload.channel.id;
 
+  switch (action.action_id) {
+    case 'vote':
+      await handleVote(userId, payload.message, restaurantId, channelId);
+      res.status(200).send('');
+      return;
+    case 'finalize':
+    case 'spin-again':
+    default:
+      res.status(400).send('Bad Request');
+  }
+}
+
+async function handleVote(
+  userId: string,
+  message: Message,
+  restaurantId: string,
+  channelId: string,
+): Promise<void> {
   const db = await connectToDatabase();
   const votesCollection = db.collection<Vote>(MONGO_VOTES_COLLECTION);
+
+  const { ts: messageTs } = message;
 
   // Record the vote
   await votesCollection.updateOne(
@@ -100,7 +103,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
   const votes = await votesCollection.find({ messageTs: messageTs }).toArray();
 
   // Update the original message with the vote counts
-  const originalBlocks = payload.message.blocks as MessageBlock[];
+  const originalBlocks = message.blocks as MessageBlock[];
   const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes);
 
   // Use Slack API to update the message
@@ -114,8 +117,6 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
   } catch (error) {
     console.error('Error updating message:', JSON.stringify(error));
   }
-  // Respond to Slack (empty 200 response to acknowledge)
-  res.status(200).send('');
 }
 
 async function connectToDatabase(): Promise<Db> {

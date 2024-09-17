@@ -8,13 +8,13 @@ interface Block {
 type TextObject = PlainTextObject | MrkdwnTextObject;
 
 interface PlainTextObject {
-  type: "plain_text";
+  type: 'plain_text';
   text: string;
   emoji?: boolean;
 }
 
 interface MrkdwnTextObject {
-  type: "mrkdwn";
+  type: 'mrkdwn';
   text: string;
   verbatim?: boolean;
 }
@@ -25,7 +25,7 @@ interface ConfirmObject {
   text: TextObject;
   confirm: PlainTextObject;
   deny: PlainTextObject;
-  style?: "primary" | "danger";
+  style?: 'primary' | 'danger';
 }
 
 // Option Objects
@@ -54,29 +54,29 @@ type BlockElement =
   | PlainTextInputElement;
 
 interface ButtonElement {
-  type: "button";
+  type: 'button';
   action_id: string;
   text: PlainTextObject;
   url?: string;
   value?: string;
-  style?: "primary" | "danger";
+  style?: 'primary' | 'danger';
   confirm?: ConfirmObject;
   accessibility_label?: string;
 }
 
 interface ImageElement {
-  type: "image";
+  type: 'image';
   image_url: string;
   alt_text: string;
 }
 
 interface SelectElement {
   type:
-    | "static_select"
-    | "users_select"
-    | "conversations_select"
-    | "channels_select"
-    | "external_select";
+    | 'static_select'
+    | 'users_select'
+    | 'conversations_select'
+    | 'channels_select'
+    | 'external_select';
   action_id: string;
   placeholder: PlainTextObject;
   initial_option?: OptionObject;
@@ -88,14 +88,14 @@ interface SelectElement {
 }
 
 interface OverflowElement {
-  type: "overflow";
+  type: 'overflow';
   action_id: string;
   options: OptionObject[];
   confirm?: ConfirmObject;
 }
 
 interface DatePickerElement {
-  type: "datepicker";
+  type: 'datepicker';
   action_id: string;
   initial_date?: string;
   placeholder?: PlainTextObject;
@@ -104,7 +104,7 @@ interface DatePickerElement {
 }
 
 interface TimePickerElement {
-  type: "timepicker";
+  type: 'timepicker';
   action_id: string;
   initial_time?: string;
   placeholder?: PlainTextObject;
@@ -113,7 +113,7 @@ interface TimePickerElement {
 }
 
 interface CheckboxesElement {
-  type: "checkboxes";
+  type: 'checkboxes';
   action_id: string;
   options: OptionObject[];
   initial_options?: OptionObject[];
@@ -122,7 +122,7 @@ interface CheckboxesElement {
 }
 
 interface RadioButtonsElement {
-  type: "radio_buttons";
+  type: 'radio_buttons';
   action_id: string;
   options: OptionObject[];
   initial_option?: OptionObject;
@@ -131,7 +131,7 @@ interface RadioButtonsElement {
 }
 
 interface PlainTextInputElement {
-  type: "plain_text_input";
+  type: 'plain_text_input';
   action_id: string;
   placeholder?: PlainTextObject;
   initial_value?: string;
@@ -143,40 +143,40 @@ interface PlainTextInputElement {
 }
 
 interface DispatchActionConfig {
-  trigger_actions_on: Array<"on_enter_pressed" | "on_character_entered">;
+  trigger_actions_on: Array<'on_enter_pressed' | 'on_character_entered'>;
 }
 
 // Block Definitions
 interface SectionBlock extends Block {
-  type: "section";
+  type: 'section';
   text?: TextObject;
   fields?: TextObject[];
   accessory?: BlockElement;
 }
 
 interface DividerBlock extends Block {
-  type: "divider";
+  type: 'divider';
 }
 
 interface ImageBlock extends Block {
-  type: "image";
+  type: 'image';
   image_url: string;
   alt_text: string;
   title?: PlainTextObject;
 }
 
 interface ActionsBlock extends Block {
-  type: "actions";
+  type: 'actions';
   elements: BlockElement[];
 }
 
 interface ContextBlock extends Block {
-  type: "context";
+  type: 'context';
   elements: Array<TextObject | ImageElement>;
 }
 
 interface InputBlock extends Block {
-  type: "input";
+  type: 'input';
   label: PlainTextObject;
   element: InputBlockElement;
   hint?: PlainTextObject;
@@ -185,14 +185,38 @@ interface InputBlock extends Block {
 }
 
 interface HeaderBlock extends Block {
-  type: "header";
+  type: 'header';
   text: PlainTextObject;
 }
 
 interface FileBlock extends Block {
-  type: "file";
+  type: 'file';
   external_id: string;
   source: string;
+}
+
+interface Message {
+  ts: string;
+  blocks: MessageBlock[];
+}
+
+interface Vote {
+  messageTs: string;
+  restaurantId: string;
+  userId: string;
+}
+
+interface Action {
+  action_id: 'vote' | 'finalize' | 'spin-again';
+  block_id: string;
+  text: {
+    type: string;
+    text: string;
+    emoji: boolean;
+  };
+  value: string;
+  type: string;
+  action_ts: string;
 }
 
 // Input Block Elements
@@ -244,4 +268,7 @@ export {
   HeaderBlock,
   FileBlock,
   MessageBlock,
+  Message,
+  Vote,
+  Action,
 };
