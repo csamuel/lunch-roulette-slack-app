@@ -83,7 +83,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       res.status(400).send('Not yet implemented');
       return;
     case 'respin':
-      await respin(userId, payload.message, channelId);
+      await respin(userId, channelId, payload.message);
       res.json({
         response_type: 'ephemeral',
         text: 'Respinning...',
@@ -133,8 +133,9 @@ async function handleVote(
   }
 }
 
-async function respin(userId: string, messageTs: string, channelId: string) {
-  await handleRespin(userId, messageTs, channelId);
+async function respin(userId: string, channelId: string, message: Message) {
+  const { ts: messageTs } = message;
+  await handleRespin(userId, channelId, messageTs);
 }
 
 async function connectToDatabase(): Promise<Db> {
