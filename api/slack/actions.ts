@@ -1,8 +1,6 @@
 import { WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import crypto from 'crypto';
 import { Db, MongoClient } from 'mongodb';
-import qs from 'qs';
 import { ButtonElement, MessageBlock, SectionBlock } from '../../types/slack';
 
 // Environment variables
@@ -16,12 +14,12 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 const MONGO_DB_NAME = 'lunchroulette';
 const MONGO_VOTES_COLLECTION = 'votes';
 
-// Disable automatic body parsing to capture raw body
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// // Disable automatic body parsing to capture raw body
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 // MongoDB setup
 let cachedDb: Db;
@@ -55,18 +53,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Parse URL-encoded body
     const { body } = req;
-    // console.log('body', JSON.stringify(JSON.parse(body.payload)));
 
     const payload = JSON.parse(body.payload);
 
-    // Validate Slack token (optional but recommended)
+    // validate slack token
     if (payload.token !== SLACK_VERIFICATION_TOKEN) {
       res.status(401).send('Unauthorized');
       return;
     }
 
+    console.log('payload', JSON.stringify(payload));
+
     const eventType = payload.type;
-    console.log('eventType', eventType);
 
     // Handle view submission
     if (eventType === 'view_submission') {
