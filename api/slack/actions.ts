@@ -58,17 +58,19 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     // Parse URL-encoded body
     const body = typeof req.body === 'string' ? qs.parse(req.body) : req.body;
-    console.log('body', JSON.stringify(JSON.parse(body.payload)));
+    // console.log('body', JSON.stringify(JSON.parse(body.payload)));
+
+    const payload = JSON.parse(body.payload);
 
     // Validate Slack token (optional but recommended)
-    // if (body.token !== SLACK_VERIFICATION_TOKEN) {
-    //   res.status(401).send('Unauthorized');
-    //   return;
-    // }
+    if (payload.token !== SLACK_VERIFICATION_TOKEN) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
 
     // const { body: reqBody } = req;
     const { payload: payloadRaw } = body;
-    const payload = JSON.parse(payloadRaw);
+    // const payload = JSON.parse(payloadRaw);
 
     const eventType = payload.type;
     console.log('eventType', eventType);
@@ -83,6 +85,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // console.log('payloadJson', JSON.stringify(payloadJson));
     // Capture raw body
     const rawBody = await getRawBody(req);
+    console.log('rawBody', rawBody.toString());
 
     // Verify Slack request signature
     if (!isValidSlackRequest(req, rawBody)) {
