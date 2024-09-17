@@ -1,8 +1,7 @@
 import { ModalView, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
-import { Db, MongoClient } from 'mongodb';
-// import qs from 'qs';
+import { Collection, Db, MongoClient } from 'mongodb';
 import {
   ActionsBlock,
   ContextBlock,
@@ -57,10 +56,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
-  // Parse URL-encoded body
   const { body } = req;
 
-  // Validate Slack token (optional but recommended)
+  // validate slack tocken
   if (body.token !== SLACK_VERIFICATION_TOKEN) {
     res.status(401).send('Unauthorized');
     return;
@@ -76,225 +74,16 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   } = body;
 
   try {
-    // Connect to MongoDB
-    const db = await connectToDatabase();
-    const selectedPlaceCollection = db.collection<SelectedPlace>(
-      MONGO_SELECTED_PLACES_COLLECTION,
-    );
-
-    if (subcommand === 'reset') {
-      // Handle the reset subcommand
-      await selectedPlaceCollection.deleteMany({});
-      res.json({
-        response_type: 'ephemeral',
-        text: 'All recently visited places have been reset.',
-      });
-      return;
+    switch (subcommand) {
+      case 'reset':
+        await handleReset(res);
+        return;
+      case 'configure':
+        await handleConfigure(triggerId, channelId, res);
+      default:
+        break;
     }
-
-    // Handle the configure subcommand
-    if (subcommand === 'configure') {
-      const view: ModalView = {
-        type: 'modal',
-        callback_id: 'configure-modal',
-        title: {
-          type: 'plain_text',
-          text: 'Configuration',
-        },
-        submit: {
-          type: 'plain_text',
-          text: 'Submit',
-        },
-        blocks: [
-          {
-            type: 'input',
-            element: {
-              type: 'number_input',
-              is_decimal_allowed: true,
-              action_id: 'latitude-action',
-              initial_value: LATITUDE.toString(),
-            },
-            label: {
-              type: 'plain_text',
-              text: 'Latitude',
-              emoji: true,
-            },
-          },
-          {
-            type: 'input',
-            element: {
-              type: 'number_input',
-              is_decimal_allowed: true,
-              action_id: 'longitude-action',
-              initial_value: LONGITUDE.toString(),
-            },
-            label: {
-              type: 'plain_text',
-              text: 'Longitude',
-              emoji: true,
-            },
-          },
-          {
-            type: 'input',
-            element: {
-              type: 'number_input',
-              is_decimal_allowed: false,
-              action_id: 'radius-action',
-              initial_value: RADIUS.toString(),
-            },
-            label: {
-              type: 'plain_text',
-              text: 'Radius (in meters)',
-              emoji: true,
-            },
-          },
-        ],
-      };
-
-      await slackClient.views.open({
-        trigger_id: triggerId,
-        view: view,
-      });
-
-      // Acknowledge the command
-      res.status(200).send('');
-      return;
-    }
-
-    // Create an array of offsets based on page limit and max results
-    const totalOffsets = Array.from(
-      { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
-      (_, i) => i * PAGE_LIMIT,
-    );
-
-    // Fetch all pages in parallel
-    const requests = totalOffsets.map((offset) =>
-      axios.get('https://api.yelp.com/v3/businesses/search', {
-        headers: {
-          Authorization: `Bearer ${YELP_API_KEY}`,
-        },
-        params: {
-          term: 'restaurants',
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-          radius: RADIUS,
-          limit: PAGE_LIMIT,
-          offset: offset,
-        },
-      }),
-    );
-
-    // Wait for all requests to complete
-    const responses = await Promise.all(requests);
-
-    // Aggregate all businesses
-    const restaurants: Restaurant[] = responses.flatMap(
-      (response) => response.data.businesses,
-    );
-
-    // Fetch restaurant IDs visited in the last 14 days
-    const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-    const recentlyVisitedIds = await selectedPlaceCollection
-      .find({ lastVisited: { $gte: twoWeeksAgo } })
-      .map((doc) => doc.restaurantId)
-      .toArray();
-
-    // Filter out recently visited restaurants
-    const filteredRestaurants = restaurants.filter(
-      (restaurant: { id: string }) =>
-        !recentlyVisitedIds.includes(restaurant.id),
-    );
-
-    if (filteredRestaurants.length === 0) {
-      res.json({
-        response_type: 'ephemeral',
-        text: 'No new restaurants available within the past two weeks!',
-      });
-      return;
-    }
-
-    // Randomly select up to 3 restaurants
-    const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
-
-    const spinner = await slackClient.users.profile.get({
-      user: userId,
-    });
-
-    const displayName = spinner.profile?.display_name || 'Unknown User';
-
-    const blocks: MessageBlock[] = [
-      {
-        type: 'header',
-        text: {
-          type: 'plain_text',
-          text: `${displayName} spun the wheel!`,
-          emoji: true,
-        },
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from *211 E 7th St.*`,
-        },
-      } as SectionBlock,
-      {
-        type: 'divider',
-      } as DividerBlock,
-    ];
-
-    // Add blocks for each selected restaurant
-    selectedRestaurants.forEach((restaurant, index) => {
-      blocks.push(...toMessageBlocks(restaurant));
-      if (index < selectedRestaurants.length - 1) {
-        blocks.push({ type: 'divider' });
-      }
-    });
-
-    // Optionally, add actions at the end
-    blocks.push(
-      {
-        type: 'divider',
-      },
-      {
-        type: 'actions',
-        elements: [
-          {
-            type: 'button',
-            text: {
-              type: 'plain_text',
-              emoji: true,
-              text: 'Pick Other Places?',
-            },
-            value: 'pick_another',
-          },
-        ],
-      } as ActionsBlock,
-    );
-
-    const result = await slackClient.chat.postMessage({
-      channel: channelId,
-      blocks: blocks,
-      text: 'Here are some restaurant options!',
-      unfurl_links: false,
-      unfurl_media: false,
-    });
-
-    // Save the selections to MongoDB
-    await Promise.all(
-      selectedRestaurants.map((restaurant) =>
-        selectedPlaceCollection.updateOne(
-          { restaurantId: restaurant.id, messageTs: result.ts },
-          { $set: { lastVisited: new Date() } },
-          { upsert: true },
-        ),
-      ),
-    );
-
-    res.json({
-      response_type: 'ephemeral',
-      text: "Looking for lunch options... I'll post them in the channel shortly!",
-    });
+    await handleNewGame(userId, triggerId, channelId, res);
   } catch (error) {
     console.error('Error:', error);
     res.json({
@@ -303,6 +92,238 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     });
   }
 };
+
+async function handleReset(res: VercelResponse) {
+  const db = await connectToDatabase();
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
+  // Handle the reset subcommand
+  await selectedPlaceCollection.deleteMany({});
+  res.json({
+    response_type: 'ephemeral',
+    text: 'All recently visited places have been reset.',
+  });
+  return;
+}
+
+async function handleConfigure(
+  triggerId: string,
+  channelId: string,
+  res: VercelResponse,
+) {
+  const view: ModalView = {
+    type: 'modal',
+    callback_id: 'configure-modal',
+    title: {
+      type: 'plain_text',
+      text: 'Configuration',
+    },
+    submit: {
+      type: 'plain_text',
+      text: 'Submit',
+    },
+    blocks: [
+      {
+        type: 'input',
+        element: {
+          type: 'number_input',
+          is_decimal_allowed: true,
+          action_id: 'latitude-action',
+          initial_value: LATITUDE.toString(),
+        },
+        label: {
+          type: 'plain_text',
+          text: 'Latitude',
+          emoji: true,
+        },
+      },
+      {
+        type: 'input',
+        element: {
+          type: 'number_input',
+          is_decimal_allowed: true,
+          action_id: 'longitude-action',
+          initial_value: LONGITUDE.toString(),
+        },
+        label: {
+          type: 'plain_text',
+          text: 'Longitude',
+          emoji: true,
+        },
+      },
+      {
+        type: 'input',
+        element: {
+          type: 'number_input',
+          is_decimal_allowed: false,
+          action_id: 'radius-action',
+          initial_value: RADIUS.toString(),
+        },
+        label: {
+          type: 'plain_text',
+          text: 'Radius (in meters)',
+          emoji: true,
+        },
+      },
+    ],
+  };
+
+  await slackClient.views.open({
+    trigger_id: triggerId,
+    view: view,
+  });
+
+  // Acknowledge the command
+  res.status(200).send('');
+  return;
+}
+
+async function handleNewGame(
+  userId: string,
+  triggerId: string,
+  channelId: string,
+  res: VercelResponse,
+) {
+  const db = await connectToDatabase();
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
+
+  // Create an array of offsets based on page limit and max results
+  const totalOffsets = Array.from(
+    { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
+    (_, i) => i * PAGE_LIMIT,
+  );
+
+  // Fetch all pages in parallel
+  const requests = totalOffsets.map((offset) =>
+    axios.get('https://api.yelp.com/v3/businesses/search', {
+      headers: {
+        Authorization: `Bearer ${YELP_API_KEY}`,
+      },
+      params: {
+        term: 'restaurants',
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+        radius: RADIUS,
+        limit: PAGE_LIMIT,
+        offset: offset,
+      },
+    }),
+  );
+
+  // Wait for all requests to complete
+  const responses = await Promise.all(requests);
+
+  // Aggregate all businesses
+  const restaurants: Restaurant[] = responses.flatMap(
+    (response) => response.data.businesses,
+  );
+
+  // Fetch restaurant IDs visited in the last 14 days
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const recentlyVisitedIds = await selectedPlaceCollection
+    .find({ lastVisited: { $gte: twoWeeksAgo } })
+    .map((doc) => doc.restaurantId)
+    .toArray();
+
+  // Filter out recently visited restaurants
+  const filteredRestaurants = restaurants.filter(
+    (restaurant: { id: string }) => !recentlyVisitedIds.includes(restaurant.id),
+  );
+
+  if (filteredRestaurants.length === 0) {
+    res.json({
+      response_type: 'ephemeral',
+      text: 'No new restaurants available within the past two weeks!',
+    });
+    return;
+  }
+
+  // Randomly select up to 3 restaurants
+  const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
+
+  const spinner = await slackClient.users.profile.get({
+    user: userId,
+  });
+
+  const displayName = spinner.profile?.display_name || 'Unknown User';
+
+  const blocks: MessageBlock[] = [
+    {
+      type: 'header',
+      text: {
+        type: 'plain_text',
+        text: `${displayName} spun the wheel!`,
+        emoji: true,
+      },
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from *211 E 7th St.*`,
+      },
+    } as SectionBlock,
+    {
+      type: 'divider',
+    } as DividerBlock,
+  ];
+
+  // Add blocks for each selected restaurant
+  selectedRestaurants.forEach((restaurant, index) => {
+    blocks.push(...toMessageBlocks(restaurant));
+    if (index < selectedRestaurants.length - 1) {
+      blocks.push({ type: 'divider' });
+    }
+  });
+
+  // Optionally, add actions at the end
+  blocks.push(
+    {
+      type: 'divider',
+    },
+    {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            emoji: true,
+            text: 'Pick Other Places?',
+          },
+          value: 'pick_another',
+        },
+      ],
+    } as ActionsBlock,
+  );
+
+  const result = await slackClient.chat.postMessage({
+    channel: channelId,
+    blocks: blocks,
+    text: 'Here are some restaurant options!',
+    unfurl_links: false,
+    unfurl_media: false,
+  });
+
+  // Save the selections to MongoDB
+  await Promise.all(
+    selectedRestaurants.map((restaurant) =>
+      selectedPlaceCollection.updateOne(
+        { restaurantId: restaurant.id, messageTs: result.ts },
+        { $set: { lastVisited: new Date() } },
+        { upsert: true },
+      ),
+    ),
+  );
+
+  res.json({
+    response_type: 'ephemeral',
+    text: "Looking for lunch options... I'll post them in the channel shortly!",
+  });
+}
 
 // Function to connect to MongoDB
 async function connectToDatabase(): Promise<Db> {
