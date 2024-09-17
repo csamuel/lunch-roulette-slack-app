@@ -329,7 +329,7 @@ async function handleNewGame(
   // Wait for all requests to complete
   const responses = await Promise.all(requests);
 
-  // Aggregate all businesses
+  // Aggregate all restaurants
   const restaurants: Restaurant[] = responses.flatMap(
     (response) => response.data.businesses,
   );

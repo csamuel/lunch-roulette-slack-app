@@ -84,6 +84,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       return;
     case 'respin':
       await respin(userId, channelId, payload.message);
+      console.log('respinning...');
       res.json({
         response_type: 'ephemeral',
         text: 'Respinning...',
