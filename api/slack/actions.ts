@@ -8,6 +8,7 @@ import {
   SectionBlock,
 } from '../../types/slack';
 import { Action, Message, Vote } from '../../types/lunchr';
+import { handleRespin } from './lunchr';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
@@ -71,6 +72,8 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
   const restaurantId = action.value;
   const channelId = payload.channel.id;
 
+  console.log('action', JSON.stringify(action, null, 2));
+
   switch (action.action_id) {
     case 'vote':
       await handleVote(userId, payload.message, restaurantId, channelId);
@@ -80,7 +83,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       res.status(400).send('Not yet implemented');
       return;
     case 'respin':
-      await handleRespin(userId, payload.message, channelId);
+      await respin(userId, payload.message, channelId);
       res.json({
         response_type: 'ephemeral',
         text: 'Respinning...',
@@ -131,7 +134,7 @@ async function handleVote(
 }
 
 async function respin(userId: string, messageTs: string, channelId: string) {
-  handleRespin(userId, messageTs, channelId);
+  await handleRespin(userId, messageTs, channelId);
 }
 
 async function connectToDatabase(): Promise<Db> {
