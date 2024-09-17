@@ -166,7 +166,7 @@ function updateBlocksWithVotes(
         return `<@${voter}>`;
       });
 
-      const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join(',') : ''}`;
+      const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join('\n') : ''}`;
       return {
         ...block,
         text: {
