@@ -11,6 +11,8 @@ const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const SLACK_SIGNING_SECRET =
   process.env.SLACK_SIGNING_SECRET || 'YOUR_SLACK_SIGNING_SECRET';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
+const SLACK_VERIFICATION_TOKEN =
+  process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -54,11 +56,20 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    const { body: reqBody } = req;
-    const { payload: reqBodyPayload } = reqBody;
-    const payloadJson = JSON.parse(reqBodyPayload);
+    // Parse URL-encoded body
+    const body = typeof req.body === 'string' ? qs.parse(req.body) : req.body;
 
-    const eventType = payloadJson.type;
+    // Validate Slack token (optional but recommended)
+    if (body.token !== SLACK_VERIFICATION_TOKEN) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+
+    // const { body: reqBody } = req;
+    const { payload: payloadRaw } = body;
+    const payload = JSON.parse(payloadRaw);
+
+    const eventType = payload.type;
     console.log('eventType', eventType);
 
     // Handle view submission
@@ -68,7 +79,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    console.log('payloadJson', JSON.stringify(payloadJson));
+    // console.log('payloadJson', JSON.stringify(payloadJson));
     // Capture raw body
     const rawBody = await getRawBody(req);
 
@@ -79,9 +90,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
 
     // Parse the payload
-    const bodyString = rawBody.toString();
-    const body = qs.parse(bodyString);
-    const payload = JSON.parse(body.payload as string);
+    // const bodyString = rawBody.toString();
+    // const body = qs.parse(bodyString);
+    // const payload = JSON.parse(body.payload as string);
 
     // Extract necessary information
     const userId = payload.user.id;
