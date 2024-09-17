@@ -2,13 +2,12 @@ import { WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Db, MongoClient } from 'mongodb';
 import {
-  Action,
   ButtonElement,
-  Message,
+  EventType,
   MessageBlock,
   SectionBlock,
-  Vote,
 } from '../../types/slack';
+import { Action, Message, Vote } from '../../types/lunchr';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
@@ -33,7 +32,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const { body } = req;
     const payload = JSON.parse(body.payload);
 
-    const { token, type: eventType } = payload;
+    const { token, type: eventType } = payload as {
+      token: string;
+      type: EventType;
+    };
 
     // validate slack token
     if (token !== SLACK_VERIFICATION_TOKEN) {
@@ -42,10 +44,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
 
     switch (eventType) {
-      case 'block_actions':
+      case EventType.BLOCK_ACTIONS:
         await handleBlockActions(payload, res);
         return;
-      case 'view_submission':
+      case EventType.VIEW_SUBMISSION:
         await handleViewSubmission(payload, res);
         return;
       default:
@@ -75,9 +77,18 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       res.status(200).send('');
       return;
     case 'finalize':
-    case 'spin-again':
+      res.status(400).send('Not yet implemented');
+      return;
+    case 'respin':
+      await handleRespin(userId, payload.message, channelId);
+      res.json({
+        response_type: 'ephemeral',
+        text: 'Respinning...',
+      });
+      return;
     default:
       res.status(400).send('Bad Request');
+      return;
   }
 }
 
@@ -117,6 +128,10 @@ async function handleVote(
   } catch (error) {
     console.error('Error updating message:', JSON.stringify(error));
   }
+}
+
+async function respin(userId: string, messageTs: string, channelId: string) {
+  handleRespin(userId, messageTs, channelId);
 }
 
 async function connectToDatabase(): Promise<Db> {

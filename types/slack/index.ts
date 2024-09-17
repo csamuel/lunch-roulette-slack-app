@@ -195,28 +195,9 @@ interface FileBlock extends Block {
   source: string;
 }
 
-interface Message {
-  ts: string;
-  blocks: MessageBlock[];
-}
-
-interface Vote {
-  messageTs: string;
-  restaurantId: string;
-  userId: string;
-}
-
-interface Action {
-  action_id: 'vote' | 'finalize' | 'spin-again';
-  block_id: string;
-  text: {
-    type: string;
-    text: string;
-    emoji: boolean;
-  };
-  value: string;
-  type: string;
-  action_ts: string;
+enum EventType {
+  VIEW_SUBMISSION = 'view_submission',
+  BLOCK_ACTIONS = 'block_actions',
 }
 
 // Input Block Elements
@@ -268,7 +249,5 @@ export {
   HeaderBlock,
   FileBlock,
   MessageBlock,
-  Message,
-  Vote,
-  Action,
+  EventType,
 };

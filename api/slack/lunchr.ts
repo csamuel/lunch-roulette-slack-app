@@ -9,6 +9,7 @@ import {
   SectionBlock,
   MessageBlock,
 } from '../../types/slack';
+import { SelectedPlace, Configuration } from '../../types/lunchr';
 import { Restaurant } from '../../types/yelp';
 
 // Environment variables
@@ -31,21 +32,7 @@ const LATITUDE = 30.2682;
 const LONGITUDE = -97.7404;
 const RADIUS = 1000; // in meters
 
-// MongoDB setup
 let cachedDb: Db;
-
-interface SelectedPlace {
-  restaurantId: string;
-  lastVisited: Date;
-  messageTs: string;
-}
-
-interface Configuration {
-  latitude: number;
-  longitude: number;
-  radius: number;
-  channelId: string;
-}
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -175,9 +162,139 @@ async function handleConfigure(
   });
 }
 
+export async function handleRespin(
+  userId: string,
+  channelId: string,
+  messageTs: string,
+) {
+  const db = await connectToDatabase();
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
+
+  // Create an array of offsets based on page limit and max results
+  const totalOffsets = Array.from(
+    { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
+    (_, i) => i * PAGE_LIMIT,
+  );
+
+  // Fetch all pages in parallel
+  const requests = totalOffsets.map((offset) =>
+    axios.get('https://api.yelp.com/v3/businesses/search', {
+      headers: {
+        Authorization: `Bearer ${YELP_API_KEY}`,
+      },
+      params: {
+        term: 'restaurants',
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+        radius: RADIUS,
+        limit: PAGE_LIMIT,
+        offset: offset,
+      },
+    }),
+  );
+
+  // Wait for all requests to complete
+  const responses = await Promise.all(requests);
+
+  // Aggregate all businesses
+  const restaurants: Restaurant[] = responses.flatMap(
+    (response) => response.data.businesses,
+  );
+
+  // Fetch restaurant IDs visited in the last 14 days
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const recentlyVisitedIds = await selectedPlaceCollection
+    .find({ lastVisited: { $gte: twoWeeksAgo } })
+    .map((doc) => doc.restaurantId)
+    .toArray();
+
+  // Filter out recently visited restaurants
+  const filteredRestaurants = restaurants.filter(
+    (restaurant: { id: string }) => !recentlyVisitedIds.includes(restaurant.id),
+  );
+
+  // Randomly select up to 3 restaurants
+  const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
+
+  const spinner = await slackClient.users.profile.get({
+    user: userId,
+  });
+
+  const displayName = spinner.profile?.display_name || 'Unknown User';
+
+  const blocks: MessageBlock[] = [
+    {
+      type: 'header',
+      text: {
+        type: 'plain_text',
+        text: `${displayName} spun the wheel!`,
+        emoji: true,
+      },
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from *211 E 7th St.*`,
+      },
+    } as SectionBlock,
+    {
+      type: 'divider',
+    } as DividerBlock,
+  ];
+
+  // Add blocks for each selected restaurant
+  selectedRestaurants.forEach((restaurant, index) => {
+    blocks.push(...toMessageBlocks(restaurant));
+    if (index < selectedRestaurants.length - 1) {
+      blocks.push({ type: 'divider' });
+    }
+  });
+
+  // Add actions
+  blocks.push(
+    {
+      type: 'divider',
+    },
+    {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            emoji: true,
+            text: 'Spin Again',
+          },
+          value: 'respin',
+        },
+      ],
+    } as ActionsBlock,
+  );
+
+  const result = await slackClient.chat.update({
+    channel: channelId,
+    ts: messageTs,
+    blocks: blocks,
+    as_user: true,
+  });
+
+  // Save the selections to MongoDB
+  await Promise.all(
+    selectedRestaurants.map((restaurant) =>
+      selectedPlaceCollection.updateOne(
+        { restaurantId: restaurant.id, messageTs: result.ts },
+        { $set: { lastVisited: new Date() } },
+        { upsert: true },
+      ),
+    ),
+  );
+}
+
 async function handleNewGame(
   userId: string,
-  triggerId: string,
   channelId: string,
   res: VercelResponse,
 ) {
@@ -275,7 +392,7 @@ async function handleNewGame(
     }
   });
 
-  // Optionally, add actions at the end
+  // Add actions
   blocks.push(
     {
       type: 'divider',
@@ -288,9 +405,9 @@ async function handleNewGame(
           text: {
             type: 'plain_text',
             emoji: true,
-            text: 'Pick Other Places?',
+            text: 'Spin Again',
           },
-          value: 'pick_another',
+          value: 'respin',
         },
       ],
     } as ActionsBlock,
