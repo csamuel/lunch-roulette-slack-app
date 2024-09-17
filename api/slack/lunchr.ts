@@ -76,14 +76,21 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   try {
     switch (subcommand) {
       case 'reset':
-        await handleReset(res);
+        await handleReset();
+        res.json({
+          response_type: 'ephemeral',
+          text: 'All recently visited places have been reset.',
+        });
         return;
       case 'configure':
-        await handleConfigure(triggerId, channelId, res);
+        await handleConfigure(triggerId, channelId);
+        res.status(200).send('');
+        return;
       default:
         break;
     }
     await handleNewGame(userId, triggerId, channelId, res);
+    return;
   } catch (error) {
     console.error('Error:', error);
     res.json({
@@ -93,25 +100,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 };
 
-async function handleReset(res: VercelResponse) {
+async function handleReset(): Promise<void> {
   const db = await connectToDatabase();
   const selectedPlaceCollection = db.collection<SelectedPlace>(
     MONGO_SELECTED_PLACES_COLLECTION,
   );
-  // Handle the reset subcommand
   await selectedPlaceCollection.deleteMany({});
-  res.json({
-    response_type: 'ephemeral',
-    text: 'All recently visited places have been reset.',
-  });
-  return;
 }
 
 async function handleConfigure(
   triggerId: string,
   channelId: string,
-  res: VercelResponse,
-) {
+): Promise<void> {
   const view: ModalView = {
     type: 'modal',
     callback_id: 'configure-modal',
@@ -173,10 +173,6 @@ async function handleConfigure(
     trigger_id: triggerId,
     view: view,
   });
-
-  // Acknowledge the command
-  res.status(200).send('');
-  return;
 }
 
 async function handleNewGame(
