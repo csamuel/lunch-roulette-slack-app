@@ -84,11 +84,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       return;
     case 'respin':
       await respin(userId, channelId, payload.message);
-      console.log('respinning...');
-      res.json({
-        response_type: 'ephemeral',
-        text: 'Respinning...',
-      });
+      res.status(200).send('');
       return;
     default:
       res.status(400).send('Bad Request');
@@ -115,7 +111,9 @@ async function handleVote(
   );
 
   // Get all votes for this message
-  const votes = await votesCollection.find({ messageTs: messageTs }).toArray();
+  const votes: Vote[] = await votesCollection
+    .find({ messageTs: messageTs })
+    .toArray();
 
   // Update the original message with the vote counts
   const originalBlocks = message.blocks as MessageBlock[];

@@ -8,8 +8,9 @@ import {
   DividerBlock,
   SectionBlock,
   MessageBlock,
+  Block,
 } from '../../types/slack';
-import { SelectedPlace, Configuration } from '../../types/lunchr';
+import { SelectedPlace, Configuration, GameConfig } from '../../types/lunchr';
 import { Restaurant } from '../../types/yelp';
 
 // Environment variables
@@ -162,11 +163,7 @@ async function handleConfigure(
   });
 }
 
-export async function handleRespin(
-  userId: string,
-  channelId: string,
-  messageTs: string,
-) {
+async function buildNewGame(userId: string): Promise<GameConfig> {
   const db = await connectToDatabase();
   const selectedPlaceCollection = db.collection<SelectedPlace>(
     MONGO_SELECTED_PLACES_COLLECTION,
@@ -273,6 +270,19 @@ export async function handleRespin(
       ],
     } as ActionsBlock,
   );
+  return {
+    blocks,
+    selectedRestaurants,
+  };
+}
+
+export async function handleRespin(
+  userId: string,
+  channelId: string,
+  messageTs: string,
+): Promise<void> {
+  const { blocks, selectedRestaurants }: GameConfig =
+    await buildNewGame(userId);
 
   const result = await slackClient.chat.update({
     channel: channelId,
@@ -280,6 +290,11 @@ export async function handleRespin(
     blocks: blocks,
     as_user: true,
   });
+
+  const db = await connectToDatabase();
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
 
   // Save the selections to MongoDB
   await Promise.all(
@@ -303,115 +318,8 @@ async function handleNewGame(
     MONGO_SELECTED_PLACES_COLLECTION,
   );
 
-  // Create an array of offsets based on page limit and max results
-  const totalOffsets = Array.from(
-    { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
-    (_, i) => i * PAGE_LIMIT,
-  );
-
-  // Fetch all pages in parallel
-  const requests = totalOffsets.map((offset) =>
-    axios.get('https://api.yelp.com/v3/businesses/search', {
-      headers: {
-        Authorization: `Bearer ${YELP_API_KEY}`,
-      },
-      params: {
-        term: 'restaurants',
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        radius: RADIUS,
-        limit: PAGE_LIMIT,
-        offset: offset,
-      },
-    }),
-  );
-
-  // Wait for all requests to complete
-  const responses = await Promise.all(requests);
-
-  // Aggregate all restaurants
-  const restaurants: Restaurant[] = responses.flatMap(
-    (response) => response.data.businesses,
-  );
-
-  // Fetch restaurant IDs visited in the last 14 days
-  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-  const recentlyVisitedIds = await selectedPlaceCollection
-    .find({ lastVisited: { $gte: twoWeeksAgo } })
-    .map((doc) => doc.restaurantId)
-    .toArray();
-
-  // Filter out recently visited restaurants
-  const filteredRestaurants = restaurants.filter(
-    (restaurant: { id: string }) => !recentlyVisitedIds.includes(restaurant.id),
-  );
-
-  if (filteredRestaurants.length === 0) {
-    res.json({
-      response_type: 'ephemeral',
-      text: 'No new restaurants available within the past two weeks!',
-    });
-    return;
-  }
-
-  // Randomly select up to 3 restaurants
-  const selectedRestaurants = getRandomElements(filteredRestaurants, 3);
-
-  const spinner = await slackClient.users.profile.get({
-    user: userId,
-  });
-
-  const displayName = spinner.profile?.display_name || 'Unknown User';
-
-  const blocks: MessageBlock[] = [
-    {
-      type: 'header',
-      text: {
-        type: 'plain_text',
-        text: `${displayName} spun the wheel!`,
-        emoji: true,
-      },
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from *211 E 7th St.*`,
-      },
-    } as SectionBlock,
-    {
-      type: 'divider',
-    } as DividerBlock,
-  ];
-
-  // Add blocks for each selected restaurant
-  selectedRestaurants.forEach((restaurant, index) => {
-    blocks.push(...toMessageBlocks(restaurant));
-    if (index < selectedRestaurants.length - 1) {
-      blocks.push({ type: 'divider' });
-    }
-  });
-
-  // Add actions
-  blocks.push(
-    {
-      type: 'divider',
-    },
-    {
-      type: 'actions',
-      elements: [
-        {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            emoji: true,
-            text: 'Spin Again',
-          },
-          action_id: 'respin',
-        },
-      ],
-    } as ActionsBlock,
-  );
+  const { blocks, selectedRestaurants }: GameConfig =
+    await buildNewGame(userId);
 
   const result = await slackClient.chat.postMessage({
     channel: channelId,
@@ -431,7 +339,6 @@ async function handleNewGame(
       ),
     ),
   );
-
   res.json({
     response_type: 'ephemeral',
     text: "Looking for lunch options... I'll post them in the channel shortly!",

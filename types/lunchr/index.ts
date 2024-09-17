@@ -1,4 +1,5 @@
 import { MessageBlock } from '../slack';
+import { Restaurant } from '../yelp';
 
 interface SelectedPlace {
   restaurantId: string;
@@ -37,4 +38,9 @@ interface Message {
   blocks: MessageBlock[];
 }
 
-export { Action, SelectedPlace, Configuration, Vote, Message };
+interface GameConfig {
+  selectedRestaurants: Restaurant[];
+  blocks: MessageBlock[];
+}
+
+export { Action, SelectedPlace, Configuration, Vote, Message, GameConfig };
