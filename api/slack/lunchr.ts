@@ -251,6 +251,15 @@ async function buildNewGame(userId: string): Promise<GameConfig> {
           },
           action_id: 'respin',
         },
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            emoji: true,
+            text: 'Finalize!',
+          },
+          action_id: 'finalize',
+        },
       ],
     } as ActionsBlock,
   );

@@ -73,6 +73,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       res.status(200).send('');
       return;
     case 'finalize':
+      await finalizeVote(userId, payload.message, channelId);
       res.status(400).send('Not yet implemented');
       return;
     case 'respin':
@@ -82,6 +83,46 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
     default:
       res.status(400).send('Bad Request');
       return;
+  }
+}
+
+function getTopVotedRestaurantId(votes: Vote[]): string {
+  return votes.length === 0
+    ? ''
+    : Object.entries(
+        votes.reduce(
+          (acc, { restaurantId }) => (
+            (acc[restaurantId] = (acc[restaurantId] || 0) + 1), acc
+          ),
+          {} as { [key: string]: number },
+        ),
+      ).reduce((a, b) => (a[1] >= b[1] ? a : b))[0];
+}
+
+async function finalizeVote(
+  userId: string,
+  message: Message,
+  channelId: string,
+): Promise<void> {
+  const { ts: messageTs } = message;
+
+  const votes: Vote[] = await getVotes(messageTs);
+
+  const topVotedRestaurantId = getTopVotedRestaurantId(votes);
+
+  // const originalBlocks = message.blocks as MessageBlock[];
+  // const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes);
+
+  // Use Slack API to update the message
+  try {
+    await slackClient.chat.update({
+      channel: channelId,
+      ts: messageTs,
+      text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
+      as_user: true,
+    });
+  } catch (error) {
+    console.error('Error updating message:', JSON.stringify(error));
   }
 }
 
