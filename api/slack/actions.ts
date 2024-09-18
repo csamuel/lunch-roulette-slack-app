@@ -58,7 +58,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 };
 
-async function handleViewSubmission(_payload: any, res: VercelResponse) {
+async function handleViewSubmission(payload: any, res: VercelResponse) {
+  console.log('view_submission_payload', JSON.stringify(payload, null, 2));
   res.status(200).send('');
   return;
 }
