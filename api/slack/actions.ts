@@ -176,16 +176,18 @@ async function finalizeVote(
     },
   } as HeaderBlock;
 
-  originalBlocks.push(dividerBlock);
-  originalBlocks.push(winnerBlock);
-  originalBlocks.push(...toMessageBlocks(winner, false));
-  originalBlocks.push(dividerBlock);
+  const winnerBlocks = [
+    dividerBlock,
+    winnerBlock,
+    ...toMessageBlocks(winner, false),
+    dividerBlock,
+  ];
 
   // Use Slack API to update the message
   try {
     await slackClient.chat.postMessage({
       channel: channelId,
-      blocks: originalBlocks,
+      blocks: winnerBlocks,
       text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
       as_user: true,
     });
