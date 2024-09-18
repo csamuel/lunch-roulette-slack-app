@@ -118,7 +118,7 @@ async function handleConfigure(
           type: 'number_input',
           is_decimal_allowed: false,
           action_id: 'radius-action',
-          initial_value: radius ? radius.toString() : '',
+          initial_value: radius ? radius.toString() : '1000',
         },
         label: {
           type: 'plain_text',
