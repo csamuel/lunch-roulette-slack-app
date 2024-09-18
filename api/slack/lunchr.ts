@@ -240,6 +240,7 @@ async function buildNewGame(userId: string): Promise<GameConfig> {
       type: 'divider',
     },
     {
+      block_id: 'action_block',
       type: 'actions',
       elements: [
         {

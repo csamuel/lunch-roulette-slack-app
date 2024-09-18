@@ -4,6 +4,7 @@ import { getVotes, recordVote } from '../../service/mongodb';
 import {
   ButtonElement,
   EventType,
+  HeaderBlock,
   MessageBlock,
   SectionBlock,
 } from '../../types/slack';
@@ -110,13 +111,24 @@ async function finalizeVote(
 
   const topVotedRestaurantId = getTopVotedRestaurantId(votes);
 
-  // const originalBlocks = message.blocks as MessageBlock[];
-  // const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes);
+  const originalBlocks = message.blocks as MessageBlock[];
+
+  const winnerBlock = {
+    type: 'header',
+    text: {
+      type: 'plain_text',
+      text: `${topVotedRestaurantId} was the winner!`,
+      emoji: true,
+    },
+  } as HeaderBlock;
+
+  originalBlocks.push(winnerBlock);
 
   // Use Slack API to update the message
   try {
     await slackClient.chat.update({
       channel: channelId,
+      blocks: originalBlocks,
       ts: messageTs,
       text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
       as_user: true,
