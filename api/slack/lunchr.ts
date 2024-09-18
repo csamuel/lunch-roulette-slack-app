@@ -8,9 +8,10 @@ import {
   MessageBlock,
   PlainTextInputElement,
 } from '../../types/slack';
-import { GameConfig } from '../../types/lunchr';
+import { Configuration, GameConfig } from '../../types/lunchr';
 import { Restaurant } from '../../types/yelp';
 import {
+  getConfiguration,
   getSelectedPlaces,
   resetSelectedPlaces,
   saveSelectedPlaces,
@@ -133,11 +134,13 @@ async function handleConfigure(
   });
 }
 
-async function buildNewGame(userId: string): Promise<GameConfig> {
+async function buildNewGame(
+  userId: string,
+  configuration: Configuration,
+): Promise<GameConfig> {
   const restaurants = await findRestaurants(DEFAULT_ADDRESS, DEFAULT_RADIUS);
 
   // Fetch restaurant IDs visited in the last 14 days
-  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
   const recentlyVisitedIds = await getSelectedPlaces();
 
   // Filter out recently visited restaurants
@@ -244,25 +247,34 @@ async function handleNewGame(
   channelId: string,
   res: VercelResponse,
 ) {
-  const { blocks, selectedRestaurants }: GameConfig =
-    await buildNewGame(userId);
+  const configuration = await getConfiguration(channelId);
 
-  const result = await slackClient.chat.postMessage({
-    channel: channelId,
-    blocks: blocks,
-    text: 'Here are some restaurant options!',
-    unfurl_links: false,
-    unfurl_media: false,
-  });
+  if (configuration) {
+    const { blocks, selectedRestaurants }: GameConfig = await buildNewGame(
+      userId,
+      configuration,
+    );
 
-  // Save the selections to MongoDB
-  if (result.ts) {
-    await saveSelectedPlaces(selectedRestaurants, result.ts);
+    const result = await slackClient.chat.postMessage({
+      channel: channelId,
+      blocks: blocks,
+      text: 'Here are some restaurant options!',
+      unfurl_links: false,
+      unfurl_media: false,
+    });
+
+    // Save the selections to MongoDB
+    if (result.ts) {
+      await saveSelectedPlaces(selectedRestaurants, result.ts);
+    }
+    res.json({
+      response_type: 'ephemeral',
+      text: 'Looking for lunch options...',
+    });
   }
-
   res.json({
     response_type: 'ephemeral',
-    text: "Looking for lunch options... I'll post them in the channel shortly!",
+    text: 'Set a location with `/lunchr configure` to start a new game!',
   });
 }
 
