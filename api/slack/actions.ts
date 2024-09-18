@@ -164,14 +164,16 @@ async function finalizeVote(
   console.log('winner', JSON.stringify(winner, null, 2));
 
   const originalBlocks = message.blocks as MessageBlock[];
-  const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes, false);
+  const finalizedBlocks = updateBlocksWithVotes(originalBlocks, votes, false);
+
+  console.log('finalizedBlocks', JSON.stringify(finalizedBlocks, null, 2));
 
   // Use Slack API to update the message
   try {
     await slackClient.chat.update({
       ts: message.ts,
       channel: channelId,
-      blocks: updatedBlocks,
+      blocks: finalizedBlocks,
       as_user: true,
     });
   } catch (error) {
@@ -319,8 +321,10 @@ function updateBlocksWithVotes(
         return {
           ...actionsBlock,
         } as MessageBlock;
+      } else {
+        console.log('removing actions block');
+        return {} as MessageBlock;
       }
-      return {} as MessageBlock;
     }
     return block;
   });
