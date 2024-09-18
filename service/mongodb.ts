@@ -1,5 +1,6 @@
 import { Db, MongoClient } from 'mongodb';
-import { Vote } from '../types/lunchr';
+import { SelectedPlace, Vote } from '../types/lunchr';
+import { Restaurant } from '../types/yelp';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const MONGO_DB_NAME = 'lunchroulette';
@@ -37,6 +38,50 @@ export async function recordVote(
 export async function getVotes(messageTs: string): Promise<Vote[]> {
   const db = await connectToDatabase();
   const votesCollection = db.collection<Vote>(MONGO_VOTES_COLLECTION);
-
   return votesCollection.find({ messageTs: messageTs }).toArray();
+}
+
+export async function saveSelectedPlaces(
+  selectedRestaurants: Restaurant[],
+  messageTs: string,
+) {
+  const db = await connectToDatabase();
+
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
+
+  await Promise.all(
+    selectedRestaurants.map((restaurant) =>
+      selectedPlaceCollection.updateOne(
+        { restaurantId: restaurant.id, messageTs: messageTs },
+        { $set: { lastVisited: new Date() } },
+        { upsert: true },
+      ),
+    ),
+  );
+}
+
+export async function getSelectedPlaces(): Promise<string[]> {
+  const db = await connectToDatabase();
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
+
+  // Fetch restaurant IDs visited in the last 14 days
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const recentlyVisitedIds = await selectedPlaceCollection
+    .find({ lastVisited: { $gte: twoWeeksAgo } })
+    .map((doc) => doc.restaurantId)
+    .toArray();
+
+  return recentlyVisitedIds;
+}
+
+export async function resetSelectedPlaces(): Promise<void> {
+  const db = await connectToDatabase();
+  const selectedPlaceCollection = db.collection<SelectedPlace>(
+    MONGO_SELECTED_PLACES_COLLECTION,
+  );
+  await selectedPlaceCollection.deleteMany({});
 }

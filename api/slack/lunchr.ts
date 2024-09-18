@@ -1,21 +1,23 @@
 import { ModalView, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
-import { Collection, Db, MongoClient } from 'mongodb';
 import {
   ActionsBlock,
   ContextBlock,
   DividerBlock,
   SectionBlock,
   MessageBlock,
-  Block,
 } from '../../types/slack';
-import { SelectedPlace, Configuration, GameConfig } from '../../types/lunchr';
+import { GameConfig } from '../../types/lunchr';
 import { Restaurant } from '../../types/yelp';
+import {
+  getSelectedPlaces,
+  resetSelectedPlaces,
+  saveSelectedPlaces,
+} from '../../service/mongodb';
 
 // Environment variables
 const YELP_API_KEY = process.env.YELP_API_KEY || 'YOUR_YELP_API_KEY';
-const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
@@ -24,16 +26,10 @@ const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
 const PAGE_LIMIT = 50; // Max limit per request
 const MAX_RESULTS = 200; // Adjust as needed (max 1000)
 
-const MONGO_DB_NAME = 'lunchroulette';
-const MONGO_SELECTED_PLACES_COLLECTION = 'selectedplaces';
-const MONGO_CONFIGURATION_COLLECTION = 'configurations';
-
 // Coordinates for 211 E 7th St, Austin, TX 78701
 const LATITUDE = 30.2682;
 const LONGITUDE = -97.7404;
 const RADIUS = 1000; // in meters
-
-let cachedDb: Db;
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -89,11 +85,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 };
 
 async function handleReset(): Promise<void> {
-  const db = await connectToDatabase();
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-  await selectedPlaceCollection.deleteMany({});
+  await resetSelectedPlaces();
 }
 
 async function handleConfigure(
@@ -164,11 +156,6 @@ async function handleConfigure(
 }
 
 async function buildNewGame(userId: string): Promise<GameConfig> {
-  const db = await connectToDatabase();
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-
   // Create an array of offsets based on page limit and max results
   const totalOffsets = Array.from(
     { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
@@ -202,10 +189,7 @@ async function buildNewGame(userId: string): Promise<GameConfig> {
 
   // Fetch restaurant IDs visited in the last 14 days
   const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-  const recentlyVisitedIds = await selectedPlaceCollection
-    .find({ lastVisited: { $gte: twoWeeksAgo } })
-    .map((doc) => doc.restaurantId)
-    .toArray();
+  const recentlyVisitedIds = await getSelectedPlaces();
 
   // Filter out recently visited restaurants
   const filteredRestaurants = restaurants.filter(
@@ -291,21 +275,9 @@ export async function handleRespin(
     as_user: true,
   });
 
-  const db = await connectToDatabase();
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-
-  // Save the selections to MongoDB
-  await Promise.all(
-    selectedRestaurants.map((restaurant) =>
-      selectedPlaceCollection.updateOne(
-        { restaurantId: restaurant.id, messageTs: result.ts },
-        { $set: { lastVisited: new Date() } },
-        { upsert: true },
-      ),
-    ),
-  );
+  if (result.ts) {
+    await saveSelectedPlaces(selectedRestaurants, result.ts);
+  }
 }
 
 async function handleNewGame(
@@ -313,11 +285,6 @@ async function handleNewGame(
   channelId: string,
   res: VercelResponse,
 ) {
-  const db = await connectToDatabase();
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-
   const { blocks, selectedRestaurants }: GameConfig =
     await buildNewGame(userId);
 
@@ -330,31 +297,14 @@ async function handleNewGame(
   });
 
   // Save the selections to MongoDB
-  await Promise.all(
-    selectedRestaurants.map((restaurant) =>
-      selectedPlaceCollection.updateOne(
-        { restaurantId: restaurant.id, messageTs: result.ts },
-        { $set: { lastVisited: new Date() } },
-        { upsert: true },
-      ),
-    ),
-  );
+  if (result.ts) {
+    await saveSelectedPlaces(selectedRestaurants, result.ts);
+  }
+
   res.json({
     response_type: 'ephemeral',
     text: "Looking for lunch options... I'll post them in the channel shortly!",
   });
-}
-
-// Function to connect to MongoDB
-async function connectToDatabase(): Promise<Db> {
-  if (cachedDb) {
-    return cachedDb;
-  }
-
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  cachedDb = client.db(MONGO_DB_NAME);
-  return cachedDb;
 }
 
 // Function to get up to 'count' random elements from an array

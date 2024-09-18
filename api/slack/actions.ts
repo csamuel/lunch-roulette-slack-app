@@ -18,7 +18,6 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
-    // Only accept POST requests
     if (req.method !== 'POST') {
       res.status(405).send('Method Not Allowed');
       return;
@@ -55,7 +54,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 };
 
-async function handleViewSubmission(payload: any, res: VercelResponse) {
+async function handleViewSubmission(_payload: any, res: VercelResponse) {
   res.status(200).send('');
   return;
 }
