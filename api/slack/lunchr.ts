@@ -22,9 +22,6 @@ const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
 
-const DEFAULT_ADDRESS = '211 E 7th St, Austin, TX 78701';
-const DEFAULT_RADIUS = 1000; // in meters
-
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 export default async (req: VercelRequest, res: VercelResponse) => {
@@ -85,6 +82,10 @@ async function handleConfigure(
   triggerId: string,
   channelId: string,
 ): Promise<void> {
+  const gameConfig = await getConfiguration(channelId);
+
+  const { address, radius } = gameConfig || {};
+
   const view: ModalView = {
     type: 'modal',
     callback_id: 'configure-modal',
@@ -103,7 +104,7 @@ async function handleConfigure(
         element: {
           type: 'plain_text_input',
           action_id: 'address-action',
-          initial_value: DEFAULT_ADDRESS,
+          initial_value: address || '',
         } as PlainTextInputElement,
         label: {
           type: 'plain_text',
@@ -117,7 +118,7 @@ async function handleConfigure(
           type: 'number_input',
           is_decimal_allowed: false,
           action_id: 'radius-action',
-          initial_value: DEFAULT_RADIUS.toString(),
+          initial_value: radius ? radius.toString() : '',
         },
         label: {
           type: 'plain_text',
@@ -171,7 +172,7 @@ async function buildNewGame(
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from ${DEFAULT_ADDRESS}`,
+        text: `Here are *3* options out of *${filteredRestaurants.length}* within ${radius}m from ${address}`,
       },
     } as SectionBlock,
     {
@@ -212,6 +213,7 @@ async function buildNewGame(
             emoji: true,
             text: 'Finalize!',
           },
+          style: 'danger',
           action_id: 'finalize',
         },
       ],
@@ -370,6 +372,7 @@ export function toMessageBlocks(
                 text: 'Select',
                 emoji: true,
               },
+              style: 'primary',
               value: id,
               action_id: 'vote',
             },

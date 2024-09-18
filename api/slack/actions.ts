@@ -5,7 +5,6 @@ import { getRestaurant } from '../../service/yelp';
 
 import {
   ButtonElement,
-  ContextBlock,
   DividerBlock,
   EventType,
   HeaderBlock,
