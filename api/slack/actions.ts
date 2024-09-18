@@ -91,7 +91,7 @@ async function handleViewSubmission(
   res: VercelResponse,
 ) {
   const { view } = payload;
-  const { state } = view;
+  const { state, private_metadata: channelId } = view;
   const { values } = state;
 
   const { address, radius } = extractAddressAndRadius(values);
@@ -99,15 +99,15 @@ async function handleViewSubmission(
   console.log('radius', JSON.stringify(radius, null, 2));
 
   if (address && radius) {
-    await saveConfiguration(address, parseInt(radius));
+    await saveConfiguration(address, parseInt(radius), channelId);
   }
 
-  // const result = await slackClient.chat.postMessage({
-  //   channel: channelId,
-  //   text: `Now using location ${address} with search radius of ${radius} meters.`,
-  //   unfurl_links: false,
-  //   unfurl_media: false,
-  // });
+  const result = await slackClient.chat.postMessage({
+    channel: channelId,
+    text: `Now using location ${address} with search radius of ${radius} meters.`,
+    unfurl_links: false,
+    unfurl_media: false,
+  });
 
   res.status(200).send('');
   return;

@@ -95,6 +95,7 @@ async function handleConfigure(
       type: 'plain_text',
       text: 'Submit',
     },
+    private_metadata: channelId,
     blocks: [
       {
         type: 'input',

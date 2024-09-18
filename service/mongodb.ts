@@ -1,5 +1,5 @@
 import { Db, MongoClient } from 'mongodb';
-import { SelectedPlace, Vote } from '../types/lunchr';
+import { Configuration, SelectedPlace, Vote } from '../types/lunchr';
 import { Restaurant } from '../types/yelp';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
@@ -20,20 +20,32 @@ async function connectToDatabase(): Promise<Db> {
   return cachedDb;
 }
 
-export async function saveConfiguration(address: string, radius: number) {
+export async function saveConfiguration(
+  address: string,
+  radius: number,
+  channelId: string,
+) {
   const db = await connectToDatabase();
-  const configurationCollection = db.collection(MONGO_CONFIGURATION_COLLECTION);
+  const configurationCollection = db.collection<Configuration>(
+    MONGO_CONFIGURATION_COLLECTION,
+  );
   await configurationCollection.updateOne(
-    { gameId: 1 },
+    { channelId: channelId },
     { $set: { address: address, radius: radius } },
     { upsert: true },
   );
 }
 
-export async function getConfiguration() {
+export async function getConfiguration(
+  channelId: string,
+): Promise<Configuration | null> {
   const db = await connectToDatabase();
-  const configurationCollection = db.collection(MONGO_CONFIGURATION_COLLECTION);
-  return configurationCollection.findOne({});
+  const configurationCollection = db.collection<Configuration>(
+    MONGO_CONFIGURATION_COLLECTION,
+  );
+  return configurationCollection.findOne({
+    channelId: channelId,
+  });
 }
 
 export async function recordVote(

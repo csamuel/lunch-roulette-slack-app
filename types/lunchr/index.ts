@@ -8,8 +8,7 @@ interface SelectedPlace {
 }
 
 interface Configuration {
-  latitude: number;
-  longitude: number;
+  address: string;
   radius: number;
   channelId: string;
 }
