@@ -217,6 +217,7 @@ async function finalizeVote(
     await slackClient.chat.postMessage({
       channel: channelId,
       blocks: winnerBlocks,
+      text: `🥇 ${winner.name} is the winner!`,
       as_user: true,
       unfurl_links: false,
       unfurl_media: false,
