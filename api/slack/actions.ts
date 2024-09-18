@@ -4,6 +4,7 @@ import { getVotes, recordVote, saveConfiguration } from '../../service/mongodb';
 import { getRestaurant } from '../../service/yelp';
 
 import {
+  ActionsBlock,
   ButtonElement,
   DividerBlock,
   EventType,
@@ -162,6 +163,20 @@ async function finalizeVote(
   console.log('winner', JSON.stringify(winner, null, 2));
 
   const originalBlocks = message.blocks as MessageBlock[];
+  const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes, false);
+
+  // Use Slack API to update the message
+  try {
+    await slackClient.chat.update({
+      ts: message.ts,
+      channel: channelId,
+      blocks: updatedBlocks,
+      text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
+      as_user: true,
+    });
+  } catch (error) {
+    console.error('Error updating message:', JSON.stringify(error));
+  }
 
   const dividerBlock = {
     type: 'divider',
@@ -214,7 +229,7 @@ async function handleVote(
 
   // Update the original message with the vote counts
   const originalBlocks = message.blocks as MessageBlock[];
-  const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes, false);
+  const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes, true);
 
   // Use Slack API to update the message
   try {
@@ -272,17 +287,6 @@ function updateBlocksWithVotes(
         return `<@${voter}>`;
       });
 
-      // accessory: {
-      //   type: 'button',
-      //   text: {
-      //     type: 'plain_text',
-      //     text: 'Select',
-      //     emoji: true,
-      //   },
-      //   value: id,
-      //   action_id: 'vote',
-      // },
-
       const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join('\n') : ''}`;
       return {
         // ...block,
@@ -298,8 +302,21 @@ function updateBlocksWithVotes(
         },
       } as MessageBlock;
     }
+    if (isActionsBlock(block)) {
+      const actionsBlock = block as ActionsBlock;
+      if (votingEnabled) {
+        return {
+          ...actionsBlock,
+        } as MessageBlock;
+      }
+      return {} as MessageBlock;
+    }
     return block;
   });
+}
+
+function isActionsBlock(block: MessageBlock): boolean {
+  return block.type === 'actions';
 }
 
 function isVotingSectionBlock(block: MessageBlock): boolean {
