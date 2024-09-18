@@ -1,6 +1,5 @@
 import { ModalView, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import axios from 'axios';
 import {
   ActionsBlock,
   ContextBlock,
@@ -15,16 +14,11 @@ import {
   resetSelectedPlaces,
   saveSelectedPlaces,
 } from '../../service/mongodb';
+import { findRestaurants } from '../../service/yelp';
 
-// Environment variables
-const YELP_API_KEY = process.env.YELP_API_KEY || 'YOUR_YELP_API_KEY';
 const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
-
-// Yelp API parameters
-const PAGE_LIMIT = 50; // Max limit per request
-const MAX_RESULTS = 200; // Adjust as needed (max 1000)
 
 // Coordinates for 211 E 7th St, Austin, TX 78701
 const LATITUDE = 30.2682;
@@ -156,36 +150,7 @@ async function handleConfigure(
 }
 
 async function buildNewGame(userId: string): Promise<GameConfig> {
-  // Create an array of offsets based on page limit and max results
-  const totalOffsets = Array.from(
-    { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
-    (_, i) => i * PAGE_LIMIT,
-  );
-
-  // Fetch all pages in parallel
-  const requests = totalOffsets.map((offset) =>
-    axios.get('https://api.yelp.com/v3/businesses/search', {
-      headers: {
-        Authorization: `Bearer ${YELP_API_KEY}`,
-      },
-      params: {
-        term: 'restaurants',
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        radius: RADIUS,
-        limit: PAGE_LIMIT,
-        offset: offset,
-      },
-    }),
-  );
-
-  // Wait for all requests to complete
-  const responses = await Promise.all(requests);
-
-  // Aggregate all businesses
-  const restaurants: Restaurant[] = responses.flatMap(
-    (response) => response.data.businesses,
-  );
+  const restaurants = await findRestaurants(LATITUDE, LONGITUDE, RADIUS);
 
   // Fetch restaurant IDs visited in the last 14 days
   const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
