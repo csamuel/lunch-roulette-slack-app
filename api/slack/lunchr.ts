@@ -227,8 +227,20 @@ export async function handleRespin(
   channelId: string,
   messageTs: string,
 ): Promise<void> {
-  const { blocks, selectedRestaurants }: GameConfig =
-    await buildNewGame(userId);
+  const configuration = await getConfiguration(channelId);
+  if (!configuration) {
+    await slackClient.chat.postMessage({
+      channel: channelId,
+      text: 'Respin failed',
+      as_user: true,
+    });
+    return;
+  }
+
+  const { blocks, selectedRestaurants }: GameConfig = await buildNewGame(
+    userId,
+    configuration,
+  );
 
   const result = await slackClient.chat.update({
     channel: channelId,
