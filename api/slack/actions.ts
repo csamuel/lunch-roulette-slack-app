@@ -151,6 +151,10 @@ function getTopVotedRestaurantId(votes: Vote[]): string {
       ).reduce((a, b) => (a[1] >= b[1] ? a : b))[0];
 }
 
+function filterActionBlocks(blocks: MessageBlock[]): MessageBlock[] {
+  return blocks.filter((block) => block.type !== 'actions');
+}
+
 async function finalizeVote(
   userId: string,
   message: Message,
@@ -163,8 +167,11 @@ async function finalizeVote(
   const winner = (await getRestaurant(topVotedRestaurantId)) as Restaurant;
   console.log('winner', JSON.stringify(winner, null, 2));
 
-  const originalBlocks = message.blocks as MessageBlock[];
-  const finalizedBlocks = updateBlocksWithVotes(originalBlocks, votes, false);
+  const { blocks: originalBlocks }: { blocks: MessageBlock[] } = message;
+
+  const finalizedBlocks = filterActionBlocks(
+    updateBlocksWithVotes(originalBlocks, votes, false),
+  );
 
   console.log('finalizedBlocks', JSON.stringify(finalizedBlocks, null, 2));
 
@@ -316,26 +323,8 @@ function updateBlocksWithVotes(
         },
       } as MessageBlock;
     }
-    if (isActionsBlock(block)) {
-      const actionsBlock = block as ActionsBlock;
-      if (votingEnabled) {
-        return {
-          ...actionsBlock,
-        } as ActionsBlock;
-      } else {
-        console.log('removing actions block');
-        return {
-          type: 'actions',
-          elements: [],
-        } as ActionsBlock;
-      }
-    }
     return block;
   });
-}
-
-function isActionsBlock(block: MessageBlock): boolean {
-  return block.type === 'actions';
 }
 
 function isVotingSectionBlock(block: MessageBlock): boolean {
