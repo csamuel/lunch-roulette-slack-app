@@ -1,6 +1,6 @@
 import { WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getVotes, recordVote } from '../../service/mongodb';
+import { getVotes, recordVote, saveConfiguration } from '../../service/mongodb';
 import { getRestaurant } from '../../service/yelp';
 
 import {
@@ -97,6 +97,10 @@ async function handleViewSubmission(
   const { address, radius } = extractAddressAndRadius(values);
   console.log('address', JSON.stringify(address, null, 2));
   console.log('radius', JSON.stringify(radius, null, 2));
+
+  if (address && radius) {
+    await saveConfiguration(address, parseInt(radius));
+  }
 
   // const result = await slackClient.chat.postMessage({
   //   channel: channelId,
