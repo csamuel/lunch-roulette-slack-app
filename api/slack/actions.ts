@@ -46,7 +46,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         await handleBlockActions(payload, res);
         return;
       case EventType.VIEW_SUBMISSION:
-        await handleViewSubmission(payload, res);
+        await handleViewSubmission(body, payload, res);
         return;
       default:
         res.status(400).send('Bad Request');
@@ -58,8 +58,52 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 };
 
-async function handleViewSubmission(payload: any, res: VercelResponse) {
-  console.log('view_submission_payload', JSON.stringify(payload, null, 2));
+type ActionType = {
+  type: string;
+  value: string;
+};
+
+type ValuesType = {
+  [key: string]: {
+    'address-action'?: ActionType;
+    'radius-action'?: ActionType;
+  };
+};
+
+function extractAddressAndRadius(values: ValuesType) {
+  const entries = Object.entries(values) as [
+    string,
+    { 'address-action'?: ActionType; 'radius-action'?: ActionType },
+  ][];
+
+  const addressEntry = entries.find(([, value]) => value['address-action']);
+  const radiusEntry = entries.find(([, value]) => value['radius-action']);
+
+  const address = addressEntry?.[1]['address-action']?.value;
+  const radius = radiusEntry?.[1]['radius-action']?.value;
+
+  return { address, radius };
+}
+
+async function handleViewSubmission(
+  body: any,
+  payload: any,
+  res: VercelResponse,
+) {
+  console.log('view_submission_body', JSON.stringify(body, null, 2));
+  const { view } = payload;
+  const { state } = view;
+  const { values } = state;
+
+  const { address, radius } = extractAddressAndRadius(values);
+
+  // const result = await slackClient.chat.postMessage({
+  //   channel: channelId,
+  //   text: `Now using location ${address} with search radius of ${radius} meters.`,
+  //   unfurl_links: false,
+  //   unfurl_media: false,
+  // });
+
   res.status(200).send('');
   return;
 }
