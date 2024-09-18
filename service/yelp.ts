@@ -36,8 +36,9 @@ export async function findRestaurants(
       },
       params: {
         term: 'restaurants',
-        latitude: latitude,
-        longitude: longitude,
+        location: '211 E 7th St, Austin, TX 78701',
+        // latitude: latitude,
+        // longitude: longitude,
         radius: radius,
         limit: PAGE_LIMIT,
         offset: offset,
