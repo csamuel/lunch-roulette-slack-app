@@ -90,12 +90,13 @@ async function handleViewSubmission(
   payload: any,
   res: VercelResponse,
 ) {
-  console.log('view_submission_body', JSON.stringify(body, null, 2));
   const { view } = payload;
   const { state } = view;
   const { values } = state;
 
   const { address, radius } = extractAddressAndRadius(values);
+  console.log('address', JSON.stringify(address, null, 2));
+  console.log('radius', JSON.stringify(radius, null, 2));
 
   // const result = await slackClient.chat.postMessage({
   //   channel: channelId,
