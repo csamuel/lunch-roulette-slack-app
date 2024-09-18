@@ -24,6 +24,7 @@ export async function saveConfiguration(address: string, radius: number) {
   const db = await connectToDatabase();
   const configurationCollection = db.collection(MONGO_CONFIGURATION_COLLECTION);
   await configurationCollection.updateOne(
+    { gameId: 1 },
     { $set: { address: address, radius: radius } },
     { upsert: true },
   );
