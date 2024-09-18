@@ -6,6 +6,7 @@ import { getRestaurant } from '../../service/yelp';
 import {
   ActionsBlock,
   ButtonElement,
+  ContextBlock,
   DividerBlock,
   EventType,
   HeaderBlock,
@@ -171,7 +172,6 @@ async function finalizeVote(
       ts: message.ts,
       channel: channelId,
       blocks: updatedBlocks,
-      text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
       as_user: true,
     });
   } catch (error) {
@@ -191,11 +191,23 @@ async function finalizeVote(
     },
   } as HeaderBlock;
 
+  const finalizerBlock = {
+    type: 'context',
+    elements: [
+      {
+        type: 'plain_text',
+        emoji: true,
+        text: `Voting ended by <@${userId}>`,
+      },
+    ],
+  } as ContextBlock;
+
   const winnerBlocks = [
     dividerBlock,
     winnerBlock,
     ...toMessageBlocks(winner, false),
     dividerBlock,
+    finalizerBlock,
   ];
 
   // Use Slack API to update the message
@@ -203,7 +215,6 @@ async function finalizeVote(
     await slackClient.chat.postMessage({
       channel: channelId,
       blocks: winnerBlocks,
-      text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
       as_user: true,
       unfurl_links: false,
       unfurl_media: false,
