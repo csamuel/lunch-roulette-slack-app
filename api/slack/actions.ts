@@ -321,10 +321,13 @@ function updateBlocksWithVotes(
       if (votingEnabled) {
         return {
           ...actionsBlock,
-        } as MessageBlock;
+        } as ActionsBlock;
       } else {
         console.log('removing actions block');
-        return {} as MessageBlock;
+        return {
+          type: 'actions',
+          elements: [],
+        } as ActionsBlock;
       }
     }
     return block;
