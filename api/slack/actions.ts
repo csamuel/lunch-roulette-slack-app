@@ -214,7 +214,7 @@ async function handleVote(
 
   // Update the original message with the vote counts
   const originalBlocks = message.blocks as MessageBlock[];
-  const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes);
+  const updatedBlocks = updateBlocksWithVotes(originalBlocks, votes, false);
 
   // Use Slack API to update the message
   try {
@@ -237,6 +237,7 @@ async function respin(userId: string, channelId: string, message: Message) {
 function updateBlocksWithVotes(
   blocks: MessageBlock[],
   votes: Vote[],
+  votingEnabled: boolean,
 ): MessageBlock[] {
   // Group votes by restaurant
   const votesByRestaurant = votes.reduce(
@@ -271,9 +272,26 @@ function updateBlocksWithVotes(
         return `<@${voter}>`;
       });
 
+      // accessory: {
+      //   type: 'button',
+      //   text: {
+      //     type: 'plain_text',
+      //     text: 'Select',
+      //     emoji: true,
+      //   },
+      //   value: id,
+      //   action_id: 'vote',
+      // },
+
       const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join('\n') : ''}`;
       return {
-        ...block,
+        // ...block,
+        type: 'section',
+        ...(votingEnabled && {
+          accessory: {
+            ...votingButton,
+          },
+        }),
         text: {
           type: 'mrkdwn',
           text: voteText,
