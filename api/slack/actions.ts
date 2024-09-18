@@ -190,6 +190,8 @@ async function finalizeVote(
       blocks: winnerBlocks,
       text: `<@${userId}> finalized the vote! ${topVotedRestaurantId} was the winner!`,
       as_user: true,
+      unfurl_links: false,
+      unfurl_media: false,
     });
   } catch (error) {
     console.error('Error updating message:', JSON.stringify(error));
