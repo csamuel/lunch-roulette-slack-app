@@ -1,0 +1,93 @@
+{
+  "type": "view_submission",
+  "team": { "id": "TP8U7T0EL", "domain": "thinkonward" },
+  "user": {
+    "id": "U04R0FH1L4F",
+    "username": "chris.samuel",
+    "name": "chris.samuel",
+    "team_id": "TP8U7T0EL"
+  },
+  "api_app_id": "A07N4FAHS1E",
+  "token": "UohKAQbfsnhg1PQzzINvOmy2",
+  "trigger_id": "7737464068755.790959918496.ad25a0005e6c6fa52b629c4deebea32e",
+  "view": {
+    "id": "V07N271DW5P",
+    "team_id": "TP8U7T0EL",
+    "type": "modal",
+    "blocks": [
+      {
+        "type": "input",
+        "block_id": "n3qbJ",
+        "label": { "type": "plain_text", "text": "Latitude", "emoji": true },
+        "optional": false,
+        "dispatch_action": false,
+        "element": {
+          "type": "number_input",
+          "action_id": "latitude-action",
+          "initial_value": "30.2682",
+          "is_decimal_allowed": true
+        }
+      },
+      {
+        "type": "input",
+        "block_id": "RfyEy",
+        "label": { "type": "plain_text", "text": "Longitude", "emoji": true },
+        "optional": false,
+        "dispatch_action": false,
+        "element": {
+          "type": "number_input",
+          "action_id": "longitude-action",
+          "initial_value": "-97.7404",
+          "is_decimal_allowed": true
+        }
+      },
+      {
+        "type": "input",
+        "block_id": "jMsil",
+        "label": {
+          "type": "plain_text",
+          "text": "Radius (in meters)",
+          "emoji": true
+        },
+        "optional": false,
+        "dispatch_action": false,
+        "element": {
+          "type": "number_input",
+          "action_id": "radius-action",
+          "initial_value": "1000",
+          "is_decimal_allowed": false
+        }
+      }
+    ],
+    "private_metadata": "",
+    "callback_id": "configure-modal",
+    "state": {
+      "values": {
+        "n3qbJ": {
+          "latitude-action": { "type": "number_input", "value": "30.2682" }
+        },
+        "RfyEy": {
+          "longitude-action": { "type": "number_input", "value": "-97.7404" }
+        },
+        "jMsil": {
+          "radius-action": { "type": "number_input", "value": "1000" }
+        }
+      }
+    },
+    "hash": "1726534074.IkVTGqS1",
+    "title": { "type": "plain_text", "text": "Configuration", "emoji": true },
+    "clear_on_close": false,
+    "notify_on_close": false,
+    "close": null,
+    "submit": { "type": "plain_text", "text": "Submit", "emoji": true },
+    "previous_view_id": null,
+    "root_view_id": "V07N271DW5P",
+    "app_id": "A07N4FAHS1E",
+    "external_id": "",
+    "app_installed_team_id": "TP8U7T0EL",
+    "bot_id": "B07MJ6PGQP6"
+  },
+  "response_urls": [],
+  "is_enterprise_install": false,
+  "enterprise": null
+}

@@ -19,8 +19,7 @@ export async function getRestaurant(restauranId: string): Promise<Restaurant> {
 }
 
 export async function findRestaurants(
-  latitude: number,
-  longitude: number,
+  address: string,
   radius: number,
 ): Promise<Restaurant[]> {
   const totalOffsets = Array.from(
@@ -36,9 +35,7 @@ export async function findRestaurants(
       },
       params: {
         term: 'restaurants',
-        location: '211 E 7th St, Austin, TX 78701',
-        // latitude: latitude,
-        // longitude: longitude,
+        location: address,
         radius: radius,
         limit: PAGE_LIMIT,
         offset: offset,

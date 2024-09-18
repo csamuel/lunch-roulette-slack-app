@@ -20,10 +20,8 @@ const SLACK_VERIFICATION_TOKEN =
   process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
 
-// Coordinates for 211 E 7th St, Austin, TX 78701
-const LATITUDE = 30.2682;
-const LONGITUDE = -97.7404;
-const RADIUS = 1000; // in meters
+const DEFAULT_ADDRESS = '211 E 7th St, Austin, TX 78701';
+const DEFAULT_RADIUS = 1000; // in meters
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -42,7 +40,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
-  // Get the subcommand from the text
   const subcommand = (body.text || '').trim().toLowerCase();
 
   const {
@@ -57,7 +54,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         await handleReset();
         res.json({
           response_type: 'ephemeral',
-          text: 'All recently visited places have been reset.',
+          text: 'Restaurant list has been reset.',
         });
         return;
       case 'configure':
@@ -101,30 +98,18 @@ async function handleConfigure(
       {
         type: 'input',
         element: {
-          type: 'number_input',
-          is_decimal_allowed: true,
-          action_id: 'latitude-action',
-          initial_value: LATITUDE.toString(),
+          type: 'plain_text_input',
+          action_id: 'address-action',
+          initial_value: DEFAULT_ADDRESS,
         },
         label: {
           type: 'plain_text',
-          text: 'Latitude',
+          text: 'Address',
           emoji: true,
         },
       },
       {
         type: 'input',
-        element: {
-          type: 'number_input',
-          is_decimal_allowed: true,
-          action_id: 'longitude-action',
-          initial_value: LONGITUDE.toString(),
-        },
-        label: {
-          type: 'plain_text',
-          text: 'Longitude',
-          emoji: true,
-        },
       },
       {
         type: 'input',
@@ -132,7 +117,7 @@ async function handleConfigure(
           type: 'number_input',
           is_decimal_allowed: false,
           action_id: 'radius-action',
-          initial_value: RADIUS.toString(),
+          initial_value: DEFAULT_RADIUS.toString(),
         },
         label: {
           type: 'plain_text',
@@ -150,7 +135,7 @@ async function handleConfigure(
 }
 
 async function buildNewGame(userId: string): Promise<GameConfig> {
-  const restaurants = await findRestaurants(LATITUDE, LONGITUDE, RADIUS);
+  const restaurants = await findRestaurants(DEFAULT_ADDRESS, DEFAULT_RADIUS);
 
   // Fetch restaurant IDs visited in the last 14 days
   const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
@@ -175,7 +160,7 @@ async function buildNewGame(userId: string): Promise<GameConfig> {
       type: 'header',
       text: {
         type: 'plain_text',
-        text: `${displayName} spun the wheel!`,
+        text: `${displayName} started a Lunch Roulette!`,
         emoji: true,
       },
     },
@@ -183,7 +168,7 @@ async function buildNewGame(userId: string): Promise<GameConfig> {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from *211 E 7th St.*`,
+        text: `Here are *3* options out of *${filteredRestaurants.length}* walking distance from ${DEFAULT_ADDRESS}`,
       },
     } as SectionBlock,
     {
