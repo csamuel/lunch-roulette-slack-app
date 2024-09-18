@@ -1,6 +1,8 @@
 import { WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { getVotes, recordVote } from '../../service/mongodb';
+import { getRestaurant } from '../../service/yelp';
+
 import {
   ButtonElement,
   EventType,
@@ -10,6 +12,7 @@ import {
 } from '../../types/slack';
 import { Action, Message, Vote } from '../../types/lunchr';
 import { handleRespin } from './lunchr';
+import { Restaurant } from '../../types/yelp';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
 const SLACK_VERIFICATION_TOKEN =
@@ -75,7 +78,7 @@ async function handleBlockActions(payload: any, res: VercelResponse) {
       return;
     case 'finalize':
       await finalizeVote(userId, payload.message, channelId);
-      res.status(400).send('Not yet implemented');
+      res.status(200).send('');
       return;
     case 'respin':
       await respin(userId, channelId, payload.message);
@@ -108,8 +111,9 @@ async function finalizeVote(
   const { ts: messageTs } = message;
 
   const votes: Vote[] = await getVotes(messageTs);
-
   const topVotedRestaurantId = getTopVotedRestaurantId(votes);
+  const winner = (await getRestaurant(topVotedRestaurantId)) as Restaurant;
+  console.log('winner', JSON.stringify(winner, null, 2));
 
   const originalBlocks = message.blocks as MessageBlock[];
 
@@ -117,7 +121,7 @@ async function finalizeVote(
     type: 'header',
     text: {
       type: 'plain_text',
-      text: `${topVotedRestaurantId} was the winner!`,
+      text: `${winner.name} was the winner!`,
       emoji: true,
     },
   } as HeaderBlock;
