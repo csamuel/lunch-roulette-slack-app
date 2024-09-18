@@ -1,4 +1,4 @@
-import { ModalView, WebClient } from '@slack/web-api';
+import { ModalView, PlainTextInput, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import {
   ActionsBlock,
@@ -6,6 +6,7 @@ import {
   DividerBlock,
   SectionBlock,
   MessageBlock,
+  PlainTextInputElement,
 } from '../../types/slack';
 import { GameConfig } from '../../types/lunchr';
 import { Restaurant } from '../../types/yelp';
@@ -101,15 +102,12 @@ async function handleConfigure(
           type: 'plain_text_input',
           action_id: 'address-action',
           initial_value: DEFAULT_ADDRESS,
-        },
+        } as PlainTextInputElement,
         label: {
           type: 'plain_text',
           text: 'Address',
           emoji: true,
         },
-      },
-      {
-        type: 'input',
       },
       {
         type: 'input',
