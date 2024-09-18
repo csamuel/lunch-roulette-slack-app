@@ -138,7 +138,8 @@ async function buildNewGame(
   userId: string,
   configuration: Configuration,
 ): Promise<GameConfig> {
-  const restaurants = await findRestaurants(DEFAULT_ADDRESS, DEFAULT_RADIUS);
+  const { address, radius } = configuration;
+  const restaurants = await findRestaurants(address, radius);
 
   // Fetch restaurant IDs visited in the last 14 days
   const recentlyVisitedIds = await getSelectedPlaces();
@@ -314,7 +315,7 @@ export function toMessageBlocks(
     distance,
     categories,
     location: { display_address },
-    attributes: { menu_url = '' } = {}, // Use optional chaining and default to an empty object
+    attributes: { menu_url = '' } = {},
   } = restaurant as Restaurant;
 
   const distanceInMiles = (distance * 0.000621371192).toFixed(2);
