@@ -4,7 +4,6 @@ import { getVotes, recordVote, saveConfiguration } from '../../service/mongodb';
 import { getRestaurant } from '../../service/yelp';
 
 import {
-  ActionsBlock,
   ButtonElement,
   ContextBlock,
   DividerBlock,
@@ -201,15 +200,12 @@ async function finalizeVote(
   } as HeaderBlock;
 
   const finalizerBlock = {
-    type: 'context',
-    elements: [
-      {
-        type: 'plain_text',
-        emoji: true,
-        text: `Voting ended by <@${userId}>`,
-      },
-    ],
-  } as ContextBlock;
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `Voting ended by <@${userId}>`,
+    },
+  } as SectionBlock;
 
   const winnerBlocks = [
     dividerBlock,
