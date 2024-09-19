@@ -283,10 +283,8 @@ async function handleNewGame(
     if (result.ts) {
       await saveSelectedPlaces(selectedRestaurants, result.ts);
     }
-    res.json({
-      response_type: 'ephemeral',
-      text: 'Looking for lunch options...',
-    });
+    res.status(200).send('');
+    return;
   }
   res.json({
     response_type: 'ephemeral',
