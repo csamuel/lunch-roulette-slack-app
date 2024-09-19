@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@slack/web-api':
         specifier: ^7.4.0
-        version: 7.4.0
+        version: 7.5.0
       '@vercel/node':
         specifier: ^3.2.14
         version: 3.2.14
@@ -139,12 +139,12 @@ packages:
     resolution: {integrity: sha512-Wz7QYfPAlG/DR+DfABddUZeNgoeY7d1J39OCR2jR+v7VBsB8ezulDK5szTnDDPDwLH5IWhLvXIHlCFZV7MSKgA==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
-  '@slack/types@2.13.1':
-    resolution: {integrity: sha512-YVtJCVtDcjOPKsvOedIThb7YmKNCcSoZN0mUSQqD2fc2ZyI59gOLCF4rYGfw/0C0agzFxAmb7hV5tbMGrgK0Tg==}
+  '@slack/types@2.14.0':
+    resolution: {integrity: sha512-n0EGm7ENQRxlXbgKSrQZL69grzg1gHLAVd+GlRVQJ1NSORo0FrApR7wql/gaKdu2n4TO83Sq/AmeUOqD60aXUA==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
-  '@slack/web-api@7.4.0':
-    resolution: {integrity: sha512-U+0pui9VcddRt3yTSkLAArVB6G8EyOb0g+/vL1E6u8k46IYc1H4UKDuULF734A2ynVyxYKHIXK8OHilX6YhwjQ==}
+  '@slack/web-api@7.5.0':
+    resolution: {integrity: sha512-e1aRwbdnTVz0uQownF8UoyrQFdSs3uXtkPYWCpcb3fW3KuTEGvmEtVzAvj9gqNSlgpWj0o6is7AdptQCELd/rQ==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
   '@ts-morph/common@0.11.1':
@@ -1261,12 +1261,12 @@ snapshots:
     dependencies:
       '@types/node': 20.16.5
 
-  '@slack/types@2.13.1': {}
+  '@slack/types@2.14.0': {}
 
-  '@slack/web-api@7.4.0':
+  '@slack/web-api@7.5.0':
     dependencies:
       '@slack/logger': 4.0.0
-      '@slack/types': 2.13.1
+      '@slack/types': 2.14.0
       '@types/node': 20.16.5
       '@types/retry': 0.12.0
       axios: 1.7.7
