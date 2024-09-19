@@ -104,7 +104,8 @@ async function handleConfigure(
         element: {
           type: 'plain_text_input',
           action_id: 'address-action',
-          initial_value: address || '',
+          initial_value:
+            address || '1600 Pennsylvania Avenue Washington, DC 20500',
         } as PlainTextInputElement,
         label: {
           type: 'plain_text',
@@ -333,7 +334,8 @@ export function toMessageBlocks(
       },
       accessory: {
         type: 'image',
-        image_url: image_url,
+        image_url:
+          image_url || 'https://placehold.co/600x600?text=No%20Photo%20%3A%28',
         alt_text: name,
       },
     } as SectionBlock,
