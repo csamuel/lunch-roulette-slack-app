@@ -49,7 +49,6 @@
    YELP_API_KEY=your_yelp_api_key
    MONGODB_URI=your_mongodb_connection_string
    SLACK_VERIFICATION_TOKEN=your_slack_verification_token
-   SLACK_SIGNING_SECRET=your_slack_signing_secret
    SLACK_BOT_TOKEN=your_slack_bot_token
    ```
 

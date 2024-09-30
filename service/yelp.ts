@@ -39,6 +39,8 @@ export async function findRestaurants(
         radius: radius,
         limit: PAGE_LIMIT,
         offset: offset,
+        open_now: true,
+        price: '1,2,3',
       },
     }),
   );

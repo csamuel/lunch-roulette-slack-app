@@ -1,16 +1,33 @@
-import { MessageBlock } from '../slack';
+import { AnyBlock } from '@slack/web-api';
 import { Restaurant } from '../yelp';
 
-interface SelectedPlace {
-  restaurantId: string;
-  lastVisited: Date;
-  messageTs: string;
+interface GameState {
+  id?: string;
+  spinner: Spinner;
+  configuration: Configuration;
+  status: 'voting' | 'finalized';
+  votes: Vote[];
+  currentOptions: Restaurant[];
+  possibleOptions: Restaurant[];
+  spins: number;
 }
 
 interface Configuration {
   address: string;
   radius: number;
   channelId: string;
+  minRating: number;
+}
+
+interface Spinner {
+  id: string;
+  displayName: string;
+}
+
+interface SelectedPlace {
+  restaurantId: string;
+  lastVisited: Date;
+  messageTs: string;
 }
 
 interface Vote {
@@ -34,12 +51,21 @@ interface Action {
 
 interface Message {
   ts: string;
-  blocks: MessageBlock[];
+  blocks: AnyBlock[];
 }
 
 interface GameConfig {
   selectedRestaurants: Restaurant[];
-  blocks: MessageBlock[];
+  blocks: AnyBlock[];
 }
 
-export { Action, SelectedPlace, Configuration, Vote, Message, GameConfig };
+export {
+  Action,
+  SelectedPlace,
+  Configuration,
+  Vote,
+  Message,
+  GameConfig,
+  GameState,
+  Spinner,
+};

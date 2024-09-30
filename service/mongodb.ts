@@ -1,12 +1,11 @@
 import { Db, MongoClient } from 'mongodb';
-import { Configuration, SelectedPlace, Vote } from '../types/lunchr';
+import { Configuration, GameState, SelectedPlace, Vote } from '../types/lunchr';
 import { Restaurant } from '../types/yelp';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const MONGO_DB_NAME = 'lunchroulette';
-const MONGO_SELECTED_PLACES_COLLECTION = 'selectedplaces';
 const MONGO_CONFIGURATION_COLLECTION = 'configurations';
-const MONGO_VOTES_COLLECTION = 'votes';
+const MONGO_GAMESTATE_COLLECTION = 'gamestates';
 
 let cachedDb: Db;
 
@@ -23,6 +22,7 @@ async function connectToDatabase(): Promise<Db> {
 export async function saveConfiguration(
   address: string,
   radius: number,
+  minRating: number,
   channelId: string,
 ) {
   const db = await connectToDatabase();
@@ -31,7 +31,7 @@ export async function saveConfiguration(
   );
   await configurationCollection.updateOne(
     { channelId: channelId },
-    { $set: { address: address, radius: radius } },
+    { $set: { address: address, radius: radius, minRating: minRating } },
     { upsert: true },
   );
 }
@@ -48,68 +48,37 @@ export async function getConfiguration(
   });
 }
 
-export async function recordVote(
-  userId: string,
-  messageTs: string,
-  restaurantId: string,
-) {
+export async function findActiveGame(
+  channelId: string,
+): Promise<GameState | null> {
   const db = await connectToDatabase();
-  const votesCollection = db.collection<Vote>(MONGO_VOTES_COLLECTION);
+  const gameStateCollection = db.collection<GameState>(
+    MONGO_GAMESTATE_COLLECTION,
+  );
+  return gameStateCollection.findOne({
+    'configuration.channelId': channelId,
+    status: 'voting',
+  });
+}
 
-  await votesCollection.updateOne(
-    { userId: userId, messageTs: messageTs },
-    { $set: { restaurantId: restaurantId } },
+export async function getGame(gameId: string): Promise<GameState | null> {
+  const db = await connectToDatabase();
+  const gameStateCollection = db.collection<GameState>(
+    MONGO_GAMESTATE_COLLECTION,
+  );
+  return gameStateCollection.findOne({
+    id: gameId,
+  });
+}
+
+export async function saveGame(gameState: GameState) {
+  const db = await connectToDatabase();
+  const configurationCollection = db.collection<GameState>(
+    MONGO_GAMESTATE_COLLECTION,
+  );
+  await configurationCollection.updateOne(
+    { id: gameState.id },
+    { $set: gameState },
     { upsert: true },
   );
-}
-
-export async function getVotes(messageTs: string): Promise<Vote[]> {
-  const db = await connectToDatabase();
-  const votesCollection = db.collection<Vote>(MONGO_VOTES_COLLECTION);
-  return votesCollection.find({ messageTs: messageTs }).toArray();
-}
-
-export async function saveSelectedPlaces(
-  selectedRestaurants: Restaurant[],
-  messageTs: string,
-) {
-  const db = await connectToDatabase();
-
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-
-  await Promise.all(
-    selectedRestaurants.map((restaurant) =>
-      selectedPlaceCollection.updateOne(
-        { restaurantId: restaurant.id, messageTs: messageTs },
-        { $set: { lastVisited: new Date() } },
-        { upsert: true },
-      ),
-    ),
-  );
-}
-
-export async function getSelectedPlaces(): Promise<string[]> {
-  const db = await connectToDatabase();
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-
-  // Fetch restaurant IDs visited in the last 14 days
-  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-  const recentlyVisitedIds = await selectedPlaceCollection
-    .find({ lastVisited: { $gte: twoWeeksAgo } })
-    .map((doc) => doc.restaurantId)
-    .toArray();
-
-  return recentlyVisitedIds;
-}
-
-export async function resetSelectedPlaces(): Promise<void> {
-  const db = await connectToDatabase();
-  const selectedPlaceCollection = db.collection<SelectedPlace>(
-    MONGO_SELECTED_PLACES_COLLECTION,
-  );
-  await selectedPlaceCollection.deleteMany({});
 }
