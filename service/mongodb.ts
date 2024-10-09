@@ -23,6 +23,7 @@ export async function saveConfiguration(
   address: string,
   radius: number,
   minRating: number,
+  maxPrice: string,
   channelId: string,
 ) {
   const db = await connectToDatabase();
@@ -31,7 +32,14 @@ export async function saveConfiguration(
   );
   await configurationCollection.updateOne(
     { channelId: channelId },
-    { $set: { address: address, radius: radius, minRating: minRating } },
+    {
+      $set: {
+        address: address,
+        radius: radius,
+        minRating: minRating,
+        maxPrice: maxPrice,
+      },
+    },
     { upsert: true },
   );
 }

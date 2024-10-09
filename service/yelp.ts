@@ -21,6 +21,7 @@ export async function getRestaurant(restaurantId: string): Promise<Restaurant> {
 export async function findRestaurants(
   address: string,
   radius: number,
+  maxPriceDollars: string,
 ): Promise<Restaurant[]> {
   const totalOffsets = Array.from(
     { length: Math.ceil(MAX_RESULTS / PAGE_LIMIT) },
@@ -40,7 +41,7 @@ export async function findRestaurants(
         limit: PAGE_LIMIT,
         offset: offset,
         open_now: true,
-        price: '1,2,3',
+        price: dollarStringToCommaSeparated(maxPriceDollars),
       },
     }),
   );
@@ -53,4 +54,10 @@ export async function findRestaurants(
     (response) => response.data.businesses,
   );
   return restaurants;
+}
+
+function dollarStringToCommaSeparated(dollars: string): string {
+  return Array.from({ length: dollars.length }, (_, i) =>
+    (i + 1).toString(),
+  ).join(',');
 }

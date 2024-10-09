@@ -90,9 +90,9 @@ async function initNewGame(
   spinnerId: string,
   configuration: Configuration,
 ): Promise<GameState> {
-  const { address, radius } = configuration;
+  const { address, radius, maxPrice } = configuration;
 
-  const restaurants = (await findRestaurants(address, radius)).filter(
+  const restaurants = (await findRestaurants(address, radius, maxPrice)).filter(
     (restaurant: { rating: number }) =>
       restaurant.rating >= configuration.minRating,
   );
@@ -132,7 +132,13 @@ async function handleConfigure(
 ): Promise<void> {
   const gameConfig = await getConfiguration(channelId);
 
-  const { address, radius, minRating } = gameConfig || {};
+  const { address, radius, minRating, maxPrice } = gameConfig || {};
+
+  const initialAddress =
+    address || '1600 Pennsylvania Avenue Washington, DC 20500';
+  const initialRadius = radius ? radius.toString() : '1000';
+  const initialMinRating = minRating ? minRating.toString() : '3.0';
+  const initialMaxPrice = maxPrice || '$$$';
 
   const view: ModalView = {
     type: 'modal',
@@ -152,8 +158,7 @@ async function handleConfigure(
         element: {
           type: 'plain_text_input',
           action_id: 'address-action',
-          initial_value:
-            address || '1600 Pennsylvania Avenue Washington, DC 20500',
+          initial_value: initialAddress,
         } as PlainTextInput,
         label: {
           type: 'plain_text',
@@ -167,7 +172,7 @@ async function handleConfigure(
           type: 'number_input',
           is_decimal_allowed: false,
           action_id: 'radius-action',
-          initial_value: radius ? radius.toString() : '1000',
+          initial_value: initialRadius,
         },
         label: {
           type: 'plain_text',
@@ -181,12 +186,60 @@ async function handleConfigure(
           type: 'number_input',
           is_decimal_allowed: true,
           action_id: 'min-rating-action',
-          initial_value: minRating ? minRating.toString() : '3.0',
+          initial_value: initialMinRating,
         },
         label: {
           type: 'plain_text',
           text: 'Minimum rating (0.1-5.0)',
           emoji: true,
+        },
+      },
+      {
+        type: 'input',
+        label: {
+          type: 'plain_text',
+          text: 'Max price range ($ - $$$$)',
+        },
+        element: {
+          type: 'static_select',
+          action_id: 'max-price-action',
+          initial_option: {
+            text: {
+              type: 'plain_text',
+              text: initialMaxPrice,
+            },
+            value: initialMaxPrice,
+          },
+          options: [
+            {
+              text: {
+                type: 'plain_text',
+                text: '$',
+              },
+              value: '$',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '$$',
+              },
+              value: '$$',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '$$$',
+              },
+              value: '$$$',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '$$$$',
+              },
+              value: '$$$$',
+            },
+          ],
         },
       },
     ],

@@ -64,6 +64,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 type ActionType = {
   type: string;
   value: string;
+  selected_option?: { value: string };
 };
 
 type ValuesType = {
@@ -71,6 +72,7 @@ type ValuesType = {
     'address-action'?: ActionType;
     'radius-action'?: ActionType;
     'min-rating-action'?: ActionType;
+    'max-price-action'?: ActionType;
   };
 };
 
@@ -81,6 +83,7 @@ function extractConfig(values: ValuesType) {
       'address-action'?: ActionType;
       'radius-action'?: ActionType;
       'min-rating-action'?: ActionType;
+      'max-price-action'?: ActionType;
     },
   ][];
 
@@ -89,12 +92,15 @@ function extractConfig(values: ValuesType) {
   const minRatingEntry = entries.find(
     ([, value]) => value['min-rating-action'],
   );
+  const maxPriceEntry = entries.find(([, value]) => value['max-price-action']);
 
   const address = addressEntry?.[1]['address-action']?.value;
   const radius = radiusEntry?.[1]['radius-action']?.value;
   const minRating = minRatingEntry?.[1]['min-rating-action']?.value;
+  const maxPrice =
+    maxPriceEntry?.[1]['max-price-action']?.selected_option?.value;
 
-  return { address, radius, minRating };
+  return { address, radius, minRating, maxPrice };
 }
 
 async function handleViewSubmission(body: any, payload: any) {
@@ -102,19 +108,20 @@ async function handleViewSubmission(body: any, payload: any) {
   const { state, private_metadata: channelId } = view;
   const { values } = state;
 
-  const { address, radius, minRating } = extractConfig(values);
-  if (address && radius && minRating) {
+  const { address, radius, minRating, maxPrice } = extractConfig(values);
+  if (address && radius && minRating && maxPrice) {
     await saveConfiguration(
       address,
       parseInt(radius),
       parseFloat(minRating),
+      maxPrice,
       channelId,
     );
   }
 
   await slackClient.chat.postMessage({
     channel: channelId,
-    text: `Now using location ${address} with search radius of ${radius} meters.`,
+    text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,
     unfurl_links: false,
     unfurl_media: false,
   });

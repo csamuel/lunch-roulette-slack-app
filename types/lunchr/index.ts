@@ -17,6 +17,7 @@ interface Configuration {
   radius: number;
   channelId: string;
   minRating: number;
+  maxPrice: string;
 }
 
 interface Spinner {
