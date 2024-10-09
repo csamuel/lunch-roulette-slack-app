@@ -1,6 +1,0 @@
-{
-  "routes": [
-    { "src": "/api/actions", "dest": "/api/actions.ts" },
-    { "src": "/api/lunchr", "dest": "/api/lunchr.ts" }
-  ]
-}
