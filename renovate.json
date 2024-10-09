@@ -1,5 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":rebaseStalePrs"],
+  "extends": [
+    "config:recommended",
+    ":rebaseStalePrs",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)"
+  ],
   "labels": ["renovate"]
 }
