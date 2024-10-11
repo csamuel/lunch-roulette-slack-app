@@ -1,5 +1,4 @@
 import {
-  AnyBlock,
   DividerBlock,
   HeaderBlock,
   SectionBlock,
@@ -9,8 +8,14 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { getGame, saveConfiguration, saveGame } from '../service/mongodb';
 import { getRestaurant } from '../service/yelp';
 
-import { EventType } from '../types/slack';
-import { Action, Vote, Message, GameState } from '../types/lunchr';
+import {
+  ActionType,
+  BasePayload,
+  EventType,
+  ValuesType,
+  ViewSubmissionPayload,
+} from '../types/lunchr';
+import { Vote, Message, GameState, ActionPayload } from '../types/lunchr';
 import { Restaurant } from '../types/yelp';
 import { getRandomElements } from '../lib/utils';
 import { toRestaurantBlock, toSlackMessageBlocks } from '../lib/blocks';
@@ -31,10 +36,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const { body } = req;
     const payload = JSON.parse(body.payload);
 
-    const { token, type: eventType } = payload as {
-      token: string;
-      type: EventType;
-    };
+    const { token, type: eventType } = payload as BasePayload;
 
     // validate slack token
     if (token !== SLACK_VERIFICATION_TOKEN) {
@@ -48,7 +50,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         res.status(200).send('');
         return;
       case EventType.VIEW_SUBMISSION:
-        await handleViewSubmission(body, payload);
+        await handleViewSubmission(payload);
         res.status(200).send('');
         return;
       default:
@@ -59,21 +61,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     console.error('Error:', error);
     res.status(500).send('Internal Server Error');
   }
-};
-
-type ActionType = {
-  type: string;
-  value: string;
-  selected_option?: { value: string };
-};
-
-type ValuesType = {
-  [key: string]: {
-    'address-action'?: ActionType;
-    'radius-action'?: ActionType;
-    'min-rating-action'?: ActionType;
-    'max-price-action'?: ActionType;
-  };
 };
 
 function extractConfig(values: ValuesType) {
@@ -103,13 +90,13 @@ function extractConfig(values: ValuesType) {
   return { address, radius, minRating, maxPrice };
 }
 
-async function handleViewSubmission(body: any, payload: any) {
+async function handleViewSubmission(payload: ViewSubmissionPayload) {
   const { view } = payload;
   const { state, private_metadata: channelId } = view;
   const { values } = state;
 
   const { address, radius, minRating, maxPrice } = extractConfig(values);
-  if (address && radius && minRating && maxPrice) {
+  if (address && radius && minRating && maxPrice && channelId) {
     await saveConfiguration(
       address,
       parseInt(radius),
@@ -117,31 +104,32 @@ async function handleViewSubmission(body: any, payload: any) {
       maxPrice,
       channelId,
     );
+    await slackClient.chat.postMessage({
+      channel: channelId,
+      text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,
+      unfurl_links: false,
+      unfurl_media: false,
+    });
   }
-
-  await slackClient.chat.postMessage({
-    channel: channelId,
-    text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,
-    unfurl_links: false,
-    unfurl_media: false,
-  });
 }
 
-async function handleBlockActions(payload: any) {
-  const action = payload.actions[0] as Action;
-  const userId = payload.user.id;
-  const restaurantId = action.value;
-  const channelId = payload.channel.id;
+async function handleBlockActions(payload: ActionPayload) {
+  const {
+    message,
+    user: { id: userId },
+    actions: [{ action_id: actionId, value: restaurantId }],
+    channel: { id: channelId },
+  } = payload;
 
-  switch (action.action_id) {
+  switch (actionId) {
     case 'vote':
-      await handleVote(userId, payload.message, restaurantId, channelId);
+      await handleVote(userId, message, restaurantId, channelId);
       return;
     case 'finalize':
-      await finalizeVote(userId, payload.message, channelId);
+      await handleFinalize(userId, message, channelId);
       return;
     case 'respin':
-      await respin(userId, channelId, payload.message);
+      await handleRespin(userId, channelId, message);
       return;
     default:
       return;
@@ -169,19 +157,32 @@ function getTopVotedRestaurantId(votes: Vote[]): {
   }
 }
 
-async function finalizeVote(
+async function handleFinalize(
   userId: string,
   message: Message,
   channelId: string,
 ): Promise<void> {
   const { ts: gameId } = message;
-
   const game = await getGame(gameId);
+  const { status, votes = [], spinner } = game || {};
+  const { id: spinnerId, displayName } = spinner || {};
 
-  const { status, votes } = game || {};
+  if (spinnerId !== userId) {
+    await slackClient.chat.postEphemeral({
+      channel: channelId,
+      user: userId,
+      text: `Only the game owner (${displayName}) can finalize the voting!`,
+    });
+    return;
+  }
 
   // No-op if there are no votes or if game already finalized
-  if (!votes || status === 'finalized') {
+  if (votes.length === 0 || status === 'finalized') {
+    await slackClient.chat.postEphemeral({
+      channel: channelId,
+      user: userId,
+      text: `Slow down turbo, nobody has voted yet!`,
+    });
     return;
   }
 
@@ -287,21 +288,33 @@ async function handleVote(
   }
 }
 
-async function respin(userId: string, channelId: string, message: Message) {
-  const { ts: messageTs } = message;
-  await handleRespin(userId, channelId, messageTs);
-}
-
 export async function handleRespin(
   userId: string,
   channelId: string,
-  messageTs: string,
+  message: Message,
 ): Promise<void> {
+  const { ts: messageTs } = message;
   const game = await getGame(messageTs);
 
-  const { possibleOptions, spins = 1 } = game || {};
+  const { spinner, possibleOptions, spins = 1 } = game || {};
+
+  const { id: spinnerId, displayName } = spinner || {};
+
+  if (spinnerId !== userId) {
+    await slackClient.chat.postEphemeral({
+      channel: channelId,
+      user: userId,
+      text: `Only the game owner (${displayName}) can respin the wheel.`,
+    });
+    return;
+  }
 
   if (!possibleOptions) {
+    await slackClient.chat.postEphemeral({
+      channel: channelId,
+      user: userId,
+      text: 'Cannot respin as there are no more remaining options.',
+    });
     return;
   }
 

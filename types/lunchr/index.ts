@@ -1,4 +1,4 @@
-import { AnyBlock } from '@slack/web-api';
+import { AnyBlock, ModalView } from '@slack/web-api';
 import { Restaurant } from '../yelp';
 
 interface GameState {
@@ -50,6 +50,46 @@ interface Action {
   action_ts: string;
 }
 
+interface BasePayload {
+  token: string;
+  type: EventType;
+}
+
+interface ActionPayload extends BasePayload {
+  actions: Action[];
+  user: { id: string };
+  channel: { id: string };
+  message: Message;
+}
+
+type ActionType = {
+  type: string;
+  value: string;
+  selected_option?: { value: string };
+};
+
+type ValuesType = {
+  [key: string]: {
+    'address-action'?: ActionType;
+    'radius-action'?: ActionType;
+    'min-rating-action'?: ActionType;
+    'max-price-action'?: ActionType;
+  };
+};
+
+interface ModalViewWithState extends ModalView {
+  state: { values: ValuesType };
+}
+
+interface ViewSubmissionPayload extends BasePayload {
+  view: ModalViewWithState;
+}
+
+enum EventType {
+  VIEW_SUBMISSION = 'view_submission',
+  BLOCK_ACTIONS = 'block_actions',
+}
+
 interface Message {
   ts: string;
   blocks: AnyBlock[];
@@ -62,11 +102,18 @@ interface GameConfig {
 
 export {
   Action,
-  SelectedPlace,
+  ActionPayload,
+  ActionType,
+  BasePayload,
   Configuration,
-  Vote,
-  Message,
+  EventType,
   GameConfig,
   GameState,
+  Message,
+  ModalViewWithState,
+  SelectedPlace,
   Spinner,
+  ValuesType,
+  ViewSubmissionPayload,
+  Vote,
 };
