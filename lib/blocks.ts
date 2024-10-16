@@ -1,12 +1,13 @@
 import {
   ActionsBlock,
   AnyBlock,
+  Button,
   ContextBlock,
   DividerBlock,
   HeaderBlock,
   SectionBlock,
 } from '@slack/web-api';
-import { GameState } from '../types/lunchr';
+import { GameState, Vote } from '../types/lunchr';
 
 import { Restaurant } from '../types/yelp';
 
@@ -81,48 +82,37 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
     }
   });
 
-  blocks.push(
-    {
-      type: 'divider',
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*Spins: ${game.spins}*`,
-      },
-    } as SectionBlock,
-    {
-      type: 'divider',
-    },
-  );
-
   if (isVotingEnabled) {
-    blocks.push({
-      block_id: 'action_block',
-      type: 'actions',
-      elements: [
-        {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            emoji: true,
-            text: 'Spin Again',
+    blocks.push(
+      {
+        type: 'divider',
+      },
+      {
+        block_id: 'action_block',
+        type: 'actions',
+        elements: [
+          {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              emoji: true,
+              text: 'Spin Again',
+            },
+            action_id: 'respin',
           },
-          action_id: 'respin',
-        },
-        {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            emoji: true,
-            text: 'Finalize!',
+          {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              emoji: true,
+              text: 'Finalize!',
+            },
+            style: 'danger',
+            action_id: 'finalize',
           },
-          style: 'danger',
-          action_id: 'finalize',
-        },
-      ],
-    } as ActionsBlock);
+        ],
+      } as ActionsBlock,
+    );
   }
 
   return blocks;
@@ -147,9 +137,7 @@ export function toRestaurantBlock(
     attributes: { menu_url = '' } = {},
   } = restaurant as Restaurant;
 
-  const distanceInMiles = distance
-    ? (distance * MILES_PER_METER).toFixed(2)
-    : null;
+  const distanceInMiles = (distance * MILES_PER_METER).toFixed(2);
   const categoryNames = categories.map((c) => c.title).join(', ');
   const menuDisplay = menu_url ? `*<${menu_url}|View menu>*` : '';
 
@@ -191,7 +179,7 @@ export function toRestaurantBlock(
         {
           type: 'plain_text',
           emoji: true,
-          text: `📍 ${display_address.join(', ')}${distanceInMiles ? ` (${distanceInMiles} miles away)` : ''}`,
+          text: `📍 ${display_address.join(', ')} (${distanceInMiles} miles away)`,
         },
       ],
     } as ContextBlock,

@@ -29,13 +29,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     trigger_id: triggerId,
   } = body;
 
+  const subcommand = text?.trim() || '';
+
   // validate slack tocken
   if (token !== SLACK_VERIFICATION_TOKEN) {
     res.status(401).send('Unauthorized');
     return;
   }
-
-  const subcommand = text?.trim() || '';
 
   switch (subcommand) {
     case 'configure':
@@ -97,6 +97,7 @@ async function initNewGame(
       restaurant.rating >= configuration.minRating,
   );
 
+  // Randomly select up to 3 restaurants
   const selectedRestaurants = getRandomElements(restaurants, 3);
 
   const spinner = await slackClient.users.profile.get({
@@ -209,13 +210,36 @@ async function handleConfigure(
             },
             value: initialMaxPrice,
           },
-          options: ['$', '$$', '$$$', '$$$$'].map((value) => ({
-            text: {
-              type: 'plain_text',
-              text: value,
+          options: [
+            {
+              text: {
+                type: 'plain_text',
+                text: '$',
+              },
+              value: '$',
             },
-            value: value,
-          })),
+            {
+              text: {
+                type: 'plain_text',
+                text: '$$',
+              },
+              value: '$$',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '$$$',
+              },
+              value: '$$$',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '$$$$',
+              },
+              value: '$$$$',
+            },
+          ],
         },
       },
     ],
