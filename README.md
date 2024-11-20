@@ -1,21 +1,7 @@
 # Lunch Roulette
 ![lunchr-logo](https://github.com/user-attachments/assets/f2cf34ac-6f3f-4e5b-a20d-0dac11a73603) 
 
-**Lunch Roulette** is a Slack app that randomly selects 3 nearby restaurants for lunch.
-
----
-
-
-## Features
-
-- **Random Restaurant Selection**: Picks a lunch spot within walking distance suitable for a 1-hour lunch.
-- **No Recent Repeats**: Avoids suggesting places visited in the last two weeks.
-- **Slack Integration**: Accessible via the `/lunchr` slash command.
-- **Yelp Integration**: Fetches restaurant data from the Yelp API.
-- **Cloud Deployment**: Deployed on Vercel with serverless functions.
-- **Persistent Storage**: Uses MongoDB Atlas for data storage.
-
----
+**Lunch Roulette** is a Slack app that randomly selects 3 nearby restaurants for lunch and allows channel members to vote.
 
 ## Quick Start
 
@@ -23,8 +9,8 @@
 
 - **Node.js** (v20+)
 - **pnpm**
-- **Vercel CLI**
-- **Slack Workspace**
+- **Vercel account**
+- **Slack Workspace** (and permission to install apps)
 - **Yelp API Key**
 - **MongoDB Atlas Account**
 
@@ -102,7 +88,9 @@
 
 ## Usage
 
-In Slack, type `/lunchr` to get a lunch suggestion.
+1. Add the Lunch Roulette app to a slack channel.
+2. In Slack, type `/lunchr configure` to configure the location, distance, cost, etc.
+3. Type `/lunchr` to start a new lunch roulette.
 
 
 ## License
