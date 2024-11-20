@@ -1,7 +1,7 @@
 # Lunch Roulette
 ![lunchr-logo](https://github.com/user-attachments/assets/f2cf34ac-6f3f-4e5b-a20d-0dac11a73603) 
 
-**Lunch Roulette** is a Slack app that randomly selects 3 nearby restaurants for lunch and allows channel members to vote.
+**Lunch Roulette** is a Slack app that randomly selects 3 nearby restaurants for lunch and allows channel members to vote for their preferred option. A winner is declared when the user that initiated the lunch roulette chooses to "finalize" (end) the game.
 
 ## Quick Start
 
