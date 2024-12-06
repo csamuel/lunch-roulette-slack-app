@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@slack/web-api':
         specifier: ^7.4.0
-        version: 7.7.0
+        version: 7.8.0
       '@vercel/node':
         specifier: ^3.2.14
         version: 3.2.26
@@ -82,8 +82,8 @@ packages:
     resolution: {integrity: sha512-fuXtbiP5GWIn8Fz+LWoOMVf/Jxm+aajZYkhi6CuEm4SxymFM+eUWzbO9qXT+L0iCkL5+KGYMCSGxo686H19S1g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/object-schema@2.1.4':
-    resolution: {integrity: sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==}
+  '@eslint/object-schema@2.1.5':
+    resolution: {integrity: sha512-o0bhxnL89h5Bae5T318nFoFzGy+YE5i/gGkoPAgkmTVdRKTiv3p8JHevPiPaMwoloKfEiiaHlawCqaZMqRm+XQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/plugin-kit@0.1.0':
@@ -143,8 +143,8 @@ packages:
     resolution: {integrity: sha512-n0EGm7ENQRxlXbgKSrQZL69grzg1gHLAVd+GlRVQJ1NSORo0FrApR7wql/gaKdu2n4TO83Sq/AmeUOqD60aXUA==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
-  '@slack/web-api@7.7.0':
-    resolution: {integrity: sha512-DtRyjgQi0mObA2uC6H8nL2OhAISKDhvtOXgRjGRBnBhiaWb6df5vPmKHsOHjpweYALBMHtiqE5ajZFkDW/ag8Q==}
+  '@slack/web-api@7.8.0':
+    resolution: {integrity: sha512-d4SdG+6UmGdzWw38a4sN3lF/nTEzsDxhzU13wm10ejOpPehtmRoqBKnPztQUfFiWbNvSb4czkWYJD4kt+5+Fuw==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
   '@ts-morph/common@0.11.1':
@@ -268,6 +268,9 @@ packages:
   axios@1.7.7:
     resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
 
+  axios@1.7.9:
+    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
+
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
@@ -337,6 +340,15 @@ packages:
 
   debug@4.3.7:
     resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.4.0:
+    resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -1182,8 +1194,8 @@ snapshots:
 
   '@eslint/config-array@0.18.0':
     dependencies:
-      '@eslint/object-schema': 2.1.4
-      debug: 4.3.7
+      '@eslint/object-schema': 2.1.5
+      debug: 4.4.0
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -1191,7 +1203,7 @@ snapshots:
   '@eslint/eslintrc@3.2.0':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.7
+      debug: 4.4.0
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.2
@@ -1204,7 +1216,7 @@ snapshots:
 
   '@eslint/js@9.10.0': {}
 
-  '@eslint/object-schema@2.1.4': {}
+  '@eslint/object-schema@2.1.5': {}
 
   '@eslint/plugin-kit@0.1.0':
     dependencies:
@@ -1267,13 +1279,13 @@ snapshots:
 
   '@slack/types@2.14.0': {}
 
-  '@slack/web-api@7.7.0':
+  '@slack/web-api@7.8.0':
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.14.0
       '@types/node': 22.9.1
       '@types/retry': 0.12.0
-      axios: 1.7.7
+      axios: 1.7.9
       eventemitter3: 5.0.1
       form-data: 4.0.1
       is-electron: 2.2.2
@@ -1440,6 +1452,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
+  axios@1.7.9:
+    dependencies:
+      follow-redirects: 1.15.9
+      form-data: 4.0.1
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
   balanced-match@1.0.2: {}
 
   bindings@1.5.0:
@@ -1497,6 +1517,10 @@ snapshots:
       which: 2.0.2
 
   debug@4.3.7:
+    dependencies:
+      ms: 2.1.3
+
+  debug@4.4.0:
     dependencies:
       ms: 2.1.3
 
@@ -1638,7 +1662,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.3.7
+      debug: 4.4.0
       escape-string-regexp: 4.0.0
       eslint-scope: 8.2.0
       eslint-visitor-keys: 4.2.0
