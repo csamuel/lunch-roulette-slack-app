@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@slack/web-api':
         specifier: ^7.4.0
-        version: 7.7.0
+        version: 7.8.0
       '@vercel/node':
         specifier: ^3.2.14
         version: 3.2.29
@@ -143,8 +143,8 @@ packages:
     resolution: {integrity: sha512-n0EGm7ENQRxlXbgKSrQZL69grzg1gHLAVd+GlRVQJ1NSORo0FrApR7wql/gaKdu2n4TO83Sq/AmeUOqD60aXUA==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
-  '@slack/web-api@7.7.0':
-    resolution: {integrity: sha512-DtRyjgQi0mObA2uC6H8nL2OhAISKDhvtOXgRjGRBnBhiaWb6df5vPmKHsOHjpweYALBMHtiqE5ajZFkDW/ag8Q==}
+  '@slack/web-api@7.8.0':
+    resolution: {integrity: sha512-d4SdG+6UmGdzWw38a4sN3lF/nTEzsDxhzU13wm10ejOpPehtmRoqBKnPztQUfFiWbNvSb4czkWYJD4kt+5+Fuw==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
   '@ts-morph/common@0.11.1':
@@ -1263,7 +1263,7 @@ snapshots:
 
   '@slack/types@2.14.0': {}
 
-  '@slack/web-api@7.7.0':
+  '@slack/web-api@7.8.0':
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.14.0
