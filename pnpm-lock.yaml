@@ -9,29 +9,29 @@ importers:
   .:
     dependencies:
       '@slack/web-api':
-        specifier: ^7.4.0
+        specifier: 7.7.0
         version: 7.7.0
       '@vercel/node':
-        specifier: ^3.2.14
+        specifier: 3.2.29
         version: 3.2.29
       axios:
-        specifier: ^1.5.0
+        specifier: 1.7.9
         version: 1.7.9
       mongodb:
-        specifier: ^6.0.0
+        specifier: 6.11.0
         version: 6.11.0(socks@2.8.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 22.9.2
         version: 22.9.2
       eslint-config-prettier:
-        specifier: ^9.1.0
+        specifier: 9.1.0
         version: 9.1.0(eslint@9.10.0)
       prettier:
-        specifier: ^3.3.3
+        specifier: 3.4.2
         version: 3.4.2
       typescript:
-        specifier: ^5.2.2
+        specifier: 5.7.2
         version: 5.7.2
 
 packages:
