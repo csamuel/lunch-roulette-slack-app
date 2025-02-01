@@ -14,7 +14,7 @@
     "@slack/web-api": "7.7.0",
     "@vercel/node": "5.0.5",
     "axios": "1.7.9",
-    "mongodb": "6.11.0"
+    "mongodb": "6.13.0"
   },
   "devDependencies": {
     "@types/node": "22.9.2",
