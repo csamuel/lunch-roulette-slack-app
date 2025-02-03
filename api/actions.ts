@@ -19,6 +19,7 @@ import { Vote, Message, GameState, ActionPayload } from '../types/lunchr';
 import { Restaurant } from '../types/yelp';
 import { getRandomElements } from '../lib/utils';
 import { toRestaurantBlock, toSlackMessageBlocks } from '../lib/blocks';
+import { RESPIN_ID } from '../lib/constants';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
 const SLACK_VERIFICATION_TOKEN =
@@ -146,7 +147,8 @@ function getTopVotedRestaurantId(votes: Vote[]): {
     const [restaurantId, voteCount] = Object.entries(
       votes.reduce(
         (acc, { restaurantId }) => {
-          acc[restaurantId] = (acc[restaurantId] || 0) + 1;
+          acc[restaurantId || RESPIN_ID] =
+            (acc[restaurantId || RESPIN_ID] || 0) + 1;
           return acc;
         },
         {} as { [key: string]: number },
@@ -188,6 +190,16 @@ async function handleFinalize(
 
   const { restaurantId: topVotedRestaurantId, votes: winnerVotes } =
     getTopVotedRestaurantId(votes);
+
+  if (topVotedRestaurantId === RESPIN_ID) {
+    await slackClient.chat.postEphemeral({
+      channel: channelId,
+      user: userId,
+      text: `Spin again has the most votes, cannot finalize game.`,
+    });
+    return;
+  }
+
   const winner = (await getRestaurant(topVotedRestaurantId)) as Restaurant;
 
   const updatedGame = {
