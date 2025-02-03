@@ -330,6 +330,7 @@ export async function handleRespin(
   const updatedGame = {
     ...game,
     spins: spins + 1,
+    votes: [],
     currentOptions: newSelectedRestaurants,
     possibleOptions: remainingOptions,
   } as GameState;
