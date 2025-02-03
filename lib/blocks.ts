@@ -9,6 +9,7 @@ import {
 import { GameState } from '../types/lunchr';
 
 import { Restaurant } from '../types/yelp';
+import { RESPIN_ID } from './constants';
 
 const MILES_PER_METER = 0.000621371;
 
@@ -27,7 +28,7 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
   // Group votes by restaurant
   const votesByRestaurant = votes.reduce(
     (acc, vote) => {
-      const { restaurantId, userId } = vote;
+      const { userId, restaurantId = RESPIN_ID } = vote;
       return {
         ...acc,
         [restaurantId]: [...(acc[restaurantId] || []), userId],
@@ -39,7 +40,8 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
   // Count votes per restaurant
   const voteCounts = votes.reduce(
     (acc, vote) => {
-      acc[vote.restaurantId] = (acc[vote.restaurantId] || 0) + 1;
+      acc[vote.restaurantId || RESPIN_ID] =
+        (acc[vote.restaurantId || RESPIN_ID] || 0) + 1;
       return acc;
     },
     {} as { [key: string]: number },
@@ -81,23 +83,8 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
     }
   });
 
-  blocks.push(
-    {
-      type: 'divider',
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*Spins: ${game.spins}*`,
-      },
-    } as SectionBlock,
-    {
-      type: 'divider',
-    },
-  );
-
   if (isVotingEnabled) {
+    blocks.push(...toRespinBlocks(votesByRestaurant));
     blocks.push({
       block_id: 'action_block',
       type: 'actions',
@@ -123,9 +110,78 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
         },
       ],
     } as ActionsBlock);
+
+    blocks.push(
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*Spins: ${game.spins}*`,
+        },
+      } as SectionBlock,
+      {
+        type: 'divider',
+      },
+    );
   }
 
   return blocks;
+}
+
+function toRespinBlocks(votesByRestaurant: {
+  [x: string]: string[];
+}): AnyBlock[] {
+  // const respinVoters = votesByRestaurant[RESPIN_ID] || [];
+  const respinVoterNames = (votesByRestaurant[RESPIN_ID] || []).map((voter) => {
+    return `<@${voter}>`;
+  });
+
+  const respinVoteText = `\n*Votes: ${respinVoterNames.length}*\n${respinVoterNames.length > 0 ? respinVoterNames.join('\n') : ''}`;
+
+  const respinBlocks = [
+    {
+      type: 'divider',
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `*↪️ Spin again! ↪️*`,
+      },
+      accessory: {
+        type: 'image',
+        image_url:
+          'https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color-round-2/254000/117-1024.png',
+        alt_text: 'Spin again',
+      },
+    } as SectionBlock,
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `${respinVoteText}`,
+      },
+      accessory: {
+        type: 'button',
+        text: {
+          type: 'plain_text',
+          text: 'Select',
+          emoji: true,
+        },
+        style: 'primary',
+        value: RESPIN_ID,
+        action_id: 'vote',
+      },
+    } as SectionBlock,
+    {
+      type: 'divider',
+    },
+  ];
+
+  return respinBlocks;
 }
 
 export function toRestaurantBlock(
