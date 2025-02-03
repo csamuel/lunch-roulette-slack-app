@@ -1,14 +1,8 @@
-import {
-  ActionsBlock,
-  AnyBlock,
-  ContextBlock,
-  DividerBlock,
-  HeaderBlock,
-  SectionBlock,
-} from '@slack/web-api';
-import { GameState } from '../types/lunchr';
+import { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/web-api';
 
+import { GameState } from '../types/lunchr';
 import { Restaurant } from '../types/yelp';
+
 import { RESPIN_ID } from './constants';
 
 const MILES_PER_METER = 0.000621371;
@@ -40,8 +34,7 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
   // Count votes per restaurant
   const voteCounts = votes.reduce(
     (acc, vote) => {
-      acc[vote.restaurantId || RESPIN_ID] =
-        (acc[vote.restaurantId || RESPIN_ID] || 0) + 1;
+      acc[vote.restaurantId || RESPIN_ID] = (acc[vote.restaurantId || RESPIN_ID] || 0) + 1;
       return acc;
     },
     {} as { [key: string]: number },
@@ -131,9 +124,7 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
   return blocks;
 }
 
-function toRespinBlocks(votesByRestaurant: {
-  [x: string]: string[];
-}): AnyBlock[] {
+function toRespinBlocks(votesByRestaurant: { [x: string]: string[] }): AnyBlock[] {
   // const respinVoters = votesByRestaurant[RESPIN_ID] || [];
   const respinVoterNames = (votesByRestaurant[RESPIN_ID] || []).map((voter) => {
     return `<@${voter}>`;
@@ -153,8 +144,7 @@ function toRespinBlocks(votesByRestaurant: {
       },
       accessory: {
         type: 'image',
-        image_url:
-          'https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color-round-2/254000/117-1024.png',
+        image_url: 'https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color-round-2/254000/117-1024.png',
         alt_text: 'Spin again',
       },
     } as SectionBlock,
@@ -203,9 +193,7 @@ export function toRestaurantBlock(
     attributes: { menu_url = '' } = {},
   } = restaurant as Restaurant;
 
-  const distanceInMiles = distance
-    ? (distance * MILES_PER_METER).toFixed(2)
-    : null;
+  const distanceInMiles = distance ? (distance * MILES_PER_METER).toFixed(2) : null;
   const categoryNames = categories.map((c) => c.title).join(', ');
   const menuDisplay = menu_url ? `*<${menu_url}|View menu>*` : '';
 
@@ -226,8 +214,7 @@ export function toRestaurantBlock(
       },
       accessory: {
         type: 'image',
-        image_url:
-          image_url || 'https://placehold.co/600x600?text=No%20Photo%20%3A%28',
+        image_url: image_url || 'https://placehold.co/600x600?text=No%20Photo%20%3A%28',
         alt_text: name,
       },
     } as SectionBlock,

@@ -1,4 +1,5 @@
 import { AnyBlock, ModalView } from '@slack/web-api';
+
 import { Restaurant } from '../yelp';
 
 interface GameState {
