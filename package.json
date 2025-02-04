@@ -6,7 +6,11 @@
   "scripts": {
     "build": "tsc",
     "start": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "format:check": "prettier ./api --check",
+    "format:write": "prettier ./api --write",
+    "lint:check": "eslint ./api",
+    "lint:fix": "eslint ./api --fix"
   },
   "author": "Chris Samuel",
   "license": "MIT",
@@ -17,10 +21,16 @@
     "mongodb": "6.13.0"
   },
   "devDependencies": {
+    "@types/eslint-config-prettier": "6.11.3",
     "@types/node": "22.13.0",
+    "eslint": "9.19.0",
     "eslint-config-prettier": "10.0.1",
+    "eslint-import-resolver-typescript": "3.7.0",
+    "eslint-plugin-import": "2.31.0",
+    "jiti": "2.4.2",
     "prettier": "3.4.2",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.23.0"
   },
   "packageManager": "pnpm@9.15.5+sha512.845196026aab1cc3f098a0474b64dfbab2afe7a1b4e91dd86895d8e4aa32a7a6d03049e2d0ad770bbe4de023a7122fb68c1a1d6e0d033c7076085f9d5d4800d4"
 }

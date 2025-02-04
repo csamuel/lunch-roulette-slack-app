@@ -1,6 +1,6 @@
 import { Db, MongoClient } from 'mongodb';
-import { Configuration, GameState, SelectedPlace, Vote } from '../types/lunchr';
-import { Restaurant } from '../types/yelp';
+
+import { Configuration, GameState } from '../types/lunchr';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
 const MONGO_DB_NAME = 'lunchroulette';
@@ -27,9 +27,7 @@ export async function saveConfiguration(
   channelId: string,
 ) {
   const db = await connectToDatabase();
-  const configurationCollection = db.collection<Configuration>(
-    MONGO_CONFIGURATION_COLLECTION,
-  );
+  const configurationCollection = db.collection<Configuration>(MONGO_CONFIGURATION_COLLECTION);
   await configurationCollection.updateOne(
     { channelId: channelId },
     {
@@ -44,25 +42,17 @@ export async function saveConfiguration(
   );
 }
 
-export async function getConfiguration(
-  channelId: string,
-): Promise<Configuration | null> {
+export async function getConfiguration(channelId: string): Promise<Configuration | null> {
   const db = await connectToDatabase();
-  const configurationCollection = db.collection<Configuration>(
-    MONGO_CONFIGURATION_COLLECTION,
-  );
+  const configurationCollection = db.collection<Configuration>(MONGO_CONFIGURATION_COLLECTION);
   return configurationCollection.findOne({
     channelId: channelId,
   });
 }
 
-export async function findActiveGame(
-  channelId: string,
-): Promise<GameState | null> {
+export async function findActiveGame(channelId: string): Promise<GameState | null> {
   const db = await connectToDatabase();
-  const gameStateCollection = db.collection<GameState>(
-    MONGO_GAMESTATE_COLLECTION,
-  );
+  const gameStateCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
   return gameStateCollection.findOne({
     'configuration.channelId': channelId,
     status: 'voting',
@@ -71,9 +61,7 @@ export async function findActiveGame(
 
 export async function getGame(gameId: string): Promise<GameState | null> {
   const db = await connectToDatabase();
-  const gameStateCollection = db.collection<GameState>(
-    MONGO_GAMESTATE_COLLECTION,
-  );
+  const gameStateCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
   return gameStateCollection.findOne({
     id: gameId,
   });
@@ -81,12 +69,6 @@ export async function getGame(gameId: string): Promise<GameState | null> {
 
 export async function saveGame(gameState: GameState) {
   const db = await connectToDatabase();
-  const configurationCollection = db.collection<GameState>(
-    MONGO_GAMESTATE_COLLECTION,
-  );
-  await configurationCollection.updateOne(
-    { id: gameState.id },
-    { $set: gameState },
-    { upsert: true },
-  );
+  const configurationCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
+  await configurationCollection.updateOne({ id: gameState.id }, { $set: gameState }, { upsert: true });
 }

@@ -10,5 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es6"],
     "types": ["node"]
-  }
+  },
+  "include": ["api/**/*.ts"]
 }

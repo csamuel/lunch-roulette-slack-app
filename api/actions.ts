@@ -1,29 +1,17 @@
-import {
-  DividerBlock,
-  HeaderBlock,
-  SectionBlock,
-  WebClient,
-} from '@slack/web-api';
+import { DividerBlock, HeaderBlock, SectionBlock, WebClient } from '@slack/web-api';
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getGame, saveConfiguration, saveGame } from '../service/mongodb';
-import { getRestaurant } from '../service/yelp';
 
-import {
-  ActionType,
-  BasePayload,
-  EventType,
-  ValuesType,
-  ViewSubmissionPayload,
-} from '../types/lunchr';
-import { Vote, Message, GameState, ActionPayload } from '../types/lunchr';
-import { Restaurant } from '../types/yelp';
-import { getRandomElements } from '../lib/utils';
-import { toRestaurantBlock, toSlackMessageBlocks } from '../lib/blocks';
-import { RESPIN_ID } from '../lib/constants';
+import { toRestaurantBlock, toSlackMessageBlocks } from './lib/blocks';
+import { RESPIN_ID } from './lib/constants';
+import { getRandomElements } from './lib/utils';
+import { getGame, saveConfiguration, saveGame } from './service/mongodb';
+import { getRestaurant } from './service/yelp';
+import { ActionType, BasePayload, EventType, ValuesType, ViewSubmissionPayload } from './types/lunchr';
+import { ActionPayload, GameState, Message, Vote } from './types/lunchr';
+import { Restaurant } from './types/yelp';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
-const SLACK_VERIFICATION_TOKEN =
-  process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
+const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -77,16 +65,13 @@ function extractConfig(values: ValuesType) {
 
   const addressEntry = entries.find(([, value]) => value['address-action']);
   const radiusEntry = entries.find(([, value]) => value['radius-action']);
-  const minRatingEntry = entries.find(
-    ([, value]) => value['min-rating-action'],
-  );
+  const minRatingEntry = entries.find(([, value]) => value['min-rating-action']);
   const maxPriceEntry = entries.find(([, value]) => value['max-price-action']);
 
   const address = addressEntry?.[1]['address-action']?.value;
   const radius = radiusEntry?.[1]['radius-action']?.value;
   const minRating = minRatingEntry?.[1]['min-rating-action']?.value;
-  const maxPrice =
-    maxPriceEntry?.[1]['max-price-action']?.selected_option?.value;
+  const maxPrice = maxPriceEntry?.[1]['max-price-action']?.selected_option?.value;
 
   return { address, radius, minRating, maxPrice };
 }
@@ -98,13 +83,7 @@ async function handleViewSubmission(payload: ViewSubmissionPayload) {
 
   const { address, radius, minRating, maxPrice } = extractConfig(values);
   if (address && radius && minRating && maxPrice && channelId) {
-    await saveConfiguration(
-      address,
-      parseInt(radius),
-      parseFloat(minRating),
-      maxPrice,
-      channelId,
-    );
+    await saveConfiguration(address, parseInt(radius), parseFloat(minRating), maxPrice, channelId);
     await slackClient.chat.postMessage({
       channel: channelId,
       text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,
@@ -147,8 +126,7 @@ function getTopVotedRestaurantId(votes: Vote[]): {
     const [restaurantId, voteCount] = Object.entries(
       votes.reduce(
         (acc, { restaurantId }) => {
-          acc[restaurantId || RESPIN_ID] =
-            (acc[restaurantId || RESPIN_ID] || 0) + 1;
+          acc[restaurantId || RESPIN_ID] = (acc[restaurantId || RESPIN_ID] || 0) + 1;
           return acc;
         },
         {} as { [key: string]: number },
@@ -159,11 +137,7 @@ function getTopVotedRestaurantId(votes: Vote[]): {
   }
 }
 
-async function handleFinalize(
-  userId: string,
-  message: Message,
-  channelId: string,
-): Promise<void> {
+async function handleFinalize(userId: string, message: Message, channelId: string): Promise<void> {
   const { ts: gameId } = message;
   const game = await getGame(gameId);
   const { status, votes = [], spinner } = game || {};
@@ -188,8 +162,7 @@ async function handleFinalize(
     return;
   }
 
-  const { restaurantId: topVotedRestaurantId, votes: winnerVotes } =
-    getTopVotedRestaurantId(votes);
+  const { restaurantId: topVotedRestaurantId, votes: winnerVotes } = getTopVotedRestaurantId(votes);
 
   if (topVotedRestaurantId === RESPIN_ID) {
     await slackClient.chat.postEphemeral({
@@ -263,12 +236,7 @@ async function handleFinalize(
   }
 }
 
-async function handleVote(
-  userId: string,
-  message: Message,
-  restaurantId: string,
-  channelId: string,
-): Promise<void> {
+async function handleVote(userId: string, message: Message, restaurantId: string, channelId: string): Promise<void> {
   const { ts: messageTs } = message;
 
   const game = await getGame(messageTs);
@@ -300,11 +268,7 @@ async function handleVote(
   }
 }
 
-export async function handleRespin(
-  userId: string,
-  channelId: string,
-  message: Message,
-): Promise<void> {
+export async function handleRespin(userId: string, channelId: string, message: Message): Promise<void> {
   const { ts: messageTs } = message;
   const game = await getGame(messageTs);
 
@@ -333,10 +297,7 @@ export async function handleRespin(
   const newSelectedRestaurants = getRandomElements(possibleOptions, 3);
 
   const remainingOptions = possibleOptions.filter(
-    (restaurant: { id: string }) =>
-      !newSelectedRestaurants
-        .map((restaurant) => restaurant.id)
-        .includes(restaurant.id),
+    (restaurant: { id: string }) => !newSelectedRestaurants.map((restaurant) => restaurant.id).includes(restaurant.id),
   );
 
   const updatedGame = {
