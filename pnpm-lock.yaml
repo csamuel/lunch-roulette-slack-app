@@ -12,8 +12,8 @@ importers:
         specifier: 7.8.0
         version: 7.8.0
       '@vercel/node':
-        specifier: 5.1.7
-        version: 5.1.7
+        specifier: 5.1.12
+        version: 5.1.12
       axios:
         specifier: 1.7.9
         version: 1.7.9
@@ -299,8 +299,8 @@ packages:
     resolution: {integrity: sha512-EwVHlp5l+2vp8CoqJm9KikPZgi3gbdZAtabKT9KPShGeOcJhsv4Zdo3oc8T8I0uKEmYoU4ItyxbptjF08enaxg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@vercel/build-utils@10.1.0':
-    resolution: {integrity: sha512-JPff3brfZx0mTl+0Cmzz220MmnTSYnBgVqVvT6a8lVALJHr75sKaNxZy0/hWZe8ev+w2JwLGMmJwP2TKHtKeHA==}
+  '@vercel/build-utils@10.4.0':
+    resolution: {integrity: sha512-gHh4ovvP75HmCXF+7+OBqOc6SoXkoUwKAGOrgpsKzEYwqmuOg3z0god0pTdfsJHYnZw9a/ZZr52b47FJbFKXFQ==}
 
   '@vercel/error-utils@2.0.3':
     resolution: {integrity: sha512-CqC01WZxbLUxoiVdh9B/poPbNpY9U+tO1N9oWHwTl5YAZxcqXmmWJ8KNMFItJCUUWdY3J3xv8LvAuQv2KZ5YdQ==}
@@ -310,8 +310,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  '@vercel/node@5.1.7':
-    resolution: {integrity: sha512-aOfpTss3DBeqTCxZHNUgB6ckDp2DUDV9+nuW0wf5sToHLmeMzlUGNwY48CPSly1CFyi5jYE4fyfn9dBaAustWQ==}
+  '@vercel/node@5.1.12':
+    resolution: {integrity: sha512-Rpid+Sz64D7jtSUWsKkLzL7Hh5XfUBE6fiisLG+1pB/TI7cJ58hDj7Lk9B8p/fGp/nnWkz7BDm4eq1X9XQp6Zg==}
 
   '@vercel/static-config@3.0.0':
     resolution: {integrity: sha512-2qtvcBJ1bGY0dYGYh3iM7yGKkk971FujLEDXzuW5wcZsPr1GSEjO/w2iSr3qve6nDDtBImsGoDEnus5FI4+fIw==}
@@ -439,6 +439,7 @@ packages:
   bson@6.10.2:
     resolution: {integrity: sha512-5afhLTjqDSA3akH56E+/2J6kTDuSIlBxyXPdQslj9hcIgOUE378xdOfZvC/9q3LifJNI6KR/juZ+d0NRNYBwXg==}
     engines: {node: '>=16.20.1'}
+    deprecated: a critical bug affecting only useBigInt64=true deserialization usage is fixed in bson@6.10.3
 
   call-bind-apply-helpers@1.0.1:
     resolution: {integrity: sha512-BhYE+WDaywFg2TBWYNXAE+8B1ATnThNBqXHP5nQu0jWJdVvY2hvkpyB3qOmtmDePiS5/BDQ8wASEWGMWRG148g==}
@@ -2062,7 +2063,7 @@ snapshots:
       '@typescript-eslint/types': 8.24.1
       eslint-visitor-keys: 4.2.0
 
-  '@vercel/build-utils@10.1.0': {}
+  '@vercel/build-utils@10.4.0': {}
 
   '@vercel/error-utils@2.0.3': {}
 
@@ -2085,13 +2086,13 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/node@5.1.7':
+  '@vercel/node@5.1.12':
     dependencies:
       '@edge-runtime/node-utils': 2.3.0
       '@edge-runtime/primitives': 4.1.0
       '@edge-runtime/vm': 3.2.0
       '@types/node': 16.18.11
-      '@vercel/build-utils': 10.1.0
+      '@vercel/build-utils': 10.4.0
       '@vercel/error-utils': 2.0.3
       '@vercel/nft': 0.27.10
       '@vercel/static-config': 3.0.0
