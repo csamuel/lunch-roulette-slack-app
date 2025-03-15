@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@slack/web-api": "7.8.0",
-    "@vercel/node": "5.1.7",
+    "@vercel/node": "5.1.14",
     "axios": "1.8.2",
     "mongodb": "6.14.2"
   },
