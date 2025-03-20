@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@slack/web-api':
-        specifier: 7.8.0
-        version: 7.8.0
+        specifier: 7.9.0
+        version: 7.9.0
       '@vercel/node':
         specifier: 5.1.14
         version: 5.1.14
@@ -206,8 +206,8 @@ packages:
     resolution: {integrity: sha512-n0EGm7ENQRxlXbgKSrQZL69grzg1gHLAVd+GlRVQJ1NSORo0FrApR7wql/gaKdu2n4TO83Sq/AmeUOqD60aXUA==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
-  '@slack/web-api@7.8.0':
-    resolution: {integrity: sha512-d4SdG+6UmGdzWw38a4sN3lF/nTEzsDxhzU13wm10ejOpPehtmRoqBKnPztQUfFiWbNvSb4czkWYJD4kt+5+Fuw==}
+  '@slack/web-api@7.9.0':
+    resolution: {integrity: sha512-PEvscTsHj4pLQr6g/0OwPEFDN9ElJMdba9uYvhTPjC2yGQGzjB4YmqilXaDX0Lm3IBEcLtJNRAbsfQp+x3X3Qg==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
   '@ts-morph/common@0.11.1':
@@ -419,6 +419,9 @@ packages:
 
   axios@1.8.2:
     resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
+
+  axios@1.8.4:
+    resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1929,13 +1932,13 @@ snapshots:
 
   '@slack/types@2.14.0': {}
 
-  '@slack/web-api@7.8.0':
+  '@slack/web-api@7.9.0':
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.14.0
       '@types/node': 22.13.10
       '@types/retry': 0.12.0
-      axios: 1.8.2
+      axios: 1.8.4
       eventemitter3: 5.0.1
       form-data: 4.0.1
       is-electron: 2.2.2
@@ -2227,6 +2230,14 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   axios@1.8.2:
+    dependencies:
+      follow-redirects: 1.15.9
+      form-data: 4.0.1
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
+  axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.1
