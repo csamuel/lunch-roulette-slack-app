@@ -18,7 +18,7 @@
     "@slack/web-api": "7.9.3",
     "@vercel/node": "5.3.6",
     "axios": "1.9.0",
-    "mongodb": "6.17.0"
+    "mongodb": "6.20.0"
   },
   "devDependencies": {
     "@types/eslint-config-prettier": "6.11.3",
