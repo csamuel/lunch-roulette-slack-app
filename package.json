@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/eslint-config-prettier": "6.11.3",
-    "@types/node": "22.18.3",
+    "@types/node": "22.18.8",
     "eslint": "9.31.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
