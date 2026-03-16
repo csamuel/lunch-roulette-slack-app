@@ -1,4 +1,5 @@
-import { type ModalView, type PlainTextInput, WebClient } from '@slack/web-api';
+import type { ModalView, PlainTextInput } from '@slack/types';
+import { WebClient } from '@slack/web-api';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { toSlackMessageBlocks } from './lib/blocks';

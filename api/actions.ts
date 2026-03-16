@@ -1,4 +1,5 @@
-import { type DividerBlock, type HeaderBlock, type SectionBlock, WebClient } from '@slack/web-api';
+import type { DividerBlock, HeaderBlock, SectionBlock } from '@slack/types';
+import { WebClient } from '@slack/web-api';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { toRestaurantBlock, toSlackMessageBlocks } from './lib/blocks';

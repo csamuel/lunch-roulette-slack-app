@@ -1,4 +1,4 @@
-import type { AnyBlock, ModalView } from '@slack/web-api';
+import type { AnyBlock, ModalView } from '@slack/types';
 
 import type { Restaurant } from '../yelp';
 

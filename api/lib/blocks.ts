@@ -1,4 +1,4 @@
-import type { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/web-api';
+import type { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/types';
 
 import type { GameState } from '../types/lunchr';
 import type { Restaurant } from '../types/yelp';

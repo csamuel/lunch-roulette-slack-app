@@ -1,4 +1,4 @@
-import { type Db, MongoClient } from 'mongodb';
+import { type Db, type Filter, MongoClient } from 'mongodb';
 
 import type { Configuration, GameState } from '../types/lunchr';
 
@@ -57,7 +57,7 @@ export async function findActiveGame(channelId: string): Promise<GameState | nul
   return await gameStateCollection.findOne({
     'configuration.channelId': channelId,
     status: 'voting',
-  });
+  } as Filter<GameState>);
 }
 
 export async function getGame(gameId: string): Promise<GameState | null> {
