@@ -1,6 +1,6 @@
-import { AnyBlock, ModalView } from '@slack/web-api';
+import type { AnyBlock, ModalView } from '@slack/web-api';
 
-import { Restaurant } from '../yelp';
+import type { Restaurant } from '../yelp';
 
 interface GameState {
   id?: string;
@@ -63,20 +63,18 @@ interface ActionPayload extends BasePayload {
   message: Message;
 }
 
-type ActionType = {
+interface ActionType {
   type: string;
   value: string;
   selected_option?: { value: string };
-};
+}
 
-type ValuesType = {
-  [key: string]: {
+type ValuesType = Record<string, {
     'address-action'?: ActionType;
     'radius-action'?: ActionType;
     'min-rating-action'?: ActionType;
     'max-price-action'?: ActionType;
-  };
-};
+  }>;
 
 interface ModalViewWithState extends ModalView {
   state: { values: ValuesType };
@@ -102,19 +100,19 @@ interface GameConfig {
 }
 
 export {
-  Action,
-  ActionPayload,
-  ActionType,
-  BasePayload,
-  Configuration,
+  type Action,
+  type ActionPayload,
+  type ActionType,
+  type BasePayload,
+  type Configuration,
   EventType,
-  GameConfig,
-  GameState,
-  Message,
-  ModalViewWithState,
-  SelectedPlace,
-  Spinner,
-  ValuesType,
-  ViewSubmissionPayload,
-  Vote,
+  type GameConfig,
+  type GameState,
+  type Message,
+  type ModalViewWithState,
+  type SelectedPlace,
+  type Spinner,
+  type ValuesType,
+  type ViewSubmissionPayload,
+  type Vote,
 };

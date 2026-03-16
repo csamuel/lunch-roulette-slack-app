@@ -14,4 +14,4 @@ interface Restaurant {
   };
 }
 
-export { Restaurant };
+export type { Restaurant };

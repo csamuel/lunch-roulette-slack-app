@@ -1,13 +1,13 @@
-import { Db, MongoClient } from 'mongodb';
+import { type Db, MongoClient } from 'mongodb';
 
-import { Configuration, GameState } from '../types/lunchr';
+import type { Configuration, GameState } from '../types/lunchr';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_URI';
+const MONGODB_URI = process.env.MONGODB_URI ?? 'YOUR_MONGODB_URI';
 const MONGO_DB_NAME = 'lunchroulette';
 const MONGO_CONFIGURATION_COLLECTION = 'configurations';
 const MONGO_GAMESTATE_COLLECTION = 'gamestates';
 
-let cachedDb: Db;
+let cachedDb: Db | undefined;
 
 async function connectToDatabase(): Promise<Db> {
   if (cachedDb) {
@@ -19,23 +19,24 @@ async function connectToDatabase(): Promise<Db> {
   return cachedDb;
 }
 
-export async function saveConfiguration(
-  address: string,
-  radius: number,
-  minRating: number,
-  maxPrice: string,
-  channelId: string,
-) {
+export async function saveConfiguration(config: {
+  address: string;
+  radius: number;
+  minRating: number;
+  maxPrice: string;
+  channelId: string;
+}) {
+  const { address, radius, minRating, maxPrice, channelId } = config;
   const db = await connectToDatabase();
   const configurationCollection = db.collection<Configuration>(MONGO_CONFIGURATION_COLLECTION);
   await configurationCollection.updateOne(
-    { channelId: channelId },
+    { channelId },
     {
       $set: {
-        address: address,
-        radius: radius,
-        minRating: minRating,
-        maxPrice: maxPrice,
+        address,
+        radius,
+        minRating,
+        maxPrice,
       },
     },
     { upsert: true },
@@ -45,15 +46,15 @@ export async function saveConfiguration(
 export async function getConfiguration(channelId: string): Promise<Configuration | null> {
   const db = await connectToDatabase();
   const configurationCollection = db.collection<Configuration>(MONGO_CONFIGURATION_COLLECTION);
-  return configurationCollection.findOne({
-    channelId: channelId,
+  return await configurationCollection.findOne({
+    channelId,
   });
 }
 
 export async function findActiveGame(channelId: string): Promise<GameState | null> {
   const db = await connectToDatabase();
   const gameStateCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
-  return gameStateCollection.findOne({
+  return await gameStateCollection.findOne({
     'configuration.channelId': channelId,
     status: 'voting',
   });
@@ -62,7 +63,7 @@ export async function findActiveGame(channelId: string): Promise<GameState | nul
 export async function getGame(gameId: string): Promise<GameState | null> {
   const db = await connectToDatabase();
   const gameStateCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
-  return gameStateCollection.findOne({
+  return await gameStateCollection.findOne({
     id: gameId,
   });
 }

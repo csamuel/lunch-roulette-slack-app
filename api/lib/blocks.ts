@@ -1,7 +1,7 @@
-import { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/web-api';
+import type { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/web-api';
 
-import { GameState } from '../types/lunchr';
-import { Restaurant } from '../types/yelp';
+import type { GameState } from '../types/lunchr';
+import type { Restaurant } from '../types/yelp';
 
 import { RESPIN_ID } from './constants';
 
@@ -20,25 +20,21 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
   } = game;
 
   // Group votes by restaurant
-  const votesByRestaurant = votes.reduce(
-    (acc, vote) => {
-      const { userId, restaurantId = RESPIN_ID } = vote;
-      return {
-        ...acc,
-        [restaurantId]: [...(acc[restaurantId] || []), userId],
-      };
-    },
-    {} as { [key: string]: string[] },
-  );
+  const votesByRestaurant: Partial<Record<string, string[]>> = {};
+  for (const vote of votes) {
+    const key = vote.restaurantId || RESPIN_ID;
+    if (!(key in votesByRestaurant)) {
+      votesByRestaurant[key] = [];
+    }
+    votesByRestaurant[key]?.push(vote.userId);
+  }
 
   // Count votes per restaurant
-  const voteCounts = votes.reduce(
-    (acc, vote) => {
-      acc[vote.restaurantId || RESPIN_ID] = (acc[vote.restaurantId || RESPIN_ID] || 0) + 1;
-      return acc;
-    },
-    {} as { [key: string]: number },
-  );
+  const voteCounts: Partial<Record<string, number>> = {};
+  for (const vote of votes) {
+    const key = vote.restaurantId || RESPIN_ID;
+    voteCounts[key] = (voteCounts[key] ?? 0) + 1;
+  }
 
   const blocks: AnyBlock[] = [
     {
@@ -67,7 +63,7 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
       ...toRestaurantBlock(
         restaurant,
         votesByRestaurant[restaurant.id],
-        voteCounts[restaurant.id] || 0,
+        voteCounts[restaurant.id] ?? 0,
         isVotingEnabled,
       ),
     );
@@ -124,11 +120,8 @@ export function toSlackMessageBlocks(game: GameState): AnyBlock[] {
   return blocks;
 }
 
-function toRespinBlocks(votesByRestaurant: { [x: string]: string[] }): AnyBlock[] {
-  // const respinVoters = votesByRestaurant[RESPIN_ID] || [];
-  const respinVoterNames = (votesByRestaurant[RESPIN_ID] || []).map((voter) => {
-    return `<@${voter}>`;
-  });
+function toRespinBlocks(votesByRestaurant: Partial<Record<string, string[]>>): AnyBlock[] {
+  const respinVoterNames = (votesByRestaurant[RESPIN_ID] ?? []).map((voter) => `<@${voter}>`);
 
   const respinVoteText = `\n*Votes: ${respinVoterNames.length}*\n${respinVoterNames.length > 0 ? respinVoterNames.join('\n') : ''}`;
 
@@ -152,7 +145,7 @@ function toRespinBlocks(votesByRestaurant: { [x: string]: string[] }): AnyBlock[
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `${respinVoteText}`,
+        text: respinVoteText,
       },
       accessory: {
         type: 'button',
@@ -176,8 +169,8 @@ function toRespinBlocks(votesByRestaurant: { [x: string]: string[] }): AnyBlock[
 
 export function toRestaurantBlock(
   restaurant: Restaurant,
-  voters: string[],
-  voteCount: number | null,
+  voters: string[] | undefined,
+  voteCount: number | undefined,
   votingEnabled: boolean,
 ): Array<AnyBlock> {
   const {
@@ -191,16 +184,14 @@ export function toRestaurantBlock(
     categories,
     location: { display_address },
     attributes: { menu_url = '' } = {},
-  } = restaurant as Restaurant;
+  } = restaurant;
 
   const distanceInMiles = distance ? (distance * MILES_PER_METER).toFixed(2) : null;
   const categoryNames = categories.map((c) => c.title).join(', ');
   const menuDisplay = menu_url ? `*<${menu_url}|View menu>*` : '';
 
   const voterNames = voters
-    ? voters.map((voter) => {
-        return `<@${voter}>`;
-      })
+    ? voters.map((voter) => `<@${voter}>`)
     : [];
 
   const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join('\n') : ''}`;
@@ -242,7 +233,7 @@ export function toRestaurantBlock(
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `${voteText}`,
+        text: voteText,
       },
       ...(votingEnabled && {
         accessory: {

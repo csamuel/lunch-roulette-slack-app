@@ -1,14 +1,14 @@
-import { ModalView, PlainTextInput, WebClient } from '@slack/web-api';
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { type ModalView, type PlainTextInput, WebClient } from '@slack/web-api';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { toSlackMessageBlocks } from './lib/blocks';
 import { getRandomElements } from './lib/utils';
 import { findActiveGame, getConfiguration, saveGame } from './service/mongodb';
 import { findRestaurants } from './service/yelp';
-import { Configuration, GameState } from './types/lunchr';
+import type { Configuration, GameState } from './types/lunchr';
 
-const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
-const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
+const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN ?? 'YOUR_SLACK_VERIFICATION_TOKEN';
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -19,7 +19,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
-  const { body } = req;
+  const { body } = req as { body: { token: string; text?: string; channel_id: string; user_id: string; trigger_id: string } };
   const { token, text, channel_id: channelId, user_id: userId, trigger_id: triggerId } = body;
 
   // validate slack tocken
@@ -28,7 +28,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
-  const subcommand = text?.trim() || '';
+  const subcommand = text?.trim() ?? '';
 
   switch (subcommand) {
     case 'configure':
@@ -76,7 +76,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   });
 
   res.status(200).send('');
-  return;
+  
 };
 
 async function initNewGame(spinnerId: string, configuration: Configuration): Promise<GameState> {
@@ -96,11 +96,11 @@ async function initNewGame(spinnerId: string, configuration: Configuration): Pro
     (restaurant: { id: string }) => !selectedRestaurants.map((restaurant) => restaurant.id).includes(restaurant.id),
   );
 
-  const displayName = spinner.profile?.display_name || 'Unknown User';
+  const displayName = spinner.profile?.display_name ?? 'Unknown User';
 
   const game: GameState = {
-    configuration: configuration,
-    spinner: { id: spinnerId, displayName: displayName },
+    configuration,
+    spinner: { id: spinnerId, displayName },
     status: 'voting',
     currentOptions: selectedRestaurants,
     possibleOptions: remainingOptions,
@@ -114,12 +114,12 @@ async function initNewGame(spinnerId: string, configuration: Configuration): Pro
 async function handleConfigure(triggerId: string, channelId: string): Promise<void> {
   const gameConfig = await getConfiguration(channelId);
 
-  const { address, radius, minRating, maxPrice } = gameConfig || {};
+  const { address, radius, minRating, maxPrice } = gameConfig ?? {};
 
-  const initialAddress = address || '1600 Pennsylvania Avenue Washington, DC 20500';
+  const initialAddress = address ?? '1600 Pennsylvania Avenue Washington, DC 20500';
   const initialRadius = radius ? radius.toString() : '1000';
   const initialMinRating = minRating ? minRating.toString() : '3.0';
-  const initialMaxPrice = maxPrice || '$$$';
+  const initialMaxPrice = maxPrice ?? '$$$';
 
   const view: ModalView = {
     type: 'modal',
@@ -196,7 +196,7 @@ async function handleConfigure(triggerId: string, channelId: string): Promise<vo
               type: 'plain_text',
               text: value,
             },
-            value: value,
+            value,
           })),
         },
       },
@@ -205,6 +205,6 @@ async function handleConfigure(triggerId: string, channelId: string): Promise<vo
 
   await slackClient.views.open({
     trigger_id: triggerId,
-    view: view,
+    view,
   });
 }

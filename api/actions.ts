@@ -1,17 +1,15 @@
-import { DividerBlock, HeaderBlock, SectionBlock, WebClient } from '@slack/web-api';
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { type DividerBlock, type HeaderBlock, type SectionBlock, WebClient } from '@slack/web-api';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { toRestaurantBlock, toSlackMessageBlocks } from './lib/blocks';
 import { RESPIN_ID } from './lib/constants';
 import { getRandomElements } from './lib/utils';
 import { getGame, saveConfiguration, saveGame } from './service/mongodb';
 import { getRestaurant } from './service/yelp';
-import { ActionType, BasePayload, EventType, ValuesType, ViewSubmissionPayload } from './types/lunchr';
-import { ActionPayload, GameState, Message, Vote } from './types/lunchr';
-import { Restaurant } from './types/yelp';
+import { type ActionType, type BasePayload, EventType, type ValuesType, type ViewSubmissionPayload , type ActionPayload, type GameState, type Message, type Vote } from './types/lunchr';
 
-const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
-const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN || 'YOUR_SLACK_VERIFICATION_TOKEN';
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
+const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN ?? 'YOUR_SLACK_VERIFICATION_TOKEN';
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
@@ -22,10 +20,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    const { body } = req;
-    const payload = JSON.parse(body.payload);
+    const { body } = req as { body: { payload: string } };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown at runtime
+    const payload = JSON.parse(body.payload) as BasePayload;
 
-    const { token, type: eventType } = payload as BasePayload;
+    const { token, type: eventType } = payload;
 
     // validate slack token
     if (token !== SLACK_VERIFICATION_TOKEN) {
@@ -35,18 +34,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     switch (eventType) {
       case EventType.BLOCK_ACTIONS:
-        await handleBlockActions(payload);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- narrowing parsed payload by event type
+        await handleBlockActions(payload as ActionPayload);
         res.status(200).send('');
         return;
       case EventType.VIEW_SUBMISSION:
-        await handleViewSubmission(payload);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- narrowing parsed payload by event type
+        await handleViewSubmission(payload as ViewSubmissionPayload);
         res.status(200).send('');
-        return;
-      default:
-        res.status(400).send('Bad Request');
-        return;
     }
-  } catch (error) {
+  } catch (error: unknown) {
+    // eslint-disable-next-line no-console -- serverless function error logging
     console.error('Error:', error);
     res.status(500).send('Internal Server Error');
   }
@@ -83,7 +81,7 @@ async function handleViewSubmission(payload: ViewSubmissionPayload) {
 
   const { address, radius, minRating, maxPrice } = extractConfig(values);
   if (address && radius && minRating && maxPrice && channelId) {
-    await saveConfiguration(address, parseInt(radius), parseFloat(minRating), maxPrice, channelId);
+    await saveConfiguration({ address, radius: parseInt(radius), minRating: parseFloat(minRating), maxPrice, channelId });
     await slackClient.chat.postMessage({
       channel: channelId,
       text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,
@@ -110,9 +108,6 @@ async function handleBlockActions(payload: ActionPayload) {
       return;
     case 'respin':
       await handleRespin(userId, channelId, message);
-      return;
-    default:
-      return;
   }
 }
 
@@ -124,12 +119,12 @@ function getTopVotedRestaurantId(votes: Vote[]): {
     return { restaurantId: '', votes: 0 };
   } else {
     const [restaurantId, voteCount] = Object.entries(
-      votes.reduce(
+      votes.reduce<Record<string, number>>(
         (acc, { restaurantId }) => {
-          acc[restaurantId || RESPIN_ID] = (acc[restaurantId || RESPIN_ID] || 0) + 1;
+          acc[restaurantId] = (acc[restaurantId] || 0) + 1;
           return acc;
         },
-        {} as { [key: string]: number },
+        {},
       ),
     ).reduce((a, b) => (a[1] >= b[1] ? a : b));
 
@@ -140,8 +135,13 @@ function getTopVotedRestaurantId(votes: Vote[]): {
 async function handleFinalize(userId: string, message: Message, channelId: string): Promise<void> {
   const { ts: gameId } = message;
   const game = await getGame(gameId);
-  const { status, votes = [], spinner } = game || {};
-  const { id: spinnerId, displayName } = spinner || {};
+
+  if (!game) {
+    return;
+  }
+
+  const { status, votes = [], spinner } = game;
+  const { id: spinnerId, displayName } = spinner;
 
   if (spinnerId !== userId) {
     await slackClient.chat.postEphemeral({
@@ -173,12 +173,12 @@ async function handleFinalize(userId: string, message: Message, channelId: strin
     return;
   }
 
-  const winner = (await getRestaurant(topVotedRestaurantId)) as Restaurant;
+  const winner = await getRestaurant(topVotedRestaurantId);
 
-  const updatedGame = {
+  const updatedGame: GameState = {
     ...game,
     status: 'finalized',
-  } as GameState;
+  };
 
   await saveGame(updatedGame);
 
@@ -189,7 +189,8 @@ async function handleFinalize(userId: string, message: Message, channelId: strin
       blocks: toSlackMessageBlocks(updatedGame),
       as_user: true,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    // eslint-disable-next-line no-console -- serverless function error logging
     console.error('Error updating message:', JSON.stringify(error));
   }
 
@@ -231,7 +232,8 @@ async function handleFinalize(userId: string, message: Message, channelId: strin
       unfurl_links: false,
       unfurl_media: false,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    // eslint-disable-next-line no-console -- serverless function error logging
     console.error('Error updating message:', JSON.stringify(error));
   }
 }
@@ -241,7 +243,11 @@ async function handleVote(userId: string, message: Message, restaurantId: string
 
   const game = await getGame(messageTs);
 
-  const { votes = [] } = game || {};
+  if (!game) {
+    return;
+  }
+
+  const { votes = [] } = game;
 
   const updatedVotes = [
     // Remove any previous votes by the user
@@ -249,10 +255,10 @@ async function handleVote(userId: string, message: Message, restaurantId: string
     { messageTs, restaurantId, userId },
   ];
 
-  const updatedGame = {
+  const updatedGame: GameState = {
     ...game,
     votes: updatedVotes,
-  } as GameState;
+  };
 
   await saveGame(updatedGame);
 
@@ -263,7 +269,8 @@ async function handleVote(userId: string, message: Message, restaurantId: string
       blocks: toSlackMessageBlocks(updatedGame),
       as_user: true,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    // eslint-disable-next-line no-console -- serverless function error logging
     console.error('Error updating message:', JSON.stringify(error));
   }
 }
@@ -272,9 +279,13 @@ export async function handleRespin(userId: string, channelId: string, message: M
   const { ts: messageTs } = message;
   const game = await getGame(messageTs);
 
-  const { spinner, possibleOptions, spins = 1 } = game || {};
+  if (!game) {
+    return;
+  }
 
-  const { id: spinnerId, displayName } = spinner || {};
+  const { spinner, possibleOptions, spins = 1 } = game;
+
+  const { id: spinnerId, displayName } = spinner;
 
   if (spinnerId !== userId) {
     await slackClient.chat.postEphemeral({
@@ -285,7 +296,7 @@ export async function handleRespin(userId: string, channelId: string, message: M
     return;
   }
 
-  if (!possibleOptions) {
+  if (possibleOptions.length === 0) {
     await slackClient.chat.postEphemeral({
       channel: channelId,
       user: userId,
@@ -300,13 +311,13 @@ export async function handleRespin(userId: string, channelId: string, message: M
     (restaurant: { id: string }) => !newSelectedRestaurants.map((restaurant) => restaurant.id).includes(restaurant.id),
   );
 
-  const updatedGame = {
+  const updatedGame: GameState = {
     ...game,
     spins: spins + 1,
     votes: [],
     currentOptions: newSelectedRestaurants,
     possibleOptions: remainingOptions,
-  } as GameState;
+  };
 
   await saveGame(updatedGame);
 
@@ -317,5 +328,5 @@ export async function handleRespin(userId: string, channelId: string, message: M
     as_user: true,
   });
 
-  return;
+  
 }
