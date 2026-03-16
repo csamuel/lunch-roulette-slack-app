@@ -7,5 +7,6 @@
     ":semanticCommits",
     ":semanticCommitTypeAll(chore)"
   ],
-  "labels": ["renovate"]
+  "labels": ["renovate"],
+  "prConcurrentLimit": 5
 }
