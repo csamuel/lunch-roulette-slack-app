@@ -5,7 +5,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { toSlackMessageBlocks } from './lib/blocks';
 import { getRandomElements } from './lib/utils';
 import { findActiveGame, getConfiguration, saveGame } from './service/mongodb';
-import { findRestaurants } from './service/yelp';
+import { findRestaurants } from './service/foursquare';
 import type { Configuration, GameState } from './types/lunchr';
 
 const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN ?? 'YOUR_SLACK_VERIFICATION_TOKEN';

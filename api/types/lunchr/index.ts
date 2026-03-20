@@ -1,6 +1,6 @@
 import type { AnyBlock, ModalView } from '@slack/types';
 
-import type { Restaurant } from '../yelp';
+import type { Restaurant } from '../restaurant';
 
 interface GameState {
   id?: string;

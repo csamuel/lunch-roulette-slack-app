@@ -1,7 +1,7 @@
 import type { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/types';
 
 import type { GameState } from '../types/lunchr';
-import type { Restaurant } from '../types/yelp';
+import type { Restaurant } from '../types/restaurant';
 
 import { RESPIN_ID } from './constants';
 

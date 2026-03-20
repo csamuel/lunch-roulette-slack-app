@@ -6,7 +6,7 @@ import { toRestaurantBlock, toSlackMessageBlocks } from './lib/blocks';
 import { RESPIN_ID } from './lib/constants';
 import { getRandomElements } from './lib/utils';
 import { getGame, saveConfiguration, saveGame } from './service/mongodb';
-import { getRestaurant } from './service/yelp';
+import type { Restaurant } from './types/restaurant';
 import { type ActionType, type BasePayload, EventType, type ValuesType, type ViewSubmissionPayload , type ActionPayload, type GameState, type Message, type Vote } from './types/lunchr';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
@@ -174,7 +174,11 @@ async function handleFinalize(userId: string, message: Message, channelId: strin
     return;
   }
 
-  const winner = await getRestaurant(topVotedRestaurantId);
+  const winner = game.currentOptions.find((r: Restaurant) => r.id === topVotedRestaurantId);
+
+  if (!winner) {
+    return;
+  }
 
   const updatedGame: GameState = {
     ...game,

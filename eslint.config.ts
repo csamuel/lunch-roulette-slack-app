@@ -1,4 +1,5 @@
 import eslintCommentsPlugin from '@eslint-community/eslint-plugin-eslint-comments'
+import vitest from '@vitest/eslint-plugin'
 import prettierConfig from 'eslint-config-prettier'
 import importPlugin from 'eslint-plugin-import'
 import nPlugin from 'eslint-plugin-n'
@@ -9,7 +10,6 @@ export default [
   {
     ignores: [
       'public/',
-      'src/__generated__/',
       'pnpm-lock.yaml',
       'node_modules/',
     ],
@@ -421,6 +421,25 @@ export default [
       'import/no-duplicates': ['error'],
       'import/no-named-default': ['error'],
       'import/no-webpack-loader-syntax': ['error'],
+    },
+  },
+  {
+    files: ['**/__tests__/**', '**/__integration__/**', '**/*.test.ts'],
+    plugins: {
+      vitest,
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
+      'vitest/prefer-called-exactly-once-with': 'off',
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/unbound-method': 'off',
+      'max-nested-callbacks': 'off',
     },
   },
   prettierConfig,
