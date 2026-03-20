@@ -2,17 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { findRestaurants, getRestaurant } from '../foursquare';
 
-vi.mock('axios', () => {
-  const mockGet = vi.fn();
-  return {
-    default: {
-      create: () => ({ get: mockGet }),
-    },
-    __mockGet: mockGet,
-  };
-});
+const { mockGet } = vi.hoisted(() => ({
+  mockGet: vi.fn(),
+}));
 
-const { __mockGet: mockGet } = await import('axios') as unknown as { __mockGet: ReturnType<typeof vi.fn> };
+vi.mock('axios', () => ({
+  default: {
+    create: () => ({ get: mockGet }),
+  },
+}));
 
 function makePlace(overrides: Record<string, unknown> = {}) {
   return {
