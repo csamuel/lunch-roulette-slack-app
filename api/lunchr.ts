@@ -11,6 +11,8 @@ const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
 
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
+export const maxDuration = 30;
+
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Only accept POST requests
   if (req.method !== 'POST') {

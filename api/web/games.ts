@@ -4,6 +4,8 @@ import { createGame, generateGameId, generateSpinnerToken } from '../service/gam
 import { saveGame } from '../service/mongodb';
 import type { Configuration } from '../types/lunchr';
 
+export const maxDuration = 30;
+
 export default async (req: VercelRequest, res: VercelResponse) => {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method Not Allowed' });
