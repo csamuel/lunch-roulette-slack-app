@@ -256,17 +256,7 @@ describe('findRestaurants', () => {
     await expect(findRestaurants('NYC', 1000, '$$')).rejects.toThrow('Foursquare search failed');
   });
 
-  it('retries on terminated TypeError', async () => {
-    const place = makePlace();
-    mockFetch
-      .mockRejectedValueOnce(new TypeError('terminated'))
-      .mockResolvedValueOnce(mockResponse(geocodeSearchResponse))
-      .mockResolvedValueOnce(mockResponse({ results: [place] }));
 
-    const results = await findRestaurants('NYC', 1000, '$$$$');
-    expect(results).toHaveLength(1);
-    expect(mockFetch).toHaveBeenCalledTimes(3);
-  });
 });
 
 describe('getRestaurant', () => {

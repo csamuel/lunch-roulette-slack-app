@@ -11,7 +11,10 @@ const PAGE_LIMIT = 50;
 const MAX_RESULTS = 200;
 const FIELDS = 'fsq_id,name,link,photos,distance,price,rating,location,categories,menu';
 const API_VERSION = '1970-01-01' as const;
-const MAX_RETRIES = 3;
+
+// Custom fetch that disables connection reuse to avoid undici socket errors on Vercel
+const noKeepAliveFetch: typeof fetch = async (input, init) =>
+  await fetch(input, { ...init, keepalive: false, cache: 'no-store' });
 
 function createFoursquareClient() {
   return createClient<paths>({
@@ -19,20 +22,8 @@ function createFoursquareClient() {
     headers: {
       Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
     },
+    fetch: noKeepAliveFetch,
   });
-}
-
-async function fetchWithRetry<T>(fn: () => Promise<T>): Promise<T> {
-  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      return await fn();
-    } catch (error: unknown) {
-      const isRetryable =
-        error instanceof TypeError && error.message === 'terminated';
-      if (!isRetryable || attempt === MAX_RETRIES) throw error;
-    }
-  }
-  throw new Error('Unreachable');
 }
 
 function mapToRestaurant(place: Place): Restaurant {
@@ -62,14 +53,12 @@ function mapToRestaurant(place: Place): Restaurant {
 async function geocodeAddress(address: string): Promise<string> {
   const client = createFoursquareClient();
 
-  const { data } = await fetchWithRetry(async () =>
-    await client.GET('/v3/places/search', {
-      params: {
-        query: { near: address, query: 'restaurants', limit: 1, fields: 'fsq_id' },
-        header: { 'X-Places-Api-Version': API_VERSION },
-      },
-    }),
-  );
+  const { data } = await client.GET('/v3/places/search', {
+    params: {
+      query: { near: address, query: 'restaurants', limit: 1, fields: 'fsq_id' },
+      header: { 'X-Places-Api-Version': API_VERSION },
+    },
+  });
 
   if (!data) {
     throw new Error(`Foursquare geocode failed`);
@@ -92,22 +81,20 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
   const results: Restaurant[] = [];
 
   while (results.length < MAX_RESULTS) {
-    const { data } = await fetchWithRetry(async () =>
-      await client.GET('/v3/places/search', {
-        params: {
-          query: {
-            query: 'restaurants',
-            ll,
-            radius,
-            categories: '13065',
-            limit: PAGE_LIMIT,
-            max_price: maxPrice,
-            fields: FIELDS,
-          },
-          header: { 'X-Places-Api-Version': API_VERSION },
+    const { data } = await client.GET('/v3/places/search', {
+      params: {
+        query: {
+          query: 'restaurants',
+          ll,
+          radius,
+          categories: '13065',
+          limit: PAGE_LIMIT,
+          max_price: maxPrice,
+          fields: FIELDS,
         },
-      }),
-    );
+        header: { 'X-Places-Api-Version': API_VERSION },
+      },
+    });
 
     if (!data) {
       throw new Error(`Foursquare search failed`);
@@ -125,14 +112,12 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
 export async function getRestaurant(restaurantId: string): Promise<Restaurant> {
   const client = createFoursquareClient();
 
-  const { data } = await fetchWithRetry(async () =>
-    await client.GET('/v3/places/search', {
-      params: {
-        query: { query: restaurantId, limit: 1, fields: FIELDS },
-        header: { 'X-Places-Api-Version': API_VERSION },
-      },
-    }),
-  );
+  const { data } = await client.GET('/v3/places/search', {
+    params: {
+      query: { query: restaurantId, limit: 1, fields: FIELDS },
+      header: { 'X-Places-Api-Version': API_VERSION },
+    },
+  });
 
   if (!data) {
     throw new Error(`Foursquare place lookup failed`);
