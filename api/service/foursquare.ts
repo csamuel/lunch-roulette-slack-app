@@ -28,8 +28,8 @@ function createClient() {
     headers: {
       Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
     },
-    // Use fetch adapter to avoid Node http stream abort issues in Vercel serverless
-    adapter: 'fetch',
+    // Use http adapter to avoid undici socket errors in Vercel serverless
+    adapter: 'http',
   });
 }
 
