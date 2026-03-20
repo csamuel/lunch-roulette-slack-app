@@ -17,6 +17,7 @@ function createFoursquareClient() {
     baseUrl: 'https://api.foursquare.com',
     headers: {
       Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
+      Connection: 'close',
     },
   });
 }
