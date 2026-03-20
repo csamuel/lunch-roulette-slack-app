@@ -3,10 +3,8 @@ import { WebClient } from '@slack/web-api';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { toSlackMessageBlocks } from './lib/blocks';
-import { getRandomElements } from './lib/utils';
+import { createGame } from './service/game';
 import { findActiveGame, getConfiguration, saveGame } from './service/mongodb';
-import { findRestaurants } from './service/foursquare';
-import type { Configuration, GameState } from './types/lunchr';
 
 const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN ?? 'YOUR_SLACK_VERIFICATION_TOKEN';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
@@ -60,7 +58,14 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
-  const game: GameState = await initNewGame(userId, configuration);
+  const spinnerProfile = await slackClient.users.profile.get({ user: userId });
+  const displayName = spinnerProfile.profile?.display_name ?? 'Unknown User';
+
+  const { game } = await createGame(
+    { id: userId, displayName },
+    configuration,
+    { source: 'slack' },
+  );
 
   const result = await slackClient.chat.postMessage({
     channel: channelId,
@@ -77,40 +82,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   });
 
   res.status(200).send('');
-  
+
 };
-
-async function initNewGame(spinnerId: string, configuration: Configuration): Promise<GameState> {
-  const { address, radius, maxPrice } = configuration;
-
-  const restaurants = (await findRestaurants(address, radius, maxPrice)).filter(
-    (restaurant: { rating: number }) => restaurant.rating >= configuration.minRating,
-  );
-
-  const selectedRestaurants = getRandomElements(restaurants, 3);
-
-  const spinner = await slackClient.users.profile.get({
-    user: spinnerId,
-  });
-
-  const remainingOptions = restaurants.filter(
-    (restaurant: { id: string }) => !selectedRestaurants.map((restaurant) => restaurant.id).includes(restaurant.id),
-  );
-
-  const displayName = spinner.profile?.display_name ?? 'Unknown User';
-
-  const game: GameState = {
-    configuration,
-    spinner: { id: spinnerId, displayName },
-    status: 'voting',
-    currentOptions: selectedRestaurants,
-    possibleOptions: remainingOptions,
-    votes: [],
-    spins: 1,
-  };
-
-  return game;
-}
 
 async function handleConfigure(triggerId: string, channelId: string): Promise<void> {
   const gameConfig = await getConfiguration(channelId);

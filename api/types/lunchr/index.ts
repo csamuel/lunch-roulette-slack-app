@@ -11,12 +11,14 @@ interface GameState {
   currentOptions: Restaurant[];
   possibleOptions: Restaurant[];
   spins: number;
+  spinnerToken?: string;
+  source?: 'slack' | 'web';
 }
 
 interface Configuration {
   address: string;
   radius: number;
-  channelId: string;
+  channelId?: string;
   minRating: number;
   maxPrice: string;
 }
