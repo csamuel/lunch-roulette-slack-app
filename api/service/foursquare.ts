@@ -22,12 +22,16 @@ const PAGE_LIMIT = 50;
 const MAX_RESULTS = 200;
 const FIELDS = 'fsq_id,name,link,photos,distance,price,rating,location,categories,menu';
 
-const foursquareApi = axios.create({
-  baseURL: 'https://api.foursquare.com',
-  headers: {
-    Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
-  },
-});
+function createClient() {
+  return axios.create({
+    baseURL: 'https://api.foursquare.com',
+    headers: {
+      Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
+    },
+    // Use fetch adapter to avoid Node http stream abort issues in Vercel serverless
+    adapter: 'fetch',
+  });
+}
 
 function mapToRestaurant(place: Place): Restaurant {
   const photos = place.photos ?? [];
@@ -54,7 +58,7 @@ function mapToRestaurant(place: Place): Restaurant {
 }
 
 async function geocodeAddress(address: string): Promise<string> {
-  const { data } = await foursquareApi.get<PlacesSearchResponse>('/v3/places/search', {
+  const { data } = await createClient().get<PlacesSearchResponse>('/v3/places/search', {
     params: { near: address, query: 'restaurants', limit: 1, fields: 'fsq_id' },
   });
 
@@ -70,11 +74,12 @@ async function geocodeAddress(address: string): Promise<string> {
 export async function findRestaurants(address: string, radius: number, maxPriceDollars: string): Promise<Restaurant[]> {
   const ll = await geocodeAddress(address);
   const maxPrice = maxPriceDollars.length;
+  const client = createClient();
 
   const results: Restaurant[] = [];
 
   while (results.length < MAX_RESULTS) {
-    const { data } = await foursquareApi.get<PlacesSearchResponse>('/v3/places/search', {
+    const { data } = await client.get<PlacesSearchResponse>('/v3/places/search', {
       params: {
         query: 'restaurants',
         ll,
@@ -96,7 +101,7 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
 }
 
 export async function getRestaurant(restaurantId: string): Promise<Restaurant> {
-  const { data } = await foursquareApi.get<PlacesSearchResponse>('/v3/places/search', {
+  const { data } = await createClient().get<PlacesSearchResponse>('/v3/places/search', {
     params: { query: restaurantId, limit: 1, fields: FIELDS },
   });
 
