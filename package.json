@@ -13,7 +13,8 @@
     "lint:fix": "eslint ./api --fix",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:integration": "vitest run --config vitest.integration.config.ts"
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "generate:types": "openapi-typescript api/types/foursquare-openapi.json -o api/types/foursquare-api.d.ts"
   },
   "author": "Chris Samuel",
   "license": "MIT",
@@ -22,7 +23,8 @@
     "@slack/web-api": "7.15.0",
     "@vercel/node": "5.6.18",
     "axios": "1.13.6",
-    "mongodb": "7.1.0"
+    "mongodb": "7.1.0",
+    "openapi-fetch": "0.17.0"
   },
   "devDependencies": {
     "@eslint-community/eslint-plugin-eslint-comments": "4.7.1",
@@ -35,6 +37,7 @@
     "eslint-plugin-n": "17.24.0",
     "eslint-plugin-promise": "7.2.1",
     "jiti": "2.6.1",
+    "openapi-typescript": "7.13.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.57.1",

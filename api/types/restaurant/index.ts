@@ -14,17 +14,4 @@ interface Restaurant {
   };
 }
 
-interface FoursquarePlace {
-  fsq_id: string;
-  name: string;
-  link: string;
-  photos?: { prefix: string; suffix: string }[];
-  distance?: number;
-  price?: number;
-  rating?: number;
-  location: { formatted_address: string };
-  categories: { name: string }[];
-  menu?: string;
-}
-
-export type { FoursquarePlace, Restaurant };
+export type { Restaurant };

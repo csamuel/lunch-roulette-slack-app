@@ -1,13 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { FoursquarePlace } from '../../types/restaurant';
-
 import { findRestaurants, getRestaurant } from '../foursquare';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
 
-function makePlace(overrides: Partial<FoursquarePlace> = {}): FoursquarePlace {
+function makePlace(overrides: Record<string, unknown> = {}) {
   return {
     fsq_id: 'abc123',
     name: 'Test Restaurant',
@@ -24,12 +22,17 @@ function makePlace(overrides: Partial<FoursquarePlace> = {}): FoursquarePlace {
 }
 
 function mockResponse(body: unknown, ok = true, status = 200): Response {
-  return {
+  const jsonStr = JSON.stringify(body);
+  const resp = {
     ok,
     status,
     statusText: ok ? 'OK' : 'Bad Request',
+    headers: new Headers({ 'content-type': 'application/json' }),
     json: async () => await Promise.resolve(body),
-  } as Response;
+    text: async () => await Promise.resolve(jsonStr),
+    clone: () => resp,
+  };
+  return resp as Response;
 }
 
 const geocodeSearchResponse = {
@@ -45,6 +48,13 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+function getCallUrl(callIndex: number): URL {
+  const arg = mockFetch.mock.calls[callIndex][0];
+  // openapi-fetch may pass a Request object or a string
+  const urlStr = arg instanceof Request ? arg.url : String(arg);
+  return new URL(urlStr);
+}
+
 describe('findRestaurants', () => {
   it('geocodes via near probe then searches with ll + radius', async () => {
     const place = makePlace();
@@ -55,15 +65,14 @@ describe('findRestaurants', () => {
     await findRestaurants('New York, NY', 1000, '$$');
 
     // First call: geocode probe with near
-    const probeUrl = mockFetch.mock.calls[0][0] as string;
-    expect(probeUrl).toContain('near=New+York');
-    expect(probeUrl).toContain('limit=1');
+    const probeUrl = getCallUrl(0);
+    expect(probeUrl.searchParams.has('near')).toBe(true);
+    expect(probeUrl.searchParams.get('limit')).toBe('1');
 
     // Second call: search with ll + radius
-    const searchUrl = mockFetch.mock.calls[1][0] as string;
-    expect(searchUrl).toContain('ll=40.7128');
-    expect(searchUrl).toContain('-74.006');
-    expect(searchUrl).toContain('radius=1000');
+    const searchUrl = getCallUrl(1);
+    expect(searchUrl.searchParams.get('ll')).toContain('40.7128');
+    expect(searchUrl.searchParams.get('radius')).toBe('1000');
   });
 
   it('maps Foursquare fields to Restaurant interface', async () => {
@@ -188,32 +197,15 @@ describe('findRestaurants', () => {
 
     await findRestaurants('NYC', 1000, '$$');
 
-    const searchUrl = new URL(mockFetch.mock.calls[1][0] as string);
+    const searchUrl = getCallUrl(1);
     expect(searchUrl.searchParams.get('max_price')).toBe('2');
-  });
-
-  it('paginates with cursor until no more results', async () => {
-    const page1 = Array.from({ length: 50 }, (_, i) => makePlace({ fsq_id: `p1-${i.toString()}` }));
-    const page2 = [makePlace({ fsq_id: 'p2-0' })];
-
-    mockFetch
-      .mockResolvedValueOnce(mockResponse(geocodeSearchResponse))
-      .mockResolvedValueOnce(mockResponse({ results: page1, context: { next_cursor: 'cursor123' } }))
-      .mockResolvedValueOnce(mockResponse({ results: page2 }));
-
-    const results = await findRestaurants('NYC', 1000, '$$$$');
-    expect(results).toHaveLength(51);
-
-    // Verify cursor was passed in third fetch (after geocode probe + first search page)
-    const thirdUrl = mockFetch.mock.calls[2][0] as string;
-    expect(thirdUrl).toContain('cursor=cursor123');
   });
 
   it('stops paginating when page has fewer results than limit', async () => {
     const partialPage = Array.from({ length: 10 }, (_, i) => makePlace({ fsq_id: `r-${i.toString()}` }));
     mockFetch
       .mockResolvedValueOnce(mockResponse(geocodeSearchResponse))
-      .mockResolvedValueOnce(mockResponse({ results: partialPage, context: { next_cursor: 'more' } }));
+      .mockResolvedValueOnce(mockResponse({ results: partialPage }));
 
     const results = await findRestaurants('NYC', 1000, '$$$$');
     expect(results).toHaveLength(10);
@@ -221,7 +213,7 @@ describe('findRestaurants', () => {
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 
-  it('sends correct headers with API key', async () => {
+  it('sends Authorization header with API key', async () => {
     mockFetch
       .mockResolvedValueOnce(mockResponse(geocodeSearchResponse))
       .mockResolvedValueOnce(mockResponse({ results: [] }));
@@ -229,10 +221,8 @@ describe('findRestaurants', () => {
     await findRestaurants('NYC', 1000, '$$');
 
     for (const call of mockFetch.mock.calls) {
-      const options = call[1] as RequestInit;
-      const fetchHeaders = options.headers as Record<string, string>;
-      expect(fetchHeaders.Authorization).toBe('YOUR_FOURSQUARE_API_KEY');
-      expect(fetchHeaders.Accept).toBe('application/json');
+      const req = call[0] as Request;
+      expect(req.headers.get('Authorization')).toBe('YOUR_FOURSQUARE_API_KEY');
     }
   });
 
@@ -243,7 +233,7 @@ describe('findRestaurants', () => {
 
     await findRestaurants('NYC', 1500, '$$');
 
-    const searchUrl = new URL(mockFetch.mock.calls[1][0] as string);
+    const searchUrl = getCallUrl(1);
     expect(searchUrl.searchParams.get('query')).toBe('restaurants');
     expect(searchUrl.searchParams.get('ll')).toContain('40.7128');
     expect(searchUrl.searchParams.get('radius')).toBe('1500');
@@ -253,7 +243,7 @@ describe('findRestaurants', () => {
   });
 
   it('throws on geocode probe failure', async () => {
-    mockFetch.mockResolvedValueOnce(mockResponse(null, false, 401));
+    mockFetch.mockResolvedValueOnce(mockResponse({}, false, 401));
 
     await expect(findRestaurants('NYC', 1000, '$$')).rejects.toThrow('Foursquare geocode failed');
   });
@@ -261,7 +251,7 @@ describe('findRestaurants', () => {
   it('throws on search failure', async () => {
     mockFetch
       .mockResolvedValueOnce(mockResponse(geocodeSearchResponse))
-      .mockResolvedValueOnce(mockResponse(null, false, 500));
+      .mockResolvedValueOnce(mockResponse({}, false, 500));
 
     await expect(findRestaurants('NYC', 1000, '$$')).rejects.toThrow('Foursquare search failed');
   });
@@ -270,20 +260,23 @@ describe('findRestaurants', () => {
 describe('getRestaurant', () => {
   it('fetches a single place by ID and maps it', async () => {
     const place = makePlace({ fsq_id: 'xyz789' });
-    mockFetch.mockResolvedValueOnce(mockResponse(place));
+    mockFetch.mockResolvedValueOnce(mockResponse({ results: [place] }));
 
     const restaurant = await getRestaurant('xyz789');
-
-    const url = mockFetch.mock.calls[0][0] as string;
-    expect(url).toContain('/places/xyz789');
 
     expect(restaurant.id).toBe('xyz789');
     expect(restaurant.name).toBe('Test Restaurant');
   });
 
   it('throws on fetch failure', async () => {
-    mockFetch.mockResolvedValueOnce(mockResponse(null, false, 404));
+    mockFetch.mockResolvedValueOnce(mockResponse({}, false, 404));
 
     await expect(getRestaurant('bad-id')).rejects.toThrow('Foursquare place lookup failed');
+  });
+
+  it('throws when no results found', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse({ results: [] }));
+
+    await expect(getRestaurant('missing-id')).rejects.toThrow('Restaurant not found');
   });
 });

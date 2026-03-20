@@ -1,71 +1,67 @@
-import type { FoursquarePlace, Restaurant } from '../types/restaurant';
+import createClient from 'openapi-fetch';
 
-function getApiKey(): string {
-  return process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY';
-}
+import type { paths } from '../types/foursquare-api';
+import type { Restaurant } from '../types/restaurant';
 
-const BASE_URL = 'https://api.foursquare.com/v3';
+type Place = NonNullable<
+  NonNullable<paths['/v3/places/search']['get']['responses']['200']['content']['application/json']['results']>[number]
+>;
+
 const PAGE_LIMIT = 50;
 const MAX_RESULTS = 200;
 const FIELDS = 'fsq_id,name,link,photos,distance,price,rating,location,categories,menu';
+const API_VERSION = '1970-01-01' as const;
 
-interface SearchResponse {
-  results: FoursquarePlace[];
-  context?: {
-    next_cursor?: string;
-    geo_bounds?: { circle: { center: { latitude: number; longitude: number } } };
-  };
+function createFoursquareClient() {
+  return createClient<paths>({
+    baseUrl: 'https://api.foursquare.com',
+    headers: {
+      Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
+    },
+  });
 }
 
-const headers = () => ({
-  Authorization: getApiKey(),
-  Accept: 'application/json',
-});
-
-function mapToRestaurant(place: FoursquarePlace): Restaurant {
+function mapToRestaurant(place: Place): Restaurant {
+  const photos = place.photos ?? [];
   const imageUrl =
-    place.photos && place.photos.length > 0
-      ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+    photos.length > 0 && photos[0]?.prefix && photos[0]?.suffix
+      ? `${photos[0].prefix}original${photos[0].suffix}`
       : '';
 
-  const address = place.location.formatted_address;
+  const address = place.location?.formatted_address ?? '';
 
   return {
-    id: place.fsq_id,
-    name: place.name,
-    url: place.link,
+    id: place.fsq_id ?? '',
+    name: place.name ?? '',
+    url: place.link ?? '',
     image_url: imageUrl,
     distance: place.distance ?? 0,
     price: place.price ? '$'.repeat(place.price) : '',
     rating: place.rating ? place.rating / 2 : 0,
     display_address: [address],
     location: { display_address: [address] },
-    categories: place.categories.map((c) => ({ title: c.name })),
+    categories: (place.categories ?? []).map((c) => ({ title: c.name ?? '' })),
     attributes: place.menu ? { menu_url: place.menu } : undefined,
   };
 }
 
 async function geocodeAddress(address: string): Promise<string> {
-  const params = new URLSearchParams({
-    near: address,
-    query: 'restaurants',
-    limit: '1',
-    fields: 'fsq_id',
+  const client = createFoursquareClient();
+
+  const { data } = await client.GET('/v3/places/search', {
+    params: {
+      query: { near: address, query: 'restaurants', limit: 1, fields: 'fsq_id' },
+      header: { 'X-Places-Api-Version': API_VERSION },
+    },
   });
 
-  const response = await fetch(`${BASE_URL}/places/search?${params.toString()}`, {
-    headers: headers(),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Foursquare geocode failed: ${response.status} ${response.statusText}`);
+  if (!data) {
+    throw new Error(`Foursquare geocode failed`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- response.json() returns unknown at runtime
-  const data = (await response.json()) as SearchResponse;
-  const center = data.context?.geo_bounds?.circle.center;
+  const center = data.context?.geo_bounds?.circle?.center;
 
-  if (!center) {
+  if (!center?.latitude || !center.longitude) {
     throw new Error(`Could not geocode address: ${address}`);
   }
 
@@ -75,57 +71,58 @@ async function geocodeAddress(address: string): Promise<string> {
 export async function findRestaurants(address: string, radius: number, maxPriceDollars: string): Promise<Restaurant[]> {
   const ll = await geocodeAddress(address);
   const maxPrice = maxPriceDollars.length;
+  const client = createFoursquareClient();
 
   const results: Restaurant[] = [];
-  let cursor: string | undefined;
 
   while (results.length < MAX_RESULTS) {
-    const params = new URLSearchParams({
-      query: 'restaurants',
-      ll,
-      radius: radius.toString(),
-      categories: '13065',
-      limit: PAGE_LIMIT.toString(),
-      max_price: maxPrice.toString(),
-      fields: FIELDS,
+    const { data } = await client.GET('/v3/places/search', {
+      params: {
+        query: {
+          query: 'restaurants',
+          ll,
+          radius,
+          categories: '13065',
+          limit: PAGE_LIMIT,
+          max_price: maxPrice,
+          fields: FIELDS,
+        },
+        header: { 'X-Places-Api-Version': API_VERSION },
+      },
     });
 
-    if (cursor) {
-      params.set('cursor', cursor);
+    if (!data) {
+      throw new Error(`Foursquare search failed`);
     }
 
-    const response = await fetch(`${BASE_URL}/places/search?${params.toString()}`, {
-      headers: headers(),
-    });
+    const places = data.results ?? [];
+    results.push(...places.map(mapToRestaurant));
 
-    if (!response.ok) {
-      throw new Error(`Foursquare search failed: ${response.status} ${response.statusText}`);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- response.json() returns unknown at runtime
-    const data = (await response.json()) as SearchResponse;
-
-    results.push(...data.results.map(mapToRestaurant));
-
-    cursor = data.context?.next_cursor;
-    if (!cursor || data.results.length < PAGE_LIMIT) break;
+    if (places.length < PAGE_LIMIT) break;
   }
 
   return results;
 }
 
 export async function getRestaurant(restaurantId: string): Promise<Restaurant> {
-  const params = new URLSearchParams({ fields: FIELDS });
+  const client = createFoursquareClient();
 
-  const response = await fetch(`${BASE_URL}/places/${restaurantId}?${params.toString()}`, {
-    headers: headers(),
+  const { data } = await client.GET('/v3/places/search', {
+    params: {
+      query: { query: restaurantId, limit: 1, fields: FIELDS },
+      header: { 'X-Places-Api-Version': API_VERSION },
+    },
   });
 
-  if (!response.ok) {
-    throw new Error(`Foursquare place lookup failed: ${response.status} ${response.statusText}`);
+  if (!data) {
+    throw new Error(`Foursquare place lookup failed`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- response.json() returns unknown at runtime
-  const place = (await response.json()) as FoursquarePlace;
+  const place = data.results?.[0];
+
+  if (!place) {
+    throw new Error(`Restaurant not found: ${restaurantId}`);
+  }
+
   return mapToRestaurant(place);
 }
