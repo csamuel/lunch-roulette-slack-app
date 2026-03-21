@@ -175,9 +175,7 @@ async function geocodeAddress(address: string): Promise<string> {
   console.log('Foursquare: geocode start');
   const { data } = await foursquareGet('/v3/places/search', {
     near: address,
-    query: 'restaurants',
     limit: 1,
-    fields: 'fsq_id',
   });
 
   const center = data.context?.geo_bounds?.circle?.center;
