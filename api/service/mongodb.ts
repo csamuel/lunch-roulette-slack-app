@@ -15,6 +15,7 @@ let cachedClientPromise: Promise<MongoClient> | undefined;
 
 function createMongoClient(): MongoClient {
   return new MongoClient(MONGODB_URI, {
+    family: 4,
     maxPoolSize: 1,
     serverSelectionTimeoutMS: MONGO_SERVER_SELECTION_TIMEOUT_MS,
     connectTimeoutMS: MONGO_CONNECT_TIMEOUT_MS,
