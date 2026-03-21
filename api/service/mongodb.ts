@@ -9,9 +9,29 @@ const MONGO_GAMESTATE_COLLECTION = 'gamestates';
 const MONGO_SERVER_SELECTION_TIMEOUT_MS = 5_000;
 const MONGO_CONNECT_TIMEOUT_MS = 5_000;
 const MONGO_SOCKET_TIMEOUT_MS = 10_000;
+const MONGO_OPERATION_TIMEOUT_MS = 8_000;
 
 let cachedDb: Db | undefined;
 let cachedClientPromise: Promise<MongoClient> | undefined;
+
+async function withTimeout<T>(label: string, promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return await new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs.toString()}ms`));
+    }, timeoutMs);
+
+    void promise.then(
+      (value) => {
+        clearTimeout(timeout);
+        resolve(value);
+      },
+      (error: unknown) => {
+        clearTimeout(timeout);
+        reject(error instanceof Error ? error : new Error(String(error)));
+      },
+    );
+  });
+}
 
 function createMongoClient(): MongoClient {
   return new MongoClient(MONGODB_URI, {
@@ -28,10 +48,16 @@ async function connectToDatabase(): Promise<Db> {
     return cachedDb;
   }
 
-  cachedClientPromise ??= createMongoClient().connect();
+  if (!cachedClientPromise) {
+    // eslint-disable-next-line no-console -- serverless function diagnostics
+    console.log('Mongo: starting connect');
+    cachedClientPromise = withTimeout('Mongo connect', createMongoClient().connect(), MONGO_OPERATION_TIMEOUT_MS);
+  }
 
   try {
     const client = await cachedClientPromise;
+    // eslint-disable-next-line no-console -- serverless function diagnostics
+    console.log('Mongo: connected');
     cachedDb = client.db(MONGO_DB_NAME);
     return cachedDb;
   } catch (error) {
@@ -92,5 +118,13 @@ export async function getGame(gameId: string): Promise<GameState | null> {
 export async function saveGame(gameState: GameState) {
   const db = await connectToDatabase();
   const configurationCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
-  await configurationCollection.updateOne({ id: gameState.id }, { $set: gameState }, { upsert: true });
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Mongo: saveGame updateOne start');
+  await withTimeout(
+    'Mongo saveGame updateOne',
+    configurationCollection.updateOne({ id: gameState.id }, { $set: gameState }, { upsert: true }),
+    MONGO_OPERATION_TIMEOUT_MS,
+  );
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Mongo: saveGame updateOne complete');
 }
