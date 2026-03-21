@@ -91,6 +91,7 @@ async function foursquareGetByUrl(url: string): Promise<FoursquareResponse> {
           url,
           {
             agent: false,
+            family: 4,
             headers: {
               Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
               Accept: 'application/json',
