@@ -26,7 +26,7 @@ export default function CreateGame() {
       });
 
       localStorage.setItem(`spinner:${gameId}`, spinnerToken);
-      navigate(`/game/${gameId}`);
+      void navigate(`/game/${gameId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create game');
     } finally {
@@ -47,7 +47,7 @@ export default function CreateGame() {
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => { setName(e.target.value); }}
             placeholder="Enter your display name"
           />
         </label>
@@ -57,7 +57,7 @@ export default function CreateGame() {
 
       <button
         className="btn-primary"
-        onClick={() => void handleCreate()}
+        onClick={() => { void handleCreate(); }}
         disabled={creating || !name.trim() || !config.address.trim()}
       >
         {creating ? 'Creating...' : 'New Game'}

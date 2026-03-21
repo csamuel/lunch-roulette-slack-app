@@ -18,9 +18,7 @@ export default function GamePage() {
   const spinnerToken = gameId ? localStorage.getItem(`spinner:${gameId}`) : null;
   const isCreator = !!spinnerToken;
 
-  const [voterName, setVoterName] = useState<string | null>(() => {
-    return sessionStorage.getItem('voterName');
-  });
+  const [voterName, setVoterName] = useState<string | null>(() => sessionStorage.getItem('voterName'));
   const needsName = !isCreator && !voterName && game?.status === 'voting';
 
   function handleNameSubmit(name: string) {
@@ -33,10 +31,11 @@ export default function GamePage() {
 
   const votesByRestaurant = useMemo(() => {
     if (!game) return {};
-    const map: Record<string, string[]> = {};
+    const map: Partial<Record<string, string[]>> = {};
     for (const v of game.votes) {
-      if (!map[v.restaurantId]) map[v.restaurantId] = [];
-      map[v.restaurantId].push(v.userId);
+      const voters = map[v.restaurantId] ?? [];
+      voters.push(v.userId);
+      map[v.restaurantId] = voters;
     }
     return map;
   }, [game]);
@@ -87,7 +86,7 @@ export default function GamePage() {
 
   // Determine winner from finalized game
   const winner = useMemo(() => {
-    if (!game || game.status !== 'finalized' || game.votes.length === 0) return null;
+    if (game?.status !== 'finalized' || game.votes.length === 0) return null;
     const counts: Record<string, number> = {};
     for (const v of game.votes) {
       counts[v.restaurantId] = (counts[v.restaurantId] || 0) + 1;
@@ -128,15 +127,15 @@ export default function GamePage() {
             voters={votesByRestaurant[restaurant.id] ?? []}
             votingEnabled={isVoting && !!displayName}
             hasVoted={currentVote === restaurant.id}
-            onVote={(id) => void handleVote(id)}
+            onVote={(id) => { void handleVote(id); }}
           />
         ))}
       </div>
 
       {isVoting && isCreator && (
         <SpinnerControls
-          onRespin={() => void handleRespin()}
-          onFinalize={() => void handleFinalize()}
+          onRespin={() => { void handleRespin(); }}
+          onFinalize={() => { void handleFinalize(); }}
           disabled={actionLoading}
         />
       )}

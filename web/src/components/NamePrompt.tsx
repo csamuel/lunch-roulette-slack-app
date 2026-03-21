@@ -22,7 +22,7 @@ export default function NamePrompt({ onSubmit }: Props) {
         <input
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => { setName(e.target.value); }}
           placeholder="Your name"
           autoFocus
         />

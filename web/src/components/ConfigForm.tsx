@@ -13,7 +13,7 @@ export default function ConfigForm({ config, onChange }: Props) {
         <input
           type="text"
           value={config.address}
-          onChange={(e) => onChange({ address: e.target.value })}
+          onChange={(e) => { onChange({ address: e.target.value }); }}
           placeholder="123 Main St, City, State"
         />
       </label>
@@ -22,7 +22,7 @@ export default function ConfigForm({ config, onChange }: Props) {
         <input
           type="number"
           value={config.radius}
-          onChange={(e) => onChange({ radius: parseInt(e.target.value) || 0 })}
+          onChange={(e) => { onChange({ radius: parseInt(e.target.value) || 0 }); }}
         />
       </label>
       <label>
@@ -33,14 +33,14 @@ export default function ConfigForm({ config, onChange }: Props) {
           min="0"
           max="5"
           value={config.minRating}
-          onChange={(e) => onChange({ minRating: parseFloat(e.target.value) || 0 })}
+          onChange={(e) => { onChange({ minRating: parseFloat(e.target.value) || 0 }); }}
         />
       </label>
       <label>
         Max Price
         <select
           value={config.maxPrice}
-          onChange={(e) => onChange({ maxPrice: e.target.value })}
+          onChange={(e) => { onChange({ maxPrice: e.target.value }); }}
         >
           <option value="$">$</option>
           <option value="$$">$$</option>

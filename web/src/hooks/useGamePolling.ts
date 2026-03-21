@@ -32,7 +32,7 @@ export function useGamePolling(gameId: string | undefined) {
     if (!gameId) return;
 
     void fetchGame();
-    intervalRef.current = setInterval(() => void fetchGame(), 3000);
+    intervalRef.current = setInterval(() => { void fetchGame(); }, 3000);
 
     return () => {
       if (intervalRef.current) {
@@ -43,7 +43,7 @@ export function useGamePolling(gameId: string | undefined) {
   }, [gameId, fetchGame]);
 
   // Allow manual refresh after actions
-  const refresh = useCallback(() => void fetchGame(), [fetchGame]);
+  const refresh = useCallback(() => { void fetchGame(); }, [fetchGame]);
 
   return { game, error, loading, refresh, setGame };
 }

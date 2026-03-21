@@ -14,6 +14,7 @@ const defaults: SearchConfig = {
 function load(): SearchConfig {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
     if (stored) return { ...defaults, ...JSON.parse(stored) as Partial<SearchConfig> };
   } catch { /* ignore */ }
   return defaults;

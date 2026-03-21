@@ -72,7 +72,7 @@ export default function RestaurantCard({
       {votingEnabled && (
         <button
           className={`btn-vote${hasVoted ? ' selected' : ''}`}
-          onClick={() => onVote(id)}
+          onClick={() => { onVote(id); }}
         >
           {hasVoted ? 'Selected' : 'Vote'}
         </button>
