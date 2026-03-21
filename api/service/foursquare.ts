@@ -36,6 +36,8 @@ async function foursquareGet(path: string, params: Record<string, string | numbe
       headers: {
         Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
         Accept: 'application/json',
+        'User-Agent': 'lunch-roulette/1.0',
+        Connection: 'close',
       },
     }, (res) => {
       let data = '';
