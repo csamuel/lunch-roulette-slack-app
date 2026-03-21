@@ -28,6 +28,7 @@ const MAX_RESULTS = 200;
 const FIELDS = 'fsq_id,name,link,photos,distance,price,rating,location,categories,menu';
 const MAX_RETRIES = 3;
 const API_VERSION = '1970-01-01' as const;
+const FOURSQUARE_REQUEST_TIMEOUT_MS = 8_000;
 
 function isRetryableRequestError(error: unknown): boolean {
   if (!(error instanceof Error)) {
@@ -71,6 +72,21 @@ async function foursquareGetByUrl(url: string): Promise<FoursquareResponse> {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt += 1) {
     try {
       return await new Promise((resolve, reject) => {
+        let settled = false;
+        let ended = false;
+
+        const settleResolve = (value: FoursquareResponse) => {
+          if (settled) return;
+          settled = true;
+          resolve(value);
+        };
+
+        const settleReject = (error: unknown) => {
+          if (settled) return;
+          settled = true;
+          reject(error instanceof Error ? error : new Error(String(error)));
+        };
+
         const req = https.get(
           url,
           {
@@ -85,28 +101,41 @@ async function foursquareGetByUrl(url: string): Promise<FoursquareResponse> {
           },
           (res) => {
             let data = '';
+            res.setEncoding('utf8');
             res.on('data', (chunk: string) => {
               data += chunk;
             });
             res.on('end', () => {
+              ended = true;
               if (res.statusCode && res.statusCode >= 400) {
-                reject(new Error(`Foursquare API error: ${res.statusCode.toString()} ${data}`));
+                settleReject(new Error(`Foursquare API error: ${res.statusCode.toString()} ${data}`));
                 return;
               }
               try {
-                resolve({
+                settleResolve({
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
                   data: JSON.parse(data) as PlacesSearchResponse,
                   nextPageUrl: getNextPageUrl(res.headers.link),
                 });
               } catch {
-                reject(new Error(`Failed to parse Foursquare response: ${data}`));
+                settleReject(new Error(`Failed to parse Foursquare response: ${data}`));
               }
             });
-            res.on('error', reject);
+            res.on('aborted', () => {
+              settleReject(new Error('Foursquare response aborted'));
+            });
+            res.on('close', () => {
+              if (!ended) {
+                settleReject(new Error('Foursquare response closed before end'));
+              }
+            });
+            res.on('error', settleReject);
           },
         );
-        req.on('error', reject);
+        req.setTimeout(FOURSQUARE_REQUEST_TIMEOUT_MS, () => {
+          req.destroy(new Error(`Foursquare request timed out after ${FOURSQUARE_REQUEST_TIMEOUT_MS.toString()}ms`));
+        });
+        req.on('error', settleReject);
       });
     } catch (error: unknown) {
       if (!isRetryableRequestError(error) || attempt === MAX_RETRIES) {
