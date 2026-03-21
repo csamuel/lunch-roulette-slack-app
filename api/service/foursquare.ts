@@ -1,4 +1,5 @@
 import createClient from 'openapi-fetch';
+import { Agent } from 'undici';
 
 import type { paths } from '../types/foursquare-api';
 import type { Restaurant } from '../types/restaurant';
@@ -12,9 +13,18 @@ const MAX_RESULTS = 200;
 const FIELDS = 'fsq_id,name,link,photos,distance,price,rating,location,categories,menu';
 const API_VERSION = '1970-01-01' as const;
 
-// Custom fetch that disables connection reuse to avoid undici socket errors on Vercel
-const noKeepAliveFetch: typeof fetch = async (input, init) =>
-  await fetch(input, { ...init, keepalive: false, cache: 'no-store' });
+// Custom fetch that uses a fresh undici Agent per request to avoid socket reuse
+// errors with Foursquare's Fastly CDN on Vercel's serverless infrastructure
+const foursquareFetch: typeof fetch = async (input, init) => {
+  const agent = new Agent({ keepAliveTimeout: 1, keepAliveMaxTimeout: 1 });
+  try {
+    // Node's global fetch supports undici dispatcher via non-standard option
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Node's global fetch supports undici dispatcher option
+    return await fetch(input, { ...init, dispatcher: agent } as unknown as RequestInit);
+  } finally {
+    await agent.close();
+  }
+};
 
 function createFoursquareClient() {
   return createClient<paths>({
@@ -22,7 +32,7 @@ function createFoursquareClient() {
     headers: {
       Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
     },
-    fetch: noKeepAliveFetch,
+    fetch: foursquareFetch,
   });
 }
 

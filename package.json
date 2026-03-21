@@ -16,6 +16,9 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "generate:types": "openapi-typescript api/types/foursquare-openapi.json -o api/types/foursquare-api.d.ts"
   },
+  "engines": {
+    "node": "24.x"
+  },
   "author": "Chris Samuel",
   "license": "MIT",
   "dependencies": {
@@ -24,7 +27,8 @@
     "@vercel/node": "5.6.18",
     "axios": "1.13.6",
     "mongodb": "7.1.0",
-    "openapi-fetch": "0.17.0"
+    "openapi-fetch": "0.17.0",
+    "undici": "7.24.5"
   },
   "devDependencies": {
     "@eslint-community/eslint-plugin-eslint-comments": "4.7.1",
