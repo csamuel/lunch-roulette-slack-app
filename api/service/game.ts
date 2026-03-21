@@ -48,11 +48,7 @@ export async function createGame(
   return { game, allRestaurants: restaurants };
 }
 
-export async function addVote(
-  gameId: string,
-  voterId: string,
-  restaurantId: string,
-): Promise<GameState | null> {
+export async function addVote(gameId: string, voterId: string, restaurantId: string): Promise<GameState | null> {
   const game = await getGame(gameId);
   if (!game) return null;
 
@@ -77,13 +73,10 @@ export function getTopVotedRestaurantId(votes: Vote[]): {
   }
 
   const [restaurantId, voteCount] = Object.entries(
-    votes.reduce<Record<string, number>>(
-      (acc, { restaurantId }) => {
-        acc[restaurantId] = (acc[restaurantId] || 0) + 1;
-        return acc;
-      },
-      {},
-    ),
+    votes.reduce<Record<string, number>>((acc, { restaurantId }) => {
+      acc[restaurantId] = (acc[restaurantId] || 0) + 1;
+      return acc;
+    }, {}),
   ).reduce((a, b) => (a[1] >= b[1] ? a : b));
 
   return { restaurantId, votes: voteCount };

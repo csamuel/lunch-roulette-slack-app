@@ -18,54 +18,111 @@ interface PlacesSearchResponse {
   };
 }
 
+interface FoursquareResponse {
+  data: PlacesSearchResponse;
+  nextPageUrl?: string;
+}
+
 const PAGE_LIMIT = 50;
 const MAX_RESULTS = 200;
 const FIELDS = 'fsq_id,name,link,photos,distance,price,rating,location,categories,menu';
+const MAX_RETRIES = 3;
+const API_VERSION = '1970-01-01' as const;
+
+function isRetryableRequestError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const rawCode = 'code' in error ? (error as { code?: unknown }).code : undefined;
+  const code = typeof rawCode === 'string' ? rawCode : '';
+  return code === 'ECONNRESET' || error.message === 'aborted' || error.message === 'terminated';
+}
+
+function getNextPageUrl(linkHeader: string | string[] | undefined): string | undefined {
+  const header = Array.isArray(linkHeader) ? linkHeader.join(',') : linkHeader;
+  if (!header) {
+    return undefined;
+  }
+
+  for (const part of header.split(',')) {
+    const trimmedPart = part.trim();
+    const match = /^<([^>]+)>\s*;\s*rel="([^"]+)"$/u.exec(trimmedPart);
+    if (match?.[2] === 'next') {
+      return match[1];
+    }
+  }
+
+  return undefined;
+}
 
 // Use Node's native https module to avoid undici socket errors
 // with Foursquare's Fastly CDN on Vercel's infrastructure
-async function foursquareGet(path: string, params: Record<string, string | number>): Promise<PlacesSearchResponse> {
+async function foursquareGet(path: string, params: Record<string, string | number>): Promise<FoursquareResponse> {
   const searchParams = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     searchParams.set(key, String(value));
   }
   const url = `https://api.foursquare.com${path}?${searchParams.toString()}`;
+  return await foursquareGetByUrl(url);
+}
 
-  return await new Promise((resolve, reject) => {
-    const req = https.get(url, {
-      headers: {
-        Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
-        Accept: 'application/json',
-        'User-Agent': 'lunch-roulette/1.0',
-        Connection: 'close',
-      },
-    }, (res) => {
-      let data = '';
-      res.on('data', (chunk: string) => { data += chunk; });
-      res.on('end', () => {
-        if (res.statusCode && res.statusCode >= 400) {
-          reject(new Error(`Foursquare API error: ${res.statusCode.toString()} ${data}`));
-          return;
-        }
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
-          resolve(JSON.parse(data) as PlacesSearchResponse);
-        } catch {
-          reject(new Error(`Failed to parse Foursquare response: ${data}`));
-        }
+async function foursquareGetByUrl(url: string): Promise<FoursquareResponse> {
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt += 1) {
+    try {
+      return await new Promise((resolve, reject) => {
+        const req = https.get(
+          url,
+          {
+            agent: false,
+            headers: {
+              Authorization: process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY',
+              Accept: 'application/json',
+              'X-Places-Api-Version': API_VERSION,
+              'User-Agent': 'lunch-roulette/1.0',
+              Connection: 'close',
+            },
+          },
+          (res) => {
+            let data = '';
+            res.on('data', (chunk: string) => {
+              data += chunk;
+            });
+            res.on('end', () => {
+              if (res.statusCode && res.statusCode >= 400) {
+                reject(new Error(`Foursquare API error: ${res.statusCode.toString()} ${data}`));
+                return;
+              }
+              try {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
+                resolve({
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
+                  data: JSON.parse(data) as PlacesSearchResponse,
+                  nextPageUrl: getNextPageUrl(res.headers.link),
+                });
+              } catch {
+                reject(new Error(`Failed to parse Foursquare response: ${data}`));
+              }
+            });
+            res.on('error', reject);
+          },
+        );
+        req.on('error', reject);
       });
-      res.on('error', reject);
-    });
-    req.on('error', reject);
-  });
+    } catch (error: unknown) {
+      if (!isRetryableRequestError(error) || attempt === MAX_RETRIES) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error('Unreachable');
 }
 
 function mapToRestaurant(place: Place): Restaurant {
   const photos = place.photos ?? [];
   const imageUrl =
-    photos.length > 0 && photos[0]?.prefix && photos[0]?.suffix
-      ? `${photos[0].prefix}original${photos[0].suffix}`
-      : '';
+    photos.length > 0 && photos[0]?.prefix && photos[0]?.suffix ? `${photos[0].prefix}original${photos[0].suffix}` : '';
 
   const address = place.location?.formatted_address ?? '';
 
@@ -85,7 +142,7 @@ function mapToRestaurant(place: Place): Restaurant {
 }
 
 async function geocodeAddress(address: string): Promise<string> {
-  const data = await foursquareGet('/v3/places/search', {
+  const { data } = await foursquareGet('/v3/places/search', {
     near: address,
     query: 'restaurants',
     limit: 1,
@@ -106,29 +163,49 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
   const maxPrice = maxPriceDollars.length;
 
   const results: Restaurant[] = [];
+  const seenRestaurantIds = new Set<string>();
+  const visitedPageUrls = new Set<string>();
 
-  while (results.length < MAX_RESULTS) {
-    const data = await foursquareGet('/v3/places/search', {
-      query: 'restaurants',
-      ll,
-      radius,
-      categories: '13065',
-      limit: PAGE_LIMIT,
-      max_price: maxPrice,
-      fields: FIELDS,
-    });
+  let nextPageUrl: string | undefined;
+  let response = await foursquareGet('/v3/places/search', {
+    query: 'restaurants',
+    ll,
+    radius,
+    categories: '13065',
+    limit: PAGE_LIMIT,
+    max_price: maxPrice,
+    fields: FIELDS,
+  });
 
-    const places = data.results ?? [];
-    results.push(...places.map(mapToRestaurant));
+  while (true) {
+    for (const place of response.data.results ?? []) {
+      const restaurant = mapToRestaurant(place);
+      if (!restaurant.id || seenRestaurantIds.has(restaurant.id)) {
+        continue;
+      }
 
-    if (places.length < PAGE_LIMIT) break;
+      seenRestaurantIds.add(restaurant.id);
+      results.push(restaurant);
+
+      if (results.length >= MAX_RESULTS) {
+        return results;
+      }
+    }
+
+    nextPageUrl = response.nextPageUrl;
+    if (!nextPageUrl || visitedPageUrls.has(nextPageUrl)) {
+      break;
+    }
+
+    visitedPageUrls.add(nextPageUrl);
+    response = await foursquareGetByUrl(nextPageUrl);
   }
 
   return results;
 }
 
 export async function getRestaurant(restaurantId: string): Promise<Restaurant> {
-  const data = await foursquareGet('/v3/places/search', {
+  const { data } = await foursquareGet('/v3/places/search', {
     query: restaurantId,
     limit: 1,
     fields: FIELDS,

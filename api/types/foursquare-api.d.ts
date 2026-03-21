@@ -4,239 +4,1025 @@
  */
 
 export interface paths {
-    "/v3/places/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Place Search
-         * @description Search for places in the FSQ Places database using a location and querying by name, category name, telephone number, taste label, or chain name. For example, search for "coffee" to get back a list of recommended coffee shops.
-         *
-         *     You may pass a location with your request by using one of the following options. If none of the following options are passed, Place Search defaults to geolocation using ip biasing with the optional radius parameter.
-         *
-         *     <ul><li>ll & radius (circular boundary)</li><li>near (geocodable locality)</li><li>ne & sw (rectangular boundary)</li></ul>
-         */
-        get: operations["place-search"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  '/v3/places/search': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/places/{fsq_id}/tips": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Place Tips
-         * @description Retrieve tips for a FSQ Place using the fsq_id.
-         */
-        get: operations["place-tips"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Place Search
+     * @description Search for places in the FSQ Places database using a location and querying by name, category name, telephone number, taste label, or chain name. For example, search for "coffee" to get back a list of recommended coffee shops.
+     *
+     *     You may pass a location with your request by using one of the following options. If none of the following options are passed, Place Search defaults to geolocation using ip biasing with the optional radius parameter.
+     *
+     *     <ul><li>ll & radius (circular boundary)</li><li>near (geocodable locality)</li><li>ne & sw (rectangular boundary)</li></ul>
+     */
+    get: operations['place-search'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/places/{fsq_id}/tips': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/places/match": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Place Match
-         * @description Return the Foursquare record of a POI (via fsq_id) given a name and location.
-         */
-        get: operations["place-match"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Place Tips
+     * @description Retrieve tips for a FSQ Place using the fsq_id.
+     */
+    get: operations['place-tips'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/places/match': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/places/nearby": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Find Nearby Places
-         * @description Utilize Foursquare's Snap to Place technology to detect where your user's device is and what is around them.
-         *     The endpoint is designed to provide POI tagging that supports a check-in use case. It will intentionally return lower quality results not found in Place Search. It is not intended to replace Place Search as the primary way to search for top, recommended POIs.
-         */
-        get: operations["places-nearby"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Place Match
+     * @description Return the Foursquare record of a POI (via fsq_id) given a name and location.
+     */
+    get: operations['place-match'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/places/nearby': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/place/select": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Report Nearby Place Selection
-         * @description Report the selection of a place as the result of a Nearby Places request.
-         */
-        post: operations["place-select"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Find Nearby Places
+     * @description Utilize Foursquare's Snap to Place technology to detect where your user's device is and what is around them.
+     *     The endpoint is designed to provide POI tagging that supports a check-in use case. It will intentionally return lower quality results not found in Place Search. It is not intended to replace Place Search as the primary way to search for top, recommended POIs.
+     */
+    get: operations['places-nearby'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/place/select': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/address/{fsq_addr_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Address Details
-         * @description Retrieve details for any address including non-Places. For addresses that do include FSQ Places, the response will include a `directory` field that contains a list of said FSQ Places.
-         */
-        get: operations["address-details"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Report Nearby Place Selection
+     * @description Report the selection of a place as the result of a Nearby Places request.
+     */
+    post: operations['place-select'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/address/{fsq_addr_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/feedback/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Feedback Status
-         * @description Monitor the status of the feedback items provided by your users.
-         */
-        get: operations["feedback-status"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Address Details
+     * @description Retrieve details for any address including non-Places. For addresses that do include FSQ Places, the response will include a `directory` field that contains a list of said FSQ Places.
+     */
+    get: operations['address-details'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/feedback/status': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/places/{fsq_id}/flag": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Flag Problematic Place
-         * @description Provide Feedback about a problematic Place due to a variety of reasons such as closed, and mislocated via its `fsq_id`.
-         */
-        post: operations["place-flag"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Feedback Status
+     * @description Monitor the status of the feedback items provided by your users.
+     */
+    get: operations['feedback-status'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/places/{fsq_id}/flag': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/v3/places/{fsq_id}/proposeedit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Propose Place Edit
-         * @description Propose edits to an existing Place’s information such as address, phone number, and hours of operation via its `fsq_id`. Providing values for the parameters below constitue the proposed edit.
-         */
-        post: operations["place-propose-edit"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Flag Problematic Place
+     * @description Provide Feedback about a problematic Place due to a variety of reasons such as closed, and mislocated via its `fsq_id`.
+     */
+    post: operations['place-flag'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v3/places/{fsq_id}/proposeedit': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    get?: never;
+    put?: never;
+    /**
+     * Propose Place Edit
+     * @description Propose edits to an existing Place’s information such as address, phone number, and hours of operation via its `fsq_id`. Providing values for the parameters below constitue the proposed edit.
+     */
+    post: operations['place-propose-edit'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        Category: {
+  schemas: {
+    Category: {
+      /** Format: int32 */
+      id?: number;
+      name?: string;
+      short_name?: string;
+      plural_name?: string;
+      icon?: {
+        id?: string;
+        /** Format: date-time */
+        created_at?: string;
+        prefix?: string;
+        suffix?: string;
+        /** Format: int32 */
+        width?: number;
+        /** Format: int32 */
+        height?: number;
+        classifications?: string[];
+        tip?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        };
+      };
+    };
+    Hours: {
+      display?: string;
+      is_local_holiday?: boolean;
+      open_now?: boolean;
+      regular?: {
+        close?: string;
+        /** Format: int32 */
+        day?: number;
+        open?: string;
+      }[];
+    };
+    Attributes: {
+      business_meeting?: string;
+      clean?: string;
+      crowded?: string;
+      dates_popular?: string;
+      dressy?: string;
+      families_popular?: string;
+      gluten_free_diet?: string;
+      good_for_dogs?: string;
+      groups_popular?: string;
+      healthy_diet?: string;
+      late_night?: string;
+      noisy?: string;
+      quick_bite?: string;
+      romantic?: string;
+      service_quality?: string;
+      singles_popular?: string;
+      special_occasion?: string;
+      trendy?: string;
+      value_for_money?: string;
+      vegan_diet?: string;
+      vegetarian_diet?: string;
+    };
+    CreditCards: {
+      accepts_credit_cards?: Record<string, never>;
+      amex?: Record<string, never>;
+      discover?: Record<string, never>;
+      visa?: Record<string, never>;
+      diners_club?: Record<string, never>;
+      master_card?: Record<string, never>;
+      union_pay?: Record<string, never>;
+    };
+    Alcohol: {
+      bar_service?: Record<string, never>;
+      beer?: Record<string, never>;
+      byo?: Record<string, never>;
+      cocktails?: Record<string, never>;
+      full_bar?: Record<string, never>;
+      wine?: Record<string, never>;
+    };
+    Photo: {
+      id?: string;
+      /** Format: date-time */
+      created_at?: string;
+      prefix?: string;
+      suffix?: string;
+      /** Format: int32 */
+      width?: number;
+      /** Format: int32 */
+      height?: number;
+      classifications?: string[];
+      tip?: {
+        id?: string;
+        /** Format: date-time */
+        created_at?: string;
+        text?: string;
+        url?: string;
+        photo?: unknown;
+        lang?: string;
+        /** Format: int32 */
+        agree_count?: number;
+        /** Format: int32 */
+        disagree_count?: number;
+      };
+    };
+    Geocodes: {
+      drop_off?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+      front_door?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+      main?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+      road?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+      roof?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+    };
+    VenueChain: {
+      id?: string;
+      name?: string;
+      logo?: {
+        id?: string;
+        /** Format: date-time */
+        created_at?: string;
+        prefix?: string;
+        suffix?: string;
+        /** Format: int32 */
+        width?: number;
+        /** Format: int32 */
+        height?: number;
+        classifications?: string[];
+        tip?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        };
+      };
+      parent_id?: string;
+    };
+    DigitalWallet: {
+      accepts_nfc?: Record<string, never>;
+    };
+    SocialMedia: {
+      facebook_id?: string;
+      instagram?: string;
+      twitter?: string;
+    };
+    Features: {
+      payment?: {
+        credit_cards?: {
+          accepts_credit_cards?: Record<string, never>;
+          amex?: Record<string, never>;
+          discover?: Record<string, never>;
+          visa?: Record<string, never>;
+          diners_club?: Record<string, never>;
+          master_card?: Record<string, never>;
+          union_pay?: Record<string, never>;
+        };
+        digital_wallet?: {
+          accepts_nfc?: Record<string, never>;
+        };
+      };
+      food_and_drink?: {
+        alcohol?: {
+          bar_service?: Record<string, never>;
+          beer?: Record<string, never>;
+          byo?: Record<string, never>;
+          cocktails?: Record<string, never>;
+          full_bar?: Record<string, never>;
+          wine?: Record<string, never>;
+        };
+        meals?: {
+          bar_snacks?: Record<string, never>;
+          breakfast?: Record<string, never>;
+          brunch?: Record<string, never>;
+          lunch?: Record<string, never>;
+          happy_hour?: Record<string, never>;
+          dessert?: Record<string, never>;
+          dinner?: Record<string, never>;
+          tasting_menu?: Record<string, never>;
+        };
+      };
+      services?: {
+        delivery?: Record<string, never>;
+        takeout?: Record<string, never>;
+        drive_through?: Record<string, never>;
+        dine_in?: {
+          reservations?: Record<string, never>;
+          online_reservations?: Record<string, never>;
+          groups_only_reservations?: Record<string, never>;
+          essential_reservations?: Record<string, never>;
+        };
+      };
+      amenities?: {
+        restroom?: Record<string, never>;
+        smoking?: Record<string, never>;
+        jukebox?: Record<string, never>;
+        music?: Record<string, never>;
+        live_music?: Record<string, never>;
+        private_room?: Record<string, never>;
+        outdoor_seating?: Record<string, never>;
+        tvs?: Record<string, never>;
+        atm?: Record<string, never>;
+        coat_check?: Record<string, never>;
+        wheelchair_accessible?: Record<string, never>;
+        parking?: {
+          parking?: Record<string, never>;
+          street_parking?: Record<string, never>;
+          valet_parking?: Record<string, never>;
+          public_lot?: Record<string, never>;
+          private_lot?: Record<string, never>;
+        };
+        sit_down_dining?: Record<string, never>;
+        wifi?: string;
+      };
+      attributes?: {
+        business_meeting?: string;
+        clean?: string;
+        crowded?: string;
+        dates_popular?: string;
+        dressy?: string;
+        families_popular?: string;
+        gluten_free_diet?: string;
+        good_for_dogs?: string;
+        groups_popular?: string;
+        healthy_diet?: string;
+        late_night?: string;
+        noisy?: string;
+        quick_bite?: string;
+        romantic?: string;
+        service_quality?: string;
+        singles_popular?: string;
+        special_occasion?: string;
+        trendy?: string;
+        value_for_money?: string;
+        vegan_diet?: string;
+        vegetarian_diet?: string;
+      };
+    };
+    Meals: {
+      bar_snacks?: Record<string, never>;
+      breakfast?: Record<string, never>;
+      brunch?: Record<string, never>;
+      lunch?: Record<string, never>;
+      happy_hour?: Record<string, never>;
+      dessert?: Record<string, never>;
+      dinner?: Record<string, never>;
+      tasting_menu?: Record<string, never>;
+    };
+    FoodAndDrink: {
+      alcohol?: {
+        bar_service?: Record<string, never>;
+        beer?: Record<string, never>;
+        byo?: Record<string, never>;
+        cocktails?: Record<string, never>;
+        full_bar?: Record<string, never>;
+        wine?: Record<string, never>;
+      };
+      meals?: {
+        bar_snacks?: Record<string, never>;
+        breakfast?: Record<string, never>;
+        brunch?: Record<string, never>;
+        lunch?: Record<string, never>;
+        happy_hour?: Record<string, never>;
+        dessert?: Record<string, never>;
+        dinner?: Record<string, never>;
+        tasting_menu?: Record<string, never>;
+      };
+    };
+    GeoBounds: {
+      circle?: {
+        center?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        /** Format: int32 */
+        radius?: number;
+      };
+    };
+    Context: {
+      geo_bounds?: {
+        circle?: {
+          center?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          /** Format: int32 */
+          radius?: number;
+        };
+      };
+    };
+    Circle: {
+      center?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+      /** Format: int32 */
+      radius?: number;
+    };
+    Timeframe: {
+      close?: string;
+      /** Format: int32 */
+      day?: number;
+      open?: string;
+    };
+    Venue: {
+      fsq_id?: string;
+      categories?: {
+        /** Format: int32 */
+        id?: number;
+        name?: string;
+        short_name?: string;
+        plural_name?: string;
+        icon?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          prefix?: string;
+          suffix?: string;
+          /** Format: int32 */
+          width?: number;
+          /** Format: int32 */
+          height?: number;
+          classifications?: string[];
+          tip?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            text?: string;
+            url?: string;
+            photo?: unknown;
+            lang?: string;
             /** Format: int32 */
-            id?: number;
-            name?: string;
-            short_name?: string;
-            plural_name?: string;
-            icon?: {
-                id?: string;
-                /** Format: date-time */
-                created_at?: string;
-                prefix?: string;
-                suffix?: string;
-                /** Format: int32 */
-                width?: number;
-                /** Format: int32 */
-                height?: number;
-                classifications?: string[];
-                tip?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    text?: string;
-                    url?: string;
-                    photo?: unknown;
-                    lang?: string;
-                    /** Format: int32 */
-                    agree_count?: number;
-                    /** Format: int32 */
-                    disagree_count?: number;
-                };
+            agree_count?: number;
+            /** Format: int32 */
+            disagree_count?: number;
+          };
+        };
+      }[];
+      chains?: {
+        id?: string;
+        name?: string;
+        logo?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          prefix?: string;
+          suffix?: string;
+          /** Format: int32 */
+          width?: number;
+          /** Format: int32 */
+          height?: number;
+          classifications?: string[];
+          tip?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            text?: string;
+            url?: string;
+            photo?: unknown;
+            lang?: string;
+            /** Format: int32 */
+            agree_count?: number;
+            /** Format: int32 */
+            disagree_count?: number;
+          };
+        };
+        parent_id?: string;
+      }[];
+      closed_bucket?: string;
+      /** Format: date */
+      date_closed?: string;
+      description?: string;
+      /** Format: int32 */
+      distance?: number;
+      email?: string;
+      fax?: string;
+      features?: {
+        payment?: {
+          credit_cards?: {
+            accepts_credit_cards?: Record<string, never>;
+            amex?: Record<string, never>;
+            discover?: Record<string, never>;
+            visa?: Record<string, never>;
+            diners_club?: Record<string, never>;
+            master_card?: Record<string, never>;
+            union_pay?: Record<string, never>;
+          };
+          digital_wallet?: {
+            accepts_nfc?: Record<string, never>;
+          };
+        };
+        food_and_drink?: {
+          alcohol?: {
+            bar_service?: Record<string, never>;
+            beer?: Record<string, never>;
+            byo?: Record<string, never>;
+            cocktails?: Record<string, never>;
+            full_bar?: Record<string, never>;
+            wine?: Record<string, never>;
+          };
+          meals?: {
+            bar_snacks?: Record<string, never>;
+            breakfast?: Record<string, never>;
+            brunch?: Record<string, never>;
+            lunch?: Record<string, never>;
+            happy_hour?: Record<string, never>;
+            dessert?: Record<string, never>;
+            dinner?: Record<string, never>;
+            tasting_menu?: Record<string, never>;
+          };
+        };
+        services?: {
+          delivery?: Record<string, never>;
+          takeout?: Record<string, never>;
+          drive_through?: Record<string, never>;
+          dine_in?: {
+            reservations?: Record<string, never>;
+            online_reservations?: Record<string, never>;
+            groups_only_reservations?: Record<string, never>;
+            essential_reservations?: Record<string, never>;
+          };
+        };
+        amenities?: {
+          restroom?: Record<string, never>;
+          smoking?: Record<string, never>;
+          jukebox?: Record<string, never>;
+          music?: Record<string, never>;
+          live_music?: Record<string, never>;
+          private_room?: Record<string, never>;
+          outdoor_seating?: Record<string, never>;
+          tvs?: Record<string, never>;
+          atm?: Record<string, never>;
+          coat_check?: Record<string, never>;
+          wheelchair_accessible?: Record<string, never>;
+          parking?: {
+            parking?: Record<string, never>;
+            street_parking?: Record<string, never>;
+            valet_parking?: Record<string, never>;
+            public_lot?: Record<string, never>;
+            private_lot?: Record<string, never>;
+          };
+          sit_down_dining?: Record<string, never>;
+          wifi?: string;
+        };
+        attributes?: {
+          business_meeting?: string;
+          clean?: string;
+          crowded?: string;
+          dates_popular?: string;
+          dressy?: string;
+          families_popular?: string;
+          gluten_free_diet?: string;
+          good_for_dogs?: string;
+          groups_popular?: string;
+          healthy_diet?: string;
+          late_night?: string;
+          noisy?: string;
+          quick_bite?: string;
+          romantic?: string;
+          service_quality?: string;
+          singles_popular?: string;
+          special_occasion?: string;
+          trendy?: string;
+          value_for_money?: string;
+          vegan_diet?: string;
+          vegetarian_diet?: string;
+        };
+      };
+      geocodes?: {
+        drop_off?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        front_door?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        main?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        road?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        roof?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+      };
+      hours?: {
+        display?: string;
+        is_local_holiday?: boolean;
+        open_now?: boolean;
+        regular?: {
+          close?: string;
+          /** Format: int32 */
+          day?: number;
+          open?: string;
+        }[];
+      };
+      hours_popular?: {
+        close?: string;
+        /** Format: int32 */
+        day?: number;
+        open?: string;
+      }[];
+      link?: string;
+      location?: {
+        address?: string;
+        address_extended?: string;
+        admin_region?: string;
+        census_block?: string;
+        country?: string;
+        cross_street?: string;
+        dma?: string;
+        formatted_address?: string;
+        locality?: string;
+        neighborhood?: string[];
+        po_box?: string;
+        post_town?: string;
+        postcode?: string;
+        region?: string;
+      };
+      menu?: string;
+      name?: string;
+      photos?: {
+        id?: string;
+        /** Format: date-time */
+        created_at?: string;
+        prefix?: string;
+        suffix?: string;
+        /** Format: int32 */
+        width?: number;
+        /** Format: int32 */
+        height?: number;
+        classifications?: string[];
+        tip?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        };
+      }[];
+      /** Format: double */
+      popularity?: number;
+      /** Format: int32 */
+      price?: number;
+      /** Format: double */
+      rating?: number;
+      related_places?: {
+        parent?: unknown;
+      };
+      social_media?: {
+        facebook_id?: string;
+        instagram?: string;
+        twitter?: string;
+      };
+      stats?: {
+        /** Format: int32 */
+        total_photos?: number;
+        /** Format: int64 */
+        total_ratings?: number;
+        /** Format: int32 */
+        total_tips?: number;
+      };
+      store_id?: string;
+      tastes?: string[];
+      tel?: string;
+      timezone?: string;
+      tips?: {
+        id?: string;
+        /** Format: date-time */
+        created_at?: string;
+        text?: string;
+        url?: string;
+        photo?: unknown;
+        lang?: string;
+        /** Format: int32 */
+        agree_count?: number;
+        /** Format: int32 */
+        disagree_count?: number;
+      }[];
+      venue_reality_bucket?: string;
+      verified?: boolean;
+      website?: string;
+    };
+    DineIn: {
+      reservations?: Record<string, never>;
+      online_reservations?: Record<string, never>;
+      groups_only_reservations?: Record<string, never>;
+      essential_reservations?: Record<string, never>;
+    };
+    Parking: {
+      parking?: Record<string, never>;
+      street_parking?: Record<string, never>;
+      valet_parking?: Record<string, never>;
+      public_lot?: Record<string, never>;
+      private_lot?: Record<string, never>;
+    };
+    Services: {
+      delivery?: Record<string, never>;
+      takeout?: Record<string, never>;
+      drive_through?: Record<string, never>;
+      dine_in?: {
+        reservations?: Record<string, never>;
+        online_reservations?: Record<string, never>;
+        groups_only_reservations?: Record<string, never>;
+        essential_reservations?: Record<string, never>;
+      };
+    };
+    Payment: {
+      credit_cards?: {
+        accepts_credit_cards?: Record<string, never>;
+        amex?: Record<string, never>;
+        discover?: Record<string, never>;
+        visa?: Record<string, never>;
+        diners_club?: Record<string, never>;
+        master_card?: Record<string, never>;
+        union_pay?: Record<string, never>;
+      };
+      digital_wallet?: {
+        accepts_nfc?: Record<string, never>;
+      };
+    };
+    Stats: {
+      /** Format: int32 */
+      total_photos?: number;
+      /** Format: int64 */
+      total_ratings?: number;
+      /** Format: int32 */
+      total_tips?: number;
+    };
+    UnversionedPlaceSearchResponse: {
+      results?: {
+        fsq_id?: string;
+        categories?: {
+          /** Format: int32 */
+          id?: number;
+          name?: string;
+          short_name?: string;
+          plural_name?: string;
+          icon?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
             };
-        };
-        Hours: {
-            display?: string;
-            is_local_holiday?: boolean;
-            open_now?: boolean;
-            regular?: {
-                close?: string;
-                /** Format: int32 */
-                day?: number;
-                open?: string;
-            }[];
-        };
-        Attributes: {
+          };
+        }[];
+        chains?: {
+          id?: string;
+          name?: string;
+          logo?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+          parent_id?: string;
+        }[];
+        closed_bucket?: string;
+        /** Format: date */
+        date_closed?: string;
+        description?: string;
+        /** Format: int32 */
+        distance?: number;
+        email?: string;
+        fax?: string;
+        features?: {
+          payment?: {
+            credit_cards?: {
+              accepts_credit_cards?: Record<string, never>;
+              amex?: Record<string, never>;
+              discover?: Record<string, never>;
+              visa?: Record<string, never>;
+              diners_club?: Record<string, never>;
+              master_card?: Record<string, never>;
+              union_pay?: Record<string, never>;
+            };
+            digital_wallet?: {
+              accepts_nfc?: Record<string, never>;
+            };
+          };
+          food_and_drink?: {
+            alcohol?: {
+              bar_service?: Record<string, never>;
+              beer?: Record<string, never>;
+              byo?: Record<string, never>;
+              cocktails?: Record<string, never>;
+              full_bar?: Record<string, never>;
+              wine?: Record<string, never>;
+            };
+            meals?: {
+              bar_snacks?: Record<string, never>;
+              breakfast?: Record<string, never>;
+              brunch?: Record<string, never>;
+              lunch?: Record<string, never>;
+              happy_hour?: Record<string, never>;
+              dessert?: Record<string, never>;
+              dinner?: Record<string, never>;
+              tasting_menu?: Record<string, never>;
+            };
+          };
+          services?: {
+            delivery?: Record<string, never>;
+            takeout?: Record<string, never>;
+            drive_through?: Record<string, never>;
+            dine_in?: {
+              reservations?: Record<string, never>;
+              online_reservations?: Record<string, never>;
+              groups_only_reservations?: Record<string, never>;
+              essential_reservations?: Record<string, never>;
+            };
+          };
+          amenities?: {
+            restroom?: Record<string, never>;
+            smoking?: Record<string, never>;
+            jukebox?: Record<string, never>;
+            music?: Record<string, never>;
+            live_music?: Record<string, never>;
+            private_room?: Record<string, never>;
+            outdoor_seating?: Record<string, never>;
+            tvs?: Record<string, never>;
+            atm?: Record<string, never>;
+            coat_check?: Record<string, never>;
+            wheelchair_accessible?: Record<string, never>;
+            parking?: {
+              parking?: Record<string, never>;
+              street_parking?: Record<string, never>;
+              valet_parking?: Record<string, never>;
+              public_lot?: Record<string, never>;
+              private_lot?: Record<string, never>;
+            };
+            sit_down_dining?: Record<string, never>;
+            wifi?: string;
+          };
+          attributes?: {
             business_meeting?: string;
             clean?: string;
             crowded?: string;
@@ -258,946 +1044,88 @@ export interface components {
             value_for_money?: string;
             vegan_diet?: string;
             vegetarian_diet?: string;
+          };
         };
-        CreditCards: {
-            accepts_credit_cards?: Record<string, never>;
-            amex?: Record<string, never>;
-            discover?: Record<string, never>;
-            visa?: Record<string, never>;
-            diners_club?: Record<string, never>;
-            master_card?: Record<string, never>;
-            union_pay?: Record<string, never>;
+        geocodes?: {
+          drop_off?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          front_door?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          main?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          road?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          roof?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
         };
-        Alcohol: {
-            bar_service?: Record<string, never>;
-            beer?: Record<string, never>;
-            byo?: Record<string, never>;
-            cocktails?: Record<string, never>;
-            full_bar?: Record<string, never>;
-            wine?: Record<string, never>;
-        };
-        Photo: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            prefix?: string;
-            suffix?: string;
-            /** Format: int32 */
-            width?: number;
-            /** Format: int32 */
-            height?: number;
-            classifications?: string[];
-            tip?: {
-                id?: string;
-                /** Format: date-time */
-                created_at?: string;
-                text?: string;
-                url?: string;
-                photo?: unknown;
-                lang?: string;
-                /** Format: int32 */
-                agree_count?: number;
-                /** Format: int32 */
-                disagree_count?: number;
-            };
-        };
-        Geocodes: {
-            drop_off?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
-            front_door?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
-            main?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
-            road?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
-            roof?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
-        };
-        VenueChain: {
-            id?: string;
-            name?: string;
-            logo?: {
-                id?: string;
-                /** Format: date-time */
-                created_at?: string;
-                prefix?: string;
-                suffix?: string;
-                /** Format: int32 */
-                width?: number;
-                /** Format: int32 */
-                height?: number;
-                classifications?: string[];
-                tip?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    text?: string;
-                    url?: string;
-                    photo?: unknown;
-                    lang?: string;
-                    /** Format: int32 */
-                    agree_count?: number;
-                    /** Format: int32 */
-                    disagree_count?: number;
-                };
-            };
-            parent_id?: string;
-        };
-        DigitalWallet: {
-            accepts_nfc?: Record<string, never>;
-        };
-        SocialMedia: {
-            facebook_id?: string;
-            instagram?: string;
-            twitter?: string;
-        };
-        Features: {
-            payment?: {
-                credit_cards?: {
-                    accepts_credit_cards?: Record<string, never>;
-                    amex?: Record<string, never>;
-                    discover?: Record<string, never>;
-                    visa?: Record<string, never>;
-                    diners_club?: Record<string, never>;
-                    master_card?: Record<string, never>;
-                    union_pay?: Record<string, never>;
-                };
-                digital_wallet?: {
-                    accepts_nfc?: Record<string, never>;
-                };
-            };
-            food_and_drink?: {
-                alcohol?: {
-                    bar_service?: Record<string, never>;
-                    beer?: Record<string, never>;
-                    byo?: Record<string, never>;
-                    cocktails?: Record<string, never>;
-                    full_bar?: Record<string, never>;
-                    wine?: Record<string, never>;
-                };
-                meals?: {
-                    bar_snacks?: Record<string, never>;
-                    breakfast?: Record<string, never>;
-                    brunch?: Record<string, never>;
-                    lunch?: Record<string, never>;
-                    happy_hour?: Record<string, never>;
-                    dessert?: Record<string, never>;
-                    dinner?: Record<string, never>;
-                    tasting_menu?: Record<string, never>;
-                };
-            };
-            services?: {
-                delivery?: Record<string, never>;
-                takeout?: Record<string, never>;
-                drive_through?: Record<string, never>;
-                dine_in?: {
-                    reservations?: Record<string, never>;
-                    online_reservations?: Record<string, never>;
-                    groups_only_reservations?: Record<string, never>;
-                    essential_reservations?: Record<string, never>;
-                };
-            };
-            amenities?: {
-                restroom?: Record<string, never>;
-                smoking?: Record<string, never>;
-                jukebox?: Record<string, never>;
-                music?: Record<string, never>;
-                live_music?: Record<string, never>;
-                private_room?: Record<string, never>;
-                outdoor_seating?: Record<string, never>;
-                tvs?: Record<string, never>;
-                atm?: Record<string, never>;
-                coat_check?: Record<string, never>;
-                wheelchair_accessible?: Record<string, never>;
-                parking?: {
-                    parking?: Record<string, never>;
-                    street_parking?: Record<string, never>;
-                    valet_parking?: Record<string, never>;
-                    public_lot?: Record<string, never>;
-                    private_lot?: Record<string, never>;
-                };
-                sit_down_dining?: Record<string, never>;
-                wifi?: string;
-            };
-            attributes?: {
-                business_meeting?: string;
-                clean?: string;
-                crowded?: string;
-                dates_popular?: string;
-                dressy?: string;
-                families_popular?: string;
-                gluten_free_diet?: string;
-                good_for_dogs?: string;
-                groups_popular?: string;
-                healthy_diet?: string;
-                late_night?: string;
-                noisy?: string;
-                quick_bite?: string;
-                romantic?: string;
-                service_quality?: string;
-                singles_popular?: string;
-                special_occasion?: string;
-                trendy?: string;
-                value_for_money?: string;
-                vegan_diet?: string;
-                vegetarian_diet?: string;
-            };
-        };
-        Meals: {
-            bar_snacks?: Record<string, never>;
-            breakfast?: Record<string, never>;
-            brunch?: Record<string, never>;
-            lunch?: Record<string, never>;
-            happy_hour?: Record<string, never>;
-            dessert?: Record<string, never>;
-            dinner?: Record<string, never>;
-            tasting_menu?: Record<string, never>;
-        };
-        FoodAndDrink: {
-            alcohol?: {
-                bar_service?: Record<string, never>;
-                beer?: Record<string, never>;
-                byo?: Record<string, never>;
-                cocktails?: Record<string, never>;
-                full_bar?: Record<string, never>;
-                wine?: Record<string, never>;
-            };
-            meals?: {
-                bar_snacks?: Record<string, never>;
-                breakfast?: Record<string, never>;
-                brunch?: Record<string, never>;
-                lunch?: Record<string, never>;
-                happy_hour?: Record<string, never>;
-                dessert?: Record<string, never>;
-                dinner?: Record<string, never>;
-                tasting_menu?: Record<string, never>;
-            };
-        };
-        GeoBounds: {
-            circle?: {
-                center?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                /** Format: int32 */
-                radius?: number;
-            };
-        };
-        Context: {
-            geo_bounds?: {
-                circle?: {
-                    center?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    /** Format: int32 */
-                    radius?: number;
-                };
-            };
-        };
-        Circle: {
-            center?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
-            /** Format: int32 */
-            radius?: number;
-        };
-        Timeframe: {
+        hours?: {
+          display?: string;
+          is_local_holiday?: boolean;
+          open_now?: boolean;
+          regular?: {
             close?: string;
             /** Format: int32 */
             day?: number;
             open?: string;
+          }[];
         };
-        Venue: {
-            fsq_id?: string;
-            categories?: {
-                /** Format: int32 */
-                id?: number;
-                name?: string;
-                short_name?: string;
-                plural_name?: string;
-                icon?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    prefix?: string;
-                    suffix?: string;
-                    /** Format: int32 */
-                    width?: number;
-                    /** Format: int32 */
-                    height?: number;
-                    classifications?: string[];
-                    tip?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: unknown;
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    };
-                };
-            }[];
-            chains?: {
-                id?: string;
-                name?: string;
-                logo?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    prefix?: string;
-                    suffix?: string;
-                    /** Format: int32 */
-                    width?: number;
-                    /** Format: int32 */
-                    height?: number;
-                    classifications?: string[];
-                    tip?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: unknown;
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    };
-                };
-                parent_id?: string;
-            }[];
-            closed_bucket?: string;
-            /** Format: date */
-            date_closed?: string;
-            description?: string;
-            /** Format: int32 */
-            distance?: number;
-            email?: string;
-            fax?: string;
-            features?: {
-                payment?: {
-                    credit_cards?: {
-                        accepts_credit_cards?: Record<string, never>;
-                        amex?: Record<string, never>;
-                        discover?: Record<string, never>;
-                        visa?: Record<string, never>;
-                        diners_club?: Record<string, never>;
-                        master_card?: Record<string, never>;
-                        union_pay?: Record<string, never>;
-                    };
-                    digital_wallet?: {
-                        accepts_nfc?: Record<string, never>;
-                    };
-                };
-                food_and_drink?: {
-                    alcohol?: {
-                        bar_service?: Record<string, never>;
-                        beer?: Record<string, never>;
-                        byo?: Record<string, never>;
-                        cocktails?: Record<string, never>;
-                        full_bar?: Record<string, never>;
-                        wine?: Record<string, never>;
-                    };
-                    meals?: {
-                        bar_snacks?: Record<string, never>;
-                        breakfast?: Record<string, never>;
-                        brunch?: Record<string, never>;
-                        lunch?: Record<string, never>;
-                        happy_hour?: Record<string, never>;
-                        dessert?: Record<string, never>;
-                        dinner?: Record<string, never>;
-                        tasting_menu?: Record<string, never>;
-                    };
-                };
-                services?: {
-                    delivery?: Record<string, never>;
-                    takeout?: Record<string, never>;
-                    drive_through?: Record<string, never>;
-                    dine_in?: {
-                        reservations?: Record<string, never>;
-                        online_reservations?: Record<string, never>;
-                        groups_only_reservations?: Record<string, never>;
-                        essential_reservations?: Record<string, never>;
-                    };
-                };
-                amenities?: {
-                    restroom?: Record<string, never>;
-                    smoking?: Record<string, never>;
-                    jukebox?: Record<string, never>;
-                    music?: Record<string, never>;
-                    live_music?: Record<string, never>;
-                    private_room?: Record<string, never>;
-                    outdoor_seating?: Record<string, never>;
-                    tvs?: Record<string, never>;
-                    atm?: Record<string, never>;
-                    coat_check?: Record<string, never>;
-                    wheelchair_accessible?: Record<string, never>;
-                    parking?: {
-                        parking?: Record<string, never>;
-                        street_parking?: Record<string, never>;
-                        valet_parking?: Record<string, never>;
-                        public_lot?: Record<string, never>;
-                        private_lot?: Record<string, never>;
-                    };
-                    sit_down_dining?: Record<string, never>;
-                    wifi?: string;
-                };
-                attributes?: {
-                    business_meeting?: string;
-                    clean?: string;
-                    crowded?: string;
-                    dates_popular?: string;
-                    dressy?: string;
-                    families_popular?: string;
-                    gluten_free_diet?: string;
-                    good_for_dogs?: string;
-                    groups_popular?: string;
-                    healthy_diet?: string;
-                    late_night?: string;
-                    noisy?: string;
-                    quick_bite?: string;
-                    romantic?: string;
-                    service_quality?: string;
-                    singles_popular?: string;
-                    special_occasion?: string;
-                    trendy?: string;
-                    value_for_money?: string;
-                    vegan_diet?: string;
-                    vegetarian_diet?: string;
-                };
-            };
-            geocodes?: {
-                drop_off?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                front_door?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                main?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                road?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                roof?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-            };
-            hours?: {
-                display?: string;
-                is_local_holiday?: boolean;
-                open_now?: boolean;
-                regular?: {
-                    close?: string;
-                    /** Format: int32 */
-                    day?: number;
-                    open?: string;
-                }[];
-            };
-            hours_popular?: {
-                close?: string;
-                /** Format: int32 */
-                day?: number;
-                open?: string;
-            }[];
-            link?: string;
-            location?: {
-                address?: string;
-                address_extended?: string;
-                admin_region?: string;
-                census_block?: string;
-                country?: string;
-                cross_street?: string;
-                dma?: string;
-                formatted_address?: string;
-                locality?: string;
-                neighborhood?: string[];
-                po_box?: string;
-                post_town?: string;
-                postcode?: string;
-                region?: string;
-            };
-            menu?: string;
-            name?: string;
-            photos?: {
-                id?: string;
-                /** Format: date-time */
-                created_at?: string;
-                prefix?: string;
-                suffix?: string;
-                /** Format: int32 */
-                width?: number;
-                /** Format: int32 */
-                height?: number;
-                classifications?: string[];
-                tip?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    text?: string;
-                    url?: string;
-                    photo?: unknown;
-                    lang?: string;
-                    /** Format: int32 */
-                    agree_count?: number;
-                    /** Format: int32 */
-                    disagree_count?: number;
-                };
-            }[];
-            /** Format: double */
-            popularity?: number;
-            /** Format: int32 */
-            price?: number;
-            /** Format: double */
-            rating?: number;
-            related_places?: {
-                parent?: unknown;
-            };
-            social_media?: {
-                facebook_id?: string;
-                instagram?: string;
-                twitter?: string;
-            };
-            stats?: {
-                /** Format: int32 */
-                total_photos?: number;
-                /** Format: int64 */
-                total_ratings?: number;
-                /** Format: int32 */
-                total_tips?: number;
-            };
-            store_id?: string;
-            tastes?: string[];
-            tel?: string;
-            timezone?: string;
-            tips?: {
-                id?: string;
-                /** Format: date-time */
-                created_at?: string;
-                text?: string;
-                url?: string;
-                photo?: unknown;
-                lang?: string;
-                /** Format: int32 */
-                agree_count?: number;
-                /** Format: int32 */
-                disagree_count?: number;
-            }[];
-            venue_reality_bucket?: string;
-            verified?: boolean;
-            website?: string;
+        hours_popular?: {
+          close?: string;
+          /** Format: int32 */
+          day?: number;
+          open?: string;
+        }[];
+        link?: string;
+        location?: {
+          address?: string;
+          address_extended?: string;
+          admin_region?: string;
+          census_block?: string;
+          country?: string;
+          cross_street?: string;
+          dma?: string;
+          formatted_address?: string;
+          locality?: string;
+          neighborhood?: string[];
+          po_box?: string;
+          post_town?: string;
+          postcode?: string;
+          region?: string;
         };
-        DineIn: {
-            reservations?: Record<string, never>;
-            online_reservations?: Record<string, never>;
-            groups_only_reservations?: Record<string, never>;
-            essential_reservations?: Record<string, never>;
-        };
-        Parking: {
-            parking?: Record<string, never>;
-            street_parking?: Record<string, never>;
-            valet_parking?: Record<string, never>;
-            public_lot?: Record<string, never>;
-            private_lot?: Record<string, never>;
-        };
-        Services: {
-            delivery?: Record<string, never>;
-            takeout?: Record<string, never>;
-            drive_through?: Record<string, never>;
-            dine_in?: {
-                reservations?: Record<string, never>;
-                online_reservations?: Record<string, never>;
-                groups_only_reservations?: Record<string, never>;
-                essential_reservations?: Record<string, never>;
-            };
-        };
-        Payment: {
-            credit_cards?: {
-                accepts_credit_cards?: Record<string, never>;
-                amex?: Record<string, never>;
-                discover?: Record<string, never>;
-                visa?: Record<string, never>;
-                diners_club?: Record<string, never>;
-                master_card?: Record<string, never>;
-                union_pay?: Record<string, never>;
-            };
-            digital_wallet?: {
-                accepts_nfc?: Record<string, never>;
-            };
-        };
-        Stats: {
-            /** Format: int32 */
-            total_photos?: number;
-            /** Format: int64 */
-            total_ratings?: number;
-            /** Format: int32 */
-            total_tips?: number;
-        };
-        UnversionedPlaceSearchResponse: {
-            results?: {
-                fsq_id?: string;
-                categories?: {
-                    /** Format: int32 */
-                    id?: number;
-                    name?: string;
-                    short_name?: string;
-                    plural_name?: string;
-                    icon?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                }[];
-                chains?: {
-                    id?: string;
-                    name?: string;
-                    logo?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                    parent_id?: string;
-                }[];
-                closed_bucket?: string;
-                /** Format: date */
-                date_closed?: string;
-                description?: string;
-                /** Format: int32 */
-                distance?: number;
-                email?: string;
-                fax?: string;
-                features?: {
-                    payment?: {
-                        credit_cards?: {
-                            accepts_credit_cards?: Record<string, never>;
-                            amex?: Record<string, never>;
-                            discover?: Record<string, never>;
-                            visa?: Record<string, never>;
-                            diners_club?: Record<string, never>;
-                            master_card?: Record<string, never>;
-                            union_pay?: Record<string, never>;
-                        };
-                        digital_wallet?: {
-                            accepts_nfc?: Record<string, never>;
-                        };
-                    };
-                    food_and_drink?: {
-                        alcohol?: {
-                            bar_service?: Record<string, never>;
-                            beer?: Record<string, never>;
-                            byo?: Record<string, never>;
-                            cocktails?: Record<string, never>;
-                            full_bar?: Record<string, never>;
-                            wine?: Record<string, never>;
-                        };
-                        meals?: {
-                            bar_snacks?: Record<string, never>;
-                            breakfast?: Record<string, never>;
-                            brunch?: Record<string, never>;
-                            lunch?: Record<string, never>;
-                            happy_hour?: Record<string, never>;
-                            dessert?: Record<string, never>;
-                            dinner?: Record<string, never>;
-                            tasting_menu?: Record<string, never>;
-                        };
-                    };
-                    services?: {
-                        delivery?: Record<string, never>;
-                        takeout?: Record<string, never>;
-                        drive_through?: Record<string, never>;
-                        dine_in?: {
-                            reservations?: Record<string, never>;
-                            online_reservations?: Record<string, never>;
-                            groups_only_reservations?: Record<string, never>;
-                            essential_reservations?: Record<string, never>;
-                        };
-                    };
-                    amenities?: {
-                        restroom?: Record<string, never>;
-                        smoking?: Record<string, never>;
-                        jukebox?: Record<string, never>;
-                        music?: Record<string, never>;
-                        live_music?: Record<string, never>;
-                        private_room?: Record<string, never>;
-                        outdoor_seating?: Record<string, never>;
-                        tvs?: Record<string, never>;
-                        atm?: Record<string, never>;
-                        coat_check?: Record<string, never>;
-                        wheelchair_accessible?: Record<string, never>;
-                        parking?: {
-                            parking?: Record<string, never>;
-                            street_parking?: Record<string, never>;
-                            valet_parking?: Record<string, never>;
-                            public_lot?: Record<string, never>;
-                            private_lot?: Record<string, never>;
-                        };
-                        sit_down_dining?: Record<string, never>;
-                        wifi?: string;
-                    };
-                    attributes?: {
-                        business_meeting?: string;
-                        clean?: string;
-                        crowded?: string;
-                        dates_popular?: string;
-                        dressy?: string;
-                        families_popular?: string;
-                        gluten_free_diet?: string;
-                        good_for_dogs?: string;
-                        groups_popular?: string;
-                        healthy_diet?: string;
-                        late_night?: string;
-                        noisy?: string;
-                        quick_bite?: string;
-                        romantic?: string;
-                        service_quality?: string;
-                        singles_popular?: string;
-                        special_occasion?: string;
-                        trendy?: string;
-                        value_for_money?: string;
-                        vegan_diet?: string;
-                        vegetarian_diet?: string;
-                    };
-                };
-                geocodes?: {
-                    drop_off?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    front_door?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    main?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    road?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    roof?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                };
-                hours?: {
-                    display?: string;
-                    is_local_holiday?: boolean;
-                    open_now?: boolean;
-                    regular?: {
-                        close?: string;
-                        /** Format: int32 */
-                        day?: number;
-                        open?: string;
-                    }[];
-                };
-                hours_popular?: {
-                    close?: string;
-                    /** Format: int32 */
-                    day?: number;
-                    open?: string;
-                }[];
-                link?: string;
-                location?: {
-                    address?: string;
-                    address_extended?: string;
-                    admin_region?: string;
-                    census_block?: string;
-                    country?: string;
-                    cross_street?: string;
-                    dma?: string;
-                    formatted_address?: string;
-                    locality?: string;
-                    neighborhood?: string[];
-                    po_box?: string;
-                    post_town?: string;
-                    postcode?: string;
-                    region?: string;
-                };
-                menu?: string;
-                name?: string;
-                photos?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    prefix?: string;
-                    suffix?: string;
-                    /** Format: int32 */
-                    width?: number;
-                    /** Format: int32 */
-                    height?: number;
-                    classifications?: string[];
-                    tip?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: unknown;
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    };
-                }[];
-                /** Format: double */
-                popularity?: number;
-                /** Format: int32 */
-                price?: number;
-                /** Format: double */
-                rating?: number;
-                related_places?: {
-                    parent?: unknown;
-                };
-                social_media?: {
-                    facebook_id?: string;
-                    instagram?: string;
-                    twitter?: string;
-                };
-                stats?: {
-                    /** Format: int32 */
-                    total_photos?: number;
-                    /** Format: int64 */
-                    total_ratings?: number;
-                    /** Format: int32 */
-                    total_tips?: number;
-                };
-                store_id?: string;
-                tastes?: string[];
-                tel?: string;
-                timezone?: string;
-                tips?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    text?: string;
-                    url?: string;
-                    photo?: unknown;
-                    lang?: string;
-                    /** Format: int32 */
-                    agree_count?: number;
-                    /** Format: int32 */
-                    disagree_count?: number;
-                }[];
-                venue_reality_bucket?: string;
-                verified?: boolean;
-                website?: string;
-            }[];
-            context?: {
-                geo_bounds?: {
-                    circle?: {
-                        center?: {
-                            /** Format: double */
-                            latitude?: number;
-                            /** Format: double */
-                            longitude?: number;
-                        };
-                        /** Format: int32 */
-                        radius?: number;
-                    };
-                };
-            };
-        };
-        Tip: {
+        menu?: string;
+        name?: string;
+        photos?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          prefix?: string;
+          suffix?: string;
+          /** Format: int32 */
+          width?: number;
+          /** Format: int32 */
+          height?: number;
+          classifications?: string[];
+          tip?: {
             id?: string;
             /** Format: date-time */
             created_at?: string;
@@ -1209,14 +1137,252 @@ export interface components {
             agree_count?: number;
             /** Format: int32 */
             disagree_count?: number;
+          };
+        }[];
+        /** Format: double */
+        popularity?: number;
+        /** Format: int32 */
+        price?: number;
+        /** Format: double */
+        rating?: number;
+        related_places?: {
+          parent?: unknown;
         };
-        LatLong: {
-            /** Format: double */
-            latitude?: number;
-            /** Format: double */
-            longitude?: number;
+        social_media?: {
+          facebook_id?: string;
+          instagram?: string;
+          twitter?: string;
         };
-        Amenities: {
+        stats?: {
+          /** Format: int32 */
+          total_photos?: number;
+          /** Format: int64 */
+          total_ratings?: number;
+          /** Format: int32 */
+          total_tips?: number;
+        };
+        store_id?: string;
+        tastes?: string[];
+        tel?: string;
+        timezone?: string;
+        tips?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        }[];
+        venue_reality_bucket?: string;
+        verified?: boolean;
+        website?: string;
+      }[];
+      context?: {
+        geo_bounds?: {
+          circle?: {
+            center?: {
+              /** Format: double */
+              latitude?: number;
+              /** Format: double */
+              longitude?: number;
+            };
+            /** Format: int32 */
+            radius?: number;
+          };
+        };
+      };
+    };
+    Tip: {
+      id?: string;
+      /** Format: date-time */
+      created_at?: string;
+      text?: string;
+      url?: string;
+      photo?: unknown;
+      lang?: string;
+      /** Format: int32 */
+      agree_count?: number;
+      /** Format: int32 */
+      disagree_count?: number;
+    };
+    LatLong: {
+      /** Format: double */
+      latitude?: number;
+      /** Format: double */
+      longitude?: number;
+    };
+    Amenities: {
+      restroom?: Record<string, never>;
+      smoking?: Record<string, never>;
+      jukebox?: Record<string, never>;
+      music?: Record<string, never>;
+      live_music?: Record<string, never>;
+      private_room?: Record<string, never>;
+      outdoor_seating?: Record<string, never>;
+      tvs?: Record<string, never>;
+      atm?: Record<string, never>;
+      coat_check?: Record<string, never>;
+      wheelchair_accessible?: Record<string, never>;
+      parking?: {
+        parking?: Record<string, never>;
+        street_parking?: Record<string, never>;
+        valet_parking?: Record<string, never>;
+        public_lot?: Record<string, never>;
+        private_lot?: Record<string, never>;
+      };
+      sit_down_dining?: Record<string, never>;
+      wifi?: string;
+    };
+    Location: {
+      address?: string;
+      address_extended?: string;
+      admin_region?: string;
+      census_block?: string;
+      country?: string;
+      cross_street?: string;
+      dma?: string;
+      formatted_address?: string;
+      locality?: string;
+      neighborhood?: string[];
+      po_box?: string;
+      post_town?: string;
+      postcode?: string;
+      region?: string;
+    };
+    RelatedPlaces: {
+      parent?: unknown;
+    };
+    OpenAt: {
+      /** @enum {string} */
+      day?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+      /** Format: date-time */
+      time?: string;
+    };
+    PlaceMatchResponse: {
+      place?: {
+        fsq_id?: string;
+        categories?: {
+          /** Format: int32 */
+          id?: number;
+          name?: string;
+          short_name?: string;
+          plural_name?: string;
+          icon?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+        }[];
+        chains?: {
+          id?: string;
+          name?: string;
+          logo?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+          parent_id?: string;
+        }[];
+        closed_bucket?: string;
+        /** Format: date */
+        date_closed?: string;
+        description?: string;
+        /** Format: int32 */
+        distance?: number;
+        email?: string;
+        fax?: string;
+        features?: {
+          payment?: {
+            credit_cards?: {
+              accepts_credit_cards?: Record<string, never>;
+              amex?: Record<string, never>;
+              discover?: Record<string, never>;
+              visa?: Record<string, never>;
+              diners_club?: Record<string, never>;
+              master_card?: Record<string, never>;
+              union_pay?: Record<string, never>;
+            };
+            digital_wallet?: {
+              accepts_nfc?: Record<string, never>;
+            };
+          };
+          food_and_drink?: {
+            alcohol?: {
+              bar_service?: Record<string, never>;
+              beer?: Record<string, never>;
+              byo?: Record<string, never>;
+              cocktails?: Record<string, never>;
+              full_bar?: Record<string, never>;
+              wine?: Record<string, never>;
+            };
+            meals?: {
+              bar_snacks?: Record<string, never>;
+              breakfast?: Record<string, never>;
+              brunch?: Record<string, never>;
+              lunch?: Record<string, never>;
+              happy_hour?: Record<string, never>;
+              dessert?: Record<string, never>;
+              dinner?: Record<string, never>;
+              tasting_menu?: Record<string, never>;
+            };
+          };
+          services?: {
+            delivery?: Record<string, never>;
+            takeout?: Record<string, never>;
+            drive_through?: Record<string, never>;
+            dine_in?: {
+              reservations?: Record<string, never>;
+              online_reservations?: Record<string, never>;
+              groups_only_reservations?: Record<string, never>;
+              essential_reservations?: Record<string, never>;
+            };
+          };
+          amenities?: {
             restroom?: Record<string, never>;
             smoking?: Record<string, never>;
             jukebox?: Record<string, never>;
@@ -1229,635 +1395,999 @@ export interface components {
             coat_check?: Record<string, never>;
             wheelchair_accessible?: Record<string, never>;
             parking?: {
-                parking?: Record<string, never>;
-                street_parking?: Record<string, never>;
-                valet_parking?: Record<string, never>;
-                public_lot?: Record<string, never>;
-                private_lot?: Record<string, never>;
+              parking?: Record<string, never>;
+              street_parking?: Record<string, never>;
+              valet_parking?: Record<string, never>;
+              public_lot?: Record<string, never>;
+              private_lot?: Record<string, never>;
             };
             sit_down_dining?: Record<string, never>;
             wifi?: string;
+          };
+          attributes?: {
+            business_meeting?: string;
+            clean?: string;
+            crowded?: string;
+            dates_popular?: string;
+            dressy?: string;
+            families_popular?: string;
+            gluten_free_diet?: string;
+            good_for_dogs?: string;
+            groups_popular?: string;
+            healthy_diet?: string;
+            late_night?: string;
+            noisy?: string;
+            quick_bite?: string;
+            romantic?: string;
+            service_quality?: string;
+            singles_popular?: string;
+            special_occasion?: string;
+            trendy?: string;
+            value_for_money?: string;
+            vegan_diet?: string;
+            vegetarian_diet?: string;
+          };
         };
-        Location: {
-            address?: string;
-            address_extended?: string;
-            admin_region?: string;
-            census_block?: string;
-            country?: string;
-            cross_street?: string;
-            dma?: string;
-            formatted_address?: string;
-            locality?: string;
-            neighborhood?: string[];
-            po_box?: string;
-            post_town?: string;
-            postcode?: string;
-            region?: string;
-        };
-        RelatedPlaces: {
-            parent?: unknown;
-        };
-        OpenAt: {
-            /** @enum {string} */
-            day?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            /** Format: date-time */
-            time?: string;
-        };
-        PlaceMatchResponse: {
-            place?: {
-                fsq_id?: string;
-                categories?: {
-                    /** Format: int32 */
-                    id?: number;
-                    name?: string;
-                    short_name?: string;
-                    plural_name?: string;
-                    icon?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                }[];
-                chains?: {
-                    id?: string;
-                    name?: string;
-                    logo?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                    parent_id?: string;
-                }[];
-                closed_bucket?: string;
-                /** Format: date */
-                date_closed?: string;
-                description?: string;
-                /** Format: int32 */
-                distance?: number;
-                email?: string;
-                fax?: string;
-                features?: {
-                    payment?: {
-                        credit_cards?: {
-                            accepts_credit_cards?: Record<string, never>;
-                            amex?: Record<string, never>;
-                            discover?: Record<string, never>;
-                            visa?: Record<string, never>;
-                            diners_club?: Record<string, never>;
-                            master_card?: Record<string, never>;
-                            union_pay?: Record<string, never>;
-                        };
-                        digital_wallet?: {
-                            accepts_nfc?: Record<string, never>;
-                        };
-                    };
-                    food_and_drink?: {
-                        alcohol?: {
-                            bar_service?: Record<string, never>;
-                            beer?: Record<string, never>;
-                            byo?: Record<string, never>;
-                            cocktails?: Record<string, never>;
-                            full_bar?: Record<string, never>;
-                            wine?: Record<string, never>;
-                        };
-                        meals?: {
-                            bar_snacks?: Record<string, never>;
-                            breakfast?: Record<string, never>;
-                            brunch?: Record<string, never>;
-                            lunch?: Record<string, never>;
-                            happy_hour?: Record<string, never>;
-                            dessert?: Record<string, never>;
-                            dinner?: Record<string, never>;
-                            tasting_menu?: Record<string, never>;
-                        };
-                    };
-                    services?: {
-                        delivery?: Record<string, never>;
-                        takeout?: Record<string, never>;
-                        drive_through?: Record<string, never>;
-                        dine_in?: {
-                            reservations?: Record<string, never>;
-                            online_reservations?: Record<string, never>;
-                            groups_only_reservations?: Record<string, never>;
-                            essential_reservations?: Record<string, never>;
-                        };
-                    };
-                    amenities?: {
-                        restroom?: Record<string, never>;
-                        smoking?: Record<string, never>;
-                        jukebox?: Record<string, never>;
-                        music?: Record<string, never>;
-                        live_music?: Record<string, never>;
-                        private_room?: Record<string, never>;
-                        outdoor_seating?: Record<string, never>;
-                        tvs?: Record<string, never>;
-                        atm?: Record<string, never>;
-                        coat_check?: Record<string, never>;
-                        wheelchair_accessible?: Record<string, never>;
-                        parking?: {
-                            parking?: Record<string, never>;
-                            street_parking?: Record<string, never>;
-                            valet_parking?: Record<string, never>;
-                            public_lot?: Record<string, never>;
-                            private_lot?: Record<string, never>;
-                        };
-                        sit_down_dining?: Record<string, never>;
-                        wifi?: string;
-                    };
-                    attributes?: {
-                        business_meeting?: string;
-                        clean?: string;
-                        crowded?: string;
-                        dates_popular?: string;
-                        dressy?: string;
-                        families_popular?: string;
-                        gluten_free_diet?: string;
-                        good_for_dogs?: string;
-                        groups_popular?: string;
-                        healthy_diet?: string;
-                        late_night?: string;
-                        noisy?: string;
-                        quick_bite?: string;
-                        romantic?: string;
-                        service_quality?: string;
-                        singles_popular?: string;
-                        special_occasion?: string;
-                        trendy?: string;
-                        value_for_money?: string;
-                        vegan_diet?: string;
-                        vegetarian_diet?: string;
-                    };
-                };
-                geocodes?: {
-                    drop_off?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    front_door?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    main?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    road?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    roof?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                };
-                hours?: {
-                    display?: string;
-                    is_local_holiday?: boolean;
-                    open_now?: boolean;
-                    regular?: {
-                        close?: string;
-                        /** Format: int32 */
-                        day?: number;
-                        open?: string;
-                    }[];
-                };
-                hours_popular?: {
-                    close?: string;
-                    /** Format: int32 */
-                    day?: number;
-                    open?: string;
-                }[];
-                link?: string;
-                location?: {
-                    address?: string;
-                    address_extended?: string;
-                    admin_region?: string;
-                    census_block?: string;
-                    country?: string;
-                    cross_street?: string;
-                    dma?: string;
-                    formatted_address?: string;
-                    locality?: string;
-                    neighborhood?: string[];
-                    po_box?: string;
-                    post_town?: string;
-                    postcode?: string;
-                    region?: string;
-                };
-                menu?: string;
-                name?: string;
-                photos?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    prefix?: string;
-                    suffix?: string;
-                    /** Format: int32 */
-                    width?: number;
-                    /** Format: int32 */
-                    height?: number;
-                    classifications?: string[];
-                    tip?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: unknown;
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    };
-                }[];
-                /** Format: double */
-                popularity?: number;
-                /** Format: int32 */
-                price?: number;
-                /** Format: double */
-                rating?: number;
-                related_places?: {
-                    parent?: unknown;
-                };
-                social_media?: {
-                    facebook_id?: string;
-                    instagram?: string;
-                    twitter?: string;
-                };
-                stats?: {
-                    /** Format: int32 */
-                    total_photos?: number;
-                    /** Format: int64 */
-                    total_ratings?: number;
-                    /** Format: int32 */
-                    total_tips?: number;
-                };
-                store_id?: string;
-                tastes?: string[];
-                tel?: string;
-                timezone?: string;
-                tips?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    text?: string;
-                    url?: string;
-                    photo?: unknown;
-                    lang?: string;
-                    /** Format: int32 */
-                    agree_count?: number;
-                    /** Format: int32 */
-                    disagree_count?: number;
-                }[];
-                venue_reality_bucket?: string;
-                verified?: boolean;
-                website?: string;
-            };
+        geocodes?: {
+          drop_off?: {
             /** Format: double */
-            match_score?: number;
-            context?: {
-                /** Format: double */
-                latitude?: number;
-                /** Format: double */
-                longitude?: number;
-            };
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          front_door?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          main?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          road?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          roof?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
         };
-        CurrentPlaceResponse: {
+        hours?: {
+          display?: string;
+          is_local_holiday?: boolean;
+          open_now?: boolean;
+          regular?: {
+            close?: string;
+            /** Format: int32 */
+            day?: number;
+            open?: string;
+          }[];
+        };
+        hours_popular?: {
+          close?: string;
+          /** Format: int32 */
+          day?: number;
+          open?: string;
+        }[];
+        link?: string;
+        location?: {
+          address?: string;
+          address_extended?: string;
+          admin_region?: string;
+          census_block?: string;
+          country?: string;
+          cross_street?: string;
+          dma?: string;
+          formatted_address?: string;
+          locality?: string;
+          neighborhood?: string[];
+          po_box?: string;
+          post_town?: string;
+          postcode?: string;
+          region?: string;
+        };
+        menu?: string;
+        name?: string;
+        photos?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          prefix?: string;
+          suffix?: string;
+          /** Format: int32 */
+          width?: number;
+          /** Format: int32 */
+          height?: number;
+          classifications?: string[];
+          tip?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            text?: string;
+            url?: string;
+            photo?: unknown;
+            lang?: string;
+            /** Format: int32 */
+            agree_count?: number;
+            /** Format: int32 */
+            disagree_count?: number;
+          };
+        }[];
+        /** Format: double */
+        popularity?: number;
+        /** Format: int32 */
+        price?: number;
+        /** Format: double */
+        rating?: number;
+        related_places?: {
+          parent?: unknown;
+        };
+        social_media?: {
+          facebook_id?: string;
+          instagram?: string;
+          twitter?: string;
+        };
+        stats?: {
+          /** Format: int32 */
+          total_photos?: number;
+          /** Format: int64 */
+          total_ratings?: number;
+          /** Format: int32 */
+          total_tips?: number;
+        };
+        store_id?: string;
+        tastes?: string[];
+        tel?: string;
+        timezone?: string;
+        tips?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        }[];
+        venue_reality_bucket?: string;
+        verified?: boolean;
+        website?: string;
+      };
+      /** Format: double */
+      match_score?: number;
+      context?: {
+        /** Format: double */
+        latitude?: number;
+        /** Format: double */
+        longitude?: number;
+      };
+    };
+    CurrentPlaceResponse: {
+      results?: {
+        fsq_id?: string;
+        categories?: {
+          /** Format: int32 */
+          id?: number;
+          name?: string;
+          short_name?: string;
+          plural_name?: string;
+          icon?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+        }[];
+        chains?: {
+          id?: string;
+          name?: string;
+          logo?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+          parent_id?: string;
+        }[];
+        closed_bucket?: string;
+        /** Format: date */
+        date_closed?: string;
+        description?: string;
+        /** Format: int32 */
+        distance?: number;
+        email?: string;
+        fax?: string;
+        features?: {
+          payment?: {
+            credit_cards?: {
+              accepts_credit_cards?: Record<string, never>;
+              amex?: Record<string, never>;
+              discover?: Record<string, never>;
+              visa?: Record<string, never>;
+              diners_club?: Record<string, never>;
+              master_card?: Record<string, never>;
+              union_pay?: Record<string, never>;
+            };
+            digital_wallet?: {
+              accepts_nfc?: Record<string, never>;
+            };
+          };
+          food_and_drink?: {
+            alcohol?: {
+              bar_service?: Record<string, never>;
+              beer?: Record<string, never>;
+              byo?: Record<string, never>;
+              cocktails?: Record<string, never>;
+              full_bar?: Record<string, never>;
+              wine?: Record<string, never>;
+            };
+            meals?: {
+              bar_snacks?: Record<string, never>;
+              breakfast?: Record<string, never>;
+              brunch?: Record<string, never>;
+              lunch?: Record<string, never>;
+              happy_hour?: Record<string, never>;
+              dessert?: Record<string, never>;
+              dinner?: Record<string, never>;
+              tasting_menu?: Record<string, never>;
+            };
+          };
+          services?: {
+            delivery?: Record<string, never>;
+            takeout?: Record<string, never>;
+            drive_through?: Record<string, never>;
+            dine_in?: {
+              reservations?: Record<string, never>;
+              online_reservations?: Record<string, never>;
+              groups_only_reservations?: Record<string, never>;
+              essential_reservations?: Record<string, never>;
+            };
+          };
+          amenities?: {
+            restroom?: Record<string, never>;
+            smoking?: Record<string, never>;
+            jukebox?: Record<string, never>;
+            music?: Record<string, never>;
+            live_music?: Record<string, never>;
+            private_room?: Record<string, never>;
+            outdoor_seating?: Record<string, never>;
+            tvs?: Record<string, never>;
+            atm?: Record<string, never>;
+            coat_check?: Record<string, never>;
+            wheelchair_accessible?: Record<string, never>;
+            parking?: {
+              parking?: Record<string, never>;
+              street_parking?: Record<string, never>;
+              valet_parking?: Record<string, never>;
+              public_lot?: Record<string, never>;
+              private_lot?: Record<string, never>;
+            };
+            sit_down_dining?: Record<string, never>;
+            wifi?: string;
+          };
+          attributes?: {
+            business_meeting?: string;
+            clean?: string;
+            crowded?: string;
+            dates_popular?: string;
+            dressy?: string;
+            families_popular?: string;
+            gluten_free_diet?: string;
+            good_for_dogs?: string;
+            groups_popular?: string;
+            healthy_diet?: string;
+            late_night?: string;
+            noisy?: string;
+            quick_bite?: string;
+            romantic?: string;
+            service_quality?: string;
+            singles_popular?: string;
+            special_occasion?: string;
+            trendy?: string;
+            value_for_money?: string;
+            vegan_diet?: string;
+            vegetarian_diet?: string;
+          };
+        };
+        geocodes?: {
+          drop_off?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          front_door?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          main?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          road?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          roof?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+        };
+        hours?: {
+          display?: string;
+          is_local_holiday?: boolean;
+          open_now?: boolean;
+          regular?: {
+            close?: string;
+            /** Format: int32 */
+            day?: number;
+            open?: string;
+          }[];
+        };
+        hours_popular?: {
+          close?: string;
+          /** Format: int32 */
+          day?: number;
+          open?: string;
+        }[];
+        link?: string;
+        location?: {
+          address?: string;
+          address_extended?: string;
+          admin_region?: string;
+          census_block?: string;
+          country?: string;
+          cross_street?: string;
+          dma?: string;
+          formatted_address?: string;
+          locality?: string;
+          neighborhood?: string[];
+          po_box?: string;
+          post_town?: string;
+          postcode?: string;
+          region?: string;
+        };
+        menu?: string;
+        name?: string;
+        photos?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          prefix?: string;
+          suffix?: string;
+          /** Format: int32 */
+          width?: number;
+          /** Format: int32 */
+          height?: number;
+          classifications?: string[];
+          tip?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            text?: string;
+            url?: string;
+            photo?: unknown;
+            lang?: string;
+            /** Format: int32 */
+            agree_count?: number;
+            /** Format: int32 */
+            disagree_count?: number;
+          };
+        }[];
+        /** Format: double */
+        popularity?: number;
+        /** Format: int32 */
+        price?: number;
+        /** Format: double */
+        rating?: number;
+        related_places?: {
+          parent?: unknown;
+        };
+        social_media?: {
+          facebook_id?: string;
+          instagram?: string;
+          twitter?: string;
+        };
+        stats?: {
+          /** Format: int32 */
+          total_photos?: number;
+          /** Format: int64 */
+          total_ratings?: number;
+          /** Format: int32 */
+          total_tips?: number;
+        };
+        store_id?: string;
+        tastes?: string[];
+        tel?: string;
+        timezone?: string;
+        tips?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        }[];
+        venue_reality_bucket?: string;
+        verified?: boolean;
+        website?: string;
+      }[];
+    };
+    GenericResponse: {
+      response?: string;
+    };
+    AddressDetailsResponse: {
+      fsq_addr_id?: string;
+      location?: {
+        address?: string;
+        address_extended?: string;
+        admin_region?: string;
+        census_block?: string;
+        country?: string;
+        cross_street?: string;
+        dma?: string;
+        formatted_address?: string;
+        locality?: string;
+        neighborhood?: string[];
+        po_box?: string;
+        post_town?: string;
+        postcode?: string;
+        region?: string;
+      };
+      geocodes?: {
+        drop_off?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        front_door?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        main?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        road?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+        roof?: {
+          /** Format: double */
+          latitude?: number;
+          /** Format: double */
+          longitude?: number;
+        };
+      };
+      directory?: {
+        fsq_id?: string;
+        categories?: {
+          /** Format: int32 */
+          id?: number;
+          name?: string;
+          short_name?: string;
+          plural_name?: string;
+          icon?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+        }[];
+        chains?: {
+          id?: string;
+          name?: string;
+          logo?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            prefix?: string;
+            suffix?: string;
+            /** Format: int32 */
+            width?: number;
+            /** Format: int32 */
+            height?: number;
+            classifications?: string[];
+            tip?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              text?: string;
+              url?: string;
+              photo?: unknown;
+              lang?: string;
+              /** Format: int32 */
+              agree_count?: number;
+              /** Format: int32 */
+              disagree_count?: number;
+            };
+          };
+          parent_id?: string;
+        }[];
+        closed_bucket?: string;
+        /** Format: date */
+        date_closed?: string;
+        description?: string;
+        /** Format: int32 */
+        distance?: number;
+        email?: string;
+        fax?: string;
+        features?: {
+          payment?: {
+            credit_cards?: {
+              accepts_credit_cards?: Record<string, never>;
+              amex?: Record<string, never>;
+              discover?: Record<string, never>;
+              visa?: Record<string, never>;
+              diners_club?: Record<string, never>;
+              master_card?: Record<string, never>;
+              union_pay?: Record<string, never>;
+            };
+            digital_wallet?: {
+              accepts_nfc?: Record<string, never>;
+            };
+          };
+          food_and_drink?: {
+            alcohol?: {
+              bar_service?: Record<string, never>;
+              beer?: Record<string, never>;
+              byo?: Record<string, never>;
+              cocktails?: Record<string, never>;
+              full_bar?: Record<string, never>;
+              wine?: Record<string, never>;
+            };
+            meals?: {
+              bar_snacks?: Record<string, never>;
+              breakfast?: Record<string, never>;
+              brunch?: Record<string, never>;
+              lunch?: Record<string, never>;
+              happy_hour?: Record<string, never>;
+              dessert?: Record<string, never>;
+              dinner?: Record<string, never>;
+              tasting_menu?: Record<string, never>;
+            };
+          };
+          services?: {
+            delivery?: Record<string, never>;
+            takeout?: Record<string, never>;
+            drive_through?: Record<string, never>;
+            dine_in?: {
+              reservations?: Record<string, never>;
+              online_reservations?: Record<string, never>;
+              groups_only_reservations?: Record<string, never>;
+              essential_reservations?: Record<string, never>;
+            };
+          };
+          amenities?: {
+            restroom?: Record<string, never>;
+            smoking?: Record<string, never>;
+            jukebox?: Record<string, never>;
+            music?: Record<string, never>;
+            live_music?: Record<string, never>;
+            private_room?: Record<string, never>;
+            outdoor_seating?: Record<string, never>;
+            tvs?: Record<string, never>;
+            atm?: Record<string, never>;
+            coat_check?: Record<string, never>;
+            wheelchair_accessible?: Record<string, never>;
+            parking?: {
+              parking?: Record<string, never>;
+              street_parking?: Record<string, never>;
+              valet_parking?: Record<string, never>;
+              public_lot?: Record<string, never>;
+              private_lot?: Record<string, never>;
+            };
+            sit_down_dining?: Record<string, never>;
+            wifi?: string;
+          };
+          attributes?: {
+            business_meeting?: string;
+            clean?: string;
+            crowded?: string;
+            dates_popular?: string;
+            dressy?: string;
+            families_popular?: string;
+            gluten_free_diet?: string;
+            good_for_dogs?: string;
+            groups_popular?: string;
+            healthy_diet?: string;
+            late_night?: string;
+            noisy?: string;
+            quick_bite?: string;
+            romantic?: string;
+            service_quality?: string;
+            singles_popular?: string;
+            special_occasion?: string;
+            trendy?: string;
+            value_for_money?: string;
+            vegan_diet?: string;
+            vegetarian_diet?: string;
+          };
+        };
+        geocodes?: {
+          drop_off?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          front_door?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          main?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          road?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+          roof?: {
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+          };
+        };
+        hours?: {
+          display?: string;
+          is_local_holiday?: boolean;
+          open_now?: boolean;
+          regular?: {
+            close?: string;
+            /** Format: int32 */
+            day?: number;
+            open?: string;
+          }[];
+        };
+        hours_popular?: {
+          close?: string;
+          /** Format: int32 */
+          day?: number;
+          open?: string;
+        }[];
+        link?: string;
+        location?: {
+          address?: string;
+          address_extended?: string;
+          admin_region?: string;
+          census_block?: string;
+          country?: string;
+          cross_street?: string;
+          dma?: string;
+          formatted_address?: string;
+          locality?: string;
+          neighborhood?: string[];
+          po_box?: string;
+          post_town?: string;
+          postcode?: string;
+          region?: string;
+        };
+        menu?: string;
+        name?: string;
+        photos?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          prefix?: string;
+          suffix?: string;
+          /** Format: int32 */
+          width?: number;
+          /** Format: int32 */
+          height?: number;
+          classifications?: string[];
+          tip?: {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            text?: string;
+            url?: string;
+            photo?: unknown;
+            lang?: string;
+            /** Format: int32 */
+            agree_count?: number;
+            /** Format: int32 */
+            disagree_count?: number;
+          };
+        }[];
+        /** Format: double */
+        popularity?: number;
+        /** Format: int32 */
+        price?: number;
+        /** Format: double */
+        rating?: number;
+        related_places?: {
+          parent?: unknown;
+        };
+        social_media?: {
+          facebook_id?: string;
+          instagram?: string;
+          twitter?: string;
+        };
+        stats?: {
+          /** Format: int32 */
+          total_photos?: number;
+          /** Format: int64 */
+          total_ratings?: number;
+          /** Format: int32 */
+          total_tips?: number;
+        };
+        store_id?: string;
+        tastes?: string[];
+        tel?: string;
+        timezone?: string;
+        tips?: {
+          id?: string;
+          /** Format: date-time */
+          created_at?: string;
+          text?: string;
+          url?: string;
+          photo?: unknown;
+          lang?: string;
+          /** Format: int32 */
+          agree_count?: number;
+          /** Format: int32 */
+          disagree_count?: number;
+        }[];
+        venue_reality_bucket?: string;
+        verified?: boolean;
+        website?: string;
+      }[];
+    };
+    FeedbackStatusResponse: {
+      woes?: {
+        id?: string;
+        fsq_id?: string;
+        proposed_edit_type?: string;
+        /** Format: date-time */
+        created_at?: string;
+        /** Format: date-time */
+        resolved_time?: string;
+        rolled_back?: Record<string, never>;
+        status?: string;
+      }[];
+    };
+    VenueWoeModel: {
+      id?: string;
+      fsq_id?: string;
+      proposed_edit_type?: string;
+      /** Format: date-time */
+      created_at?: string;
+      /** Format: date-time */
+      resolved_time?: string;
+      rolled_back?: Record<string, never>;
+      status?: string;
+    };
+    UnversionedFeedbackResponse: {
+      proposed_edits?: {
+        id?: string;
+        fsq_id?: string;
+        proposed_edit_type?: string;
+        /** Format: date-time */
+        created_at?: string;
+        /** Format: date-time */
+        resolved_time?: string;
+        rolled_back?: Record<string, never>;
+        status?: string;
+      }[];
+      errors?: string[];
+    };
+    LatLngType: {
+      /** Format: int32 */
+      id?: number;
+      name?: string;
+      string_value?: string;
+      /** Format: int32 */
+      value?: number;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
+}
+export type $defs = Record<string, never>;
+export interface operations {
+  'place-search': {
+    parameters: {
+      query?: {
+        /** @description A string to be matched against all content for this place, including but not limited to venue name, category, telephone number, taste, and tips. */
+        query?: string;
+        /** @description The latitude/longitude around which to retrieve place information. This must be specified as latitude,longitude (e.g., ll=41.8781,-87.6298). */
+        ll?: string;
+        /** @description Sets a radius distance (in meters) used to define an area to bias search results. The maximum allowed radius is 100,000 meters. Radius can be used in combination with ll or ip biased geolocation only. By using radius, global search results will be omitted. If not provided, default radius applied is 22000 meters. */
+        radius?: number;
+        /**
+         * @description Filters the response and returns FSQ Places matching the specified categories. Supports multiple Category IDs, separated by commas.
+         *
+         *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id]
+         */
+        categories?: string;
+        /**
+         * @description Filters the response and returns FSQ Places matching the specified chains. Supports multiple chain IDs, separated by commas.
+         *
+         *     For more information on Foursquare Chain IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/chains" target="blank">Chains</a> page.
+         */
+        chains?: string;
+        /**
+         * @description Filters the response and returns FSQ Places not matching any of the specified chains. Supports multiple chain IDs, separated by commas. Cannot be used in conjunction with exclude_all_chains.
+         *
+         *     For more information on Foursquare Chain IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/chains" target="blank">Chains</a> page.
+         */
+        exclude_chains?: string;
+        /** @description Filters the response by only returning FSQ Places that are not known to be part of any chain. Cannot be used in conjunction with exclude_chains. */
+        exclude_all_chains?: boolean;
+        /**
+         * @description Indicate which fields to return in the response, separated by commas. If no fields are specified, all <a href="https://docs.foursquare.com/reference/response-fields#core-data-fields" target="_blank">Core Fields</a> are returned by default.
+         *
+         *     For a complete list of returnable fields, refer to the <a href="https://docs.foursquare.com/reference/response-fields" target="_blank">Response Fields</a> page.
+         */
+        fields?: string;
+        /** @description Restricts results to only those places within the specified price range. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive. */
+        min_price?: number;
+        /** @description Restricts results to only those places within the specified price range. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive. */
+        max_price?: number;
+        /**
+         * @description Support local day and local time requests through this parameter. To be specified as DOWTHHMM (e.g., 1T2130), where DOW is the day number 1-7 (Monday = 1, Sunday = 7) and time is in 24 hour format.
+         *
+         *     Places that do not have opening hours will not be returned if this parameter is specified. Cannot be specified in conjunction with `open_now`.
+         */
+        open_at?: string;
+        /**
+         * @description Restricts results to only those places that are open now.
+         *
+         *     Places that do not have opening hours will not be returned if this parameter is specified. Cannot be specified in conjunction with `open_at`.
+         */
+        open_now?: boolean;
+        /** @description The latitude/longitude representing the north/east points of a rectangle. Must be used with sw parameter to specify a rectangular search box. Global search results will be omitted. */
+        ne?: string;
+        /** @description The latitude/longitude representing the south/west points of a rectangle. Must be used with ne parameter to specify a rectangular search box. Global search results will be omitted. */
+        sw?: string;
+        /** @description A string naming a locality in the world (e.g., "Chicago, IL"). If the value is not geocodable, returns an error. Global search results will be omitted. */
+        near?: string;
+        /** @description A string containing a list of coordinate pairs which define the edges of the polygon. Each pair must include latitude and longitude separated by a comma, with each pair separated by a tilde ~. Must have at least 4 coordinate pairs and be considered a "closed" polygon. Global search results will be omitted. */
+        polygon?: string;
+        /** @description Specifies the order in which results are listed. */
+        sort?: 'RELEVANCE' | 'RATING' | 'DISTANCE' | 'POPULARITY';
+        /** @description The number of results to return, up to 50. Defaults to 10. */
+        limit?: number;
+        /** @description A user-generated token to identify a session for billing purposes. Learn more about [session tokens](https://docs.foursquare.com/reference/session-tokens). */
+        session_token?: string;
+        /** @description A Foursquare Venue ID to use as search bounds so only places within that venue are returned */
+        super_venue_id?: string;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
             results?: {
-                fsq_id?: string;
-                categories?: {
-                    /** Format: int32 */
-                    id?: number;
-                    name?: string;
-                    short_name?: string;
-                    plural_name?: string;
-                    icon?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                }[];
-                chains?: {
-                    id?: string;
-                    name?: string;
-                    logo?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                    parent_id?: string;
-                }[];
-                closed_bucket?: string;
-                /** Format: date */
-                date_closed?: string;
-                description?: string;
+              fsq_id?: string;
+              categories?: {
                 /** Format: int32 */
-                distance?: number;
-                email?: string;
-                fax?: string;
-                features?: {
-                    payment?: {
-                        credit_cards?: {
-                            accepts_credit_cards?: Record<string, never>;
-                            amex?: Record<string, never>;
-                            discover?: Record<string, never>;
-                            visa?: Record<string, never>;
-                            diners_club?: Record<string, never>;
-                            master_card?: Record<string, never>;
-                            union_pay?: Record<string, never>;
-                        };
-                        digital_wallet?: {
-                            accepts_nfc?: Record<string, never>;
-                        };
-                    };
-                    food_and_drink?: {
-                        alcohol?: {
-                            bar_service?: Record<string, never>;
-                            beer?: Record<string, never>;
-                            byo?: Record<string, never>;
-                            cocktails?: Record<string, never>;
-                            full_bar?: Record<string, never>;
-                            wine?: Record<string, never>;
-                        };
-                        meals?: {
-                            bar_snacks?: Record<string, never>;
-                            breakfast?: Record<string, never>;
-                            brunch?: Record<string, never>;
-                            lunch?: Record<string, never>;
-                            happy_hour?: Record<string, never>;
-                            dessert?: Record<string, never>;
-                            dinner?: Record<string, never>;
-                            tasting_menu?: Record<string, never>;
-                        };
-                    };
-                    services?: {
-                        delivery?: Record<string, never>;
-                        takeout?: Record<string, never>;
-                        drive_through?: Record<string, never>;
-                        dine_in?: {
-                            reservations?: Record<string, never>;
-                            online_reservations?: Record<string, never>;
-                            groups_only_reservations?: Record<string, never>;
-                            essential_reservations?: Record<string, never>;
-                        };
-                    };
-                    amenities?: {
-                        restroom?: Record<string, never>;
-                        smoking?: Record<string, never>;
-                        jukebox?: Record<string, never>;
-                        music?: Record<string, never>;
-                        live_music?: Record<string, never>;
-                        private_room?: Record<string, never>;
-                        outdoor_seating?: Record<string, never>;
-                        tvs?: Record<string, never>;
-                        atm?: Record<string, never>;
-                        coat_check?: Record<string, never>;
-                        wheelchair_accessible?: Record<string, never>;
-                        parking?: {
-                            parking?: Record<string, never>;
-                            street_parking?: Record<string, never>;
-                            valet_parking?: Record<string, never>;
-                            public_lot?: Record<string, never>;
-                            private_lot?: Record<string, never>;
-                        };
-                        sit_down_dining?: Record<string, never>;
-                        wifi?: string;
-                    };
-                    attributes?: {
-                        business_meeting?: string;
-                        clean?: string;
-                        crowded?: string;
-                        dates_popular?: string;
-                        dressy?: string;
-                        families_popular?: string;
-                        gluten_free_diet?: string;
-                        good_for_dogs?: string;
-                        groups_popular?: string;
-                        healthy_diet?: string;
-                        late_night?: string;
-                        noisy?: string;
-                        quick_bite?: string;
-                        romantic?: string;
-                        service_quality?: string;
-                        singles_popular?: string;
-                        special_occasion?: string;
-                        trendy?: string;
-                        value_for_money?: string;
-                        vegan_diet?: string;
-                        vegetarian_diet?: string;
-                    };
-                };
-                geocodes?: {
-                    drop_off?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    front_door?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    main?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    road?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    roof?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                };
-                hours?: {
-                    display?: string;
-                    is_local_holiday?: boolean;
-                    open_now?: boolean;
-                    regular?: {
-                        close?: string;
-                        /** Format: int32 */
-                        day?: number;
-                        open?: string;
-                    }[];
-                };
-                hours_popular?: {
-                    close?: string;
-                    /** Format: int32 */
-                    day?: number;
-                    open?: string;
-                }[];
-                link?: string;
-                location?: {
-                    address?: string;
-                    address_extended?: string;
-                    admin_region?: string;
-                    census_block?: string;
-                    country?: string;
-                    cross_street?: string;
-                    dma?: string;
-                    formatted_address?: string;
-                    locality?: string;
-                    neighborhood?: string[];
-                    po_box?: string;
-                    post_town?: string;
-                    postcode?: string;
-                    region?: string;
-                };
-                menu?: string;
+                id?: number;
                 name?: string;
-                photos?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    prefix?: string;
-                    suffix?: string;
-                    /** Format: int32 */
-                    width?: number;
-                    /** Format: int32 */
-                    height?: number;
-                    classifications?: string[];
-                    tip?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: unknown;
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    };
-                }[];
-                /** Format: double */
-                popularity?: number;
-                /** Format: int32 */
-                price?: number;
-                /** Format: double */
-                rating?: number;
-                related_places?: {
-                    parent?: unknown;
-                };
-                social_media?: {
-                    facebook_id?: string;
-                    instagram?: string;
-                    twitter?: string;
-                };
-                stats?: {
-                    /** Format: int32 */
-                    total_photos?: number;
-                    /** Format: int64 */
-                    total_ratings?: number;
-                    /** Format: int32 */
-                    total_tips?: number;
-                };
-                store_id?: string;
-                tastes?: string[];
-                tel?: string;
-                timezone?: string;
-                tips?: {
+                short_name?: string;
+                plural_name?: string;
+                icon?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
                     id?: string;
                     /** Format: date-time */
                     created_at?: string;
@@ -1869,18 +2399,190 @@ export interface components {
                     agree_count?: number;
                     /** Format: int32 */
                     disagree_count?: number;
+                  };
+                };
+              }[];
+              chains?: {
+                id?: string;
+                name?: string;
+                logo?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
+                    id?: string;
+                    /** Format: date-time */
+                    created_at?: string;
+                    text?: string;
+                    url?: string;
+                    photo?: unknown;
+                    lang?: string;
+                    /** Format: int32 */
+                    agree_count?: number;
+                    /** Format: int32 */
+                    disagree_count?: number;
+                  };
+                };
+                parent_id?: string;
+              }[];
+              closed_bucket?: string;
+              /** Format: date */
+              date_closed?: string;
+              description?: string;
+              /** Format: int32 */
+              distance?: number;
+              email?: string;
+              fax?: string;
+              features?: {
+                payment?: {
+                  credit_cards?: {
+                    accepts_credit_cards?: Record<string, never>;
+                    amex?: Record<string, never>;
+                    discover?: Record<string, never>;
+                    visa?: Record<string, never>;
+                    diners_club?: Record<string, never>;
+                    master_card?: Record<string, never>;
+                    union_pay?: Record<string, never>;
+                  };
+                  digital_wallet?: {
+                    accepts_nfc?: Record<string, never>;
+                  };
+                };
+                food_and_drink?: {
+                  alcohol?: {
+                    bar_service?: Record<string, never>;
+                    beer?: Record<string, never>;
+                    byo?: Record<string, never>;
+                    cocktails?: Record<string, never>;
+                    full_bar?: Record<string, never>;
+                    wine?: Record<string, never>;
+                  };
+                  meals?: {
+                    bar_snacks?: Record<string, never>;
+                    breakfast?: Record<string, never>;
+                    brunch?: Record<string, never>;
+                    lunch?: Record<string, never>;
+                    happy_hour?: Record<string, never>;
+                    dessert?: Record<string, never>;
+                    dinner?: Record<string, never>;
+                    tasting_menu?: Record<string, never>;
+                  };
+                };
+                services?: {
+                  delivery?: Record<string, never>;
+                  takeout?: Record<string, never>;
+                  drive_through?: Record<string, never>;
+                  dine_in?: {
+                    reservations?: Record<string, never>;
+                    online_reservations?: Record<string, never>;
+                    groups_only_reservations?: Record<string, never>;
+                    essential_reservations?: Record<string, never>;
+                  };
+                };
+                amenities?: {
+                  restroom?: Record<string, never>;
+                  smoking?: Record<string, never>;
+                  jukebox?: Record<string, never>;
+                  music?: Record<string, never>;
+                  live_music?: Record<string, never>;
+                  private_room?: Record<string, never>;
+                  outdoor_seating?: Record<string, never>;
+                  tvs?: Record<string, never>;
+                  atm?: Record<string, never>;
+                  coat_check?: Record<string, never>;
+                  wheelchair_accessible?: Record<string, never>;
+                  parking?: {
+                    parking?: Record<string, never>;
+                    street_parking?: Record<string, never>;
+                    valet_parking?: Record<string, never>;
+                    public_lot?: Record<string, never>;
+                    private_lot?: Record<string, never>;
+                  };
+                  sit_down_dining?: Record<string, never>;
+                  wifi?: string;
+                };
+                attributes?: {
+                  business_meeting?: string;
+                  clean?: string;
+                  crowded?: string;
+                  dates_popular?: string;
+                  dressy?: string;
+                  families_popular?: string;
+                  gluten_free_diet?: string;
+                  good_for_dogs?: string;
+                  groups_popular?: string;
+                  healthy_diet?: string;
+                  late_night?: string;
+                  noisy?: string;
+                  quick_bite?: string;
+                  romantic?: string;
+                  service_quality?: string;
+                  singles_popular?: string;
+                  special_occasion?: string;
+                  trendy?: string;
+                  value_for_money?: string;
+                  vegan_diet?: string;
+                  vegetarian_diet?: string;
+                };
+              };
+              geocodes?: {
+                drop_off?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                front_door?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                main?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                road?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                roof?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+              };
+              hours?: {
+                display?: string;
+                is_local_holiday?: boolean;
+                open_now?: boolean;
+                regular?: {
+                  close?: string;
+                  /** Format: int32 */
+                  day?: number;
+                  open?: string;
                 }[];
-                venue_reality_bucket?: string;
-                verified?: boolean;
-                website?: string;
-            }[];
-        };
-        GenericResponse: {
-            response?: string;
-        };
-        AddressDetailsResponse: {
-            fsq_addr_id?: string;
-            location?: {
+              };
+              hours_popular?: {
+                close?: string;
+                /** Format: int32 */
+                day?: number;
+                open?: string;
+              }[];
+              link?: string;
+              location?: {
                 address?: string;
                 address_extended?: string;
                 admin_region?: string;
@@ -1895,323 +2597,246 @@ export interface components {
                 post_town?: string;
                 postcode?: string;
                 region?: string;
-            };
-            geocodes?: {
-                drop_off?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                front_door?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                main?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                road?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-                roof?: {
-                    /** Format: double */
-                    latitude?: number;
-                    /** Format: double */
-                    longitude?: number;
-                };
-            };
-            directory?: {
-                fsq_id?: string;
-                categories?: {
-                    /** Format: int32 */
-                    id?: number;
-                    name?: string;
-                    short_name?: string;
-                    plural_name?: string;
-                    icon?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                }[];
-                chains?: {
-                    id?: string;
-                    name?: string;
-                    logo?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        prefix?: string;
-                        suffix?: string;
-                        /** Format: int32 */
-                        width?: number;
-                        /** Format: int32 */
-                        height?: number;
-                        classifications?: string[];
-                        tip?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            text?: string;
-                            url?: string;
-                            photo?: unknown;
-                            lang?: string;
-                            /** Format: int32 */
-                            agree_count?: number;
-                            /** Format: int32 */
-                            disagree_count?: number;
-                        };
-                    };
-                    parent_id?: string;
-                }[];
-                closed_bucket?: string;
-                /** Format: date */
-                date_closed?: string;
-                description?: string;
+              };
+              menu?: string;
+              name?: string;
+              photos?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                prefix?: string;
+                suffix?: string;
                 /** Format: int32 */
-                distance?: number;
-                email?: string;
-                fax?: string;
-                features?: {
-                    payment?: {
-                        credit_cards?: {
-                            accepts_credit_cards?: Record<string, never>;
-                            amex?: Record<string, never>;
-                            discover?: Record<string, never>;
-                            visa?: Record<string, never>;
-                            diners_club?: Record<string, never>;
-                            master_card?: Record<string, never>;
-                            union_pay?: Record<string, never>;
-                        };
-                        digital_wallet?: {
-                            accepts_nfc?: Record<string, never>;
-                        };
-                    };
-                    food_and_drink?: {
-                        alcohol?: {
-                            bar_service?: Record<string, never>;
-                            beer?: Record<string, never>;
-                            byo?: Record<string, never>;
-                            cocktails?: Record<string, never>;
-                            full_bar?: Record<string, never>;
-                            wine?: Record<string, never>;
-                        };
-                        meals?: {
-                            bar_snacks?: Record<string, never>;
-                            breakfast?: Record<string, never>;
-                            brunch?: Record<string, never>;
-                            lunch?: Record<string, never>;
-                            happy_hour?: Record<string, never>;
-                            dessert?: Record<string, never>;
-                            dinner?: Record<string, never>;
-                            tasting_menu?: Record<string, never>;
-                        };
-                    };
-                    services?: {
-                        delivery?: Record<string, never>;
-                        takeout?: Record<string, never>;
-                        drive_through?: Record<string, never>;
-                        dine_in?: {
-                            reservations?: Record<string, never>;
-                            online_reservations?: Record<string, never>;
-                            groups_only_reservations?: Record<string, never>;
-                            essential_reservations?: Record<string, never>;
-                        };
-                    };
-                    amenities?: {
-                        restroom?: Record<string, never>;
-                        smoking?: Record<string, never>;
-                        jukebox?: Record<string, never>;
-                        music?: Record<string, never>;
-                        live_music?: Record<string, never>;
-                        private_room?: Record<string, never>;
-                        outdoor_seating?: Record<string, never>;
-                        tvs?: Record<string, never>;
-                        atm?: Record<string, never>;
-                        coat_check?: Record<string, never>;
-                        wheelchair_accessible?: Record<string, never>;
-                        parking?: {
-                            parking?: Record<string, never>;
-                            street_parking?: Record<string, never>;
-                            valet_parking?: Record<string, never>;
-                            public_lot?: Record<string, never>;
-                            private_lot?: Record<string, never>;
-                        };
-                        sit_down_dining?: Record<string, never>;
-                        wifi?: string;
-                    };
-                    attributes?: {
-                        business_meeting?: string;
-                        clean?: string;
-                        crowded?: string;
-                        dates_popular?: string;
-                        dressy?: string;
-                        families_popular?: string;
-                        gluten_free_diet?: string;
-                        good_for_dogs?: string;
-                        groups_popular?: string;
-                        healthy_diet?: string;
-                        late_night?: string;
-                        noisy?: string;
-                        quick_bite?: string;
-                        romantic?: string;
-                        service_quality?: string;
-                        singles_popular?: string;
-                        special_occasion?: string;
-                        trendy?: string;
-                        value_for_money?: string;
-                        vegan_diet?: string;
-                        vegetarian_diet?: string;
-                    };
+                width?: number;
+                /** Format: int32 */
+                height?: number;
+                classifications?: string[];
+                tip?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  text?: string;
+                  url?: string;
+                  photo?: unknown;
+                  lang?: string;
+                  /** Format: int32 */
+                  agree_count?: number;
+                  /** Format: int32 */
+                  disagree_count?: number;
                 };
-                geocodes?: {
-                    drop_off?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    front_door?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    main?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    road?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
-                    roof?: {
-                        /** Format: double */
-                        latitude?: number;
-                        /** Format: double */
-                        longitude?: number;
-                    };
+              }[];
+              /** Format: double */
+              popularity?: number;
+              /** Format: int32 */
+              price?: number;
+              /** Format: double */
+              rating?: number;
+              related_places?: {
+                parent?: unknown;
+              };
+              social_media?: {
+                facebook_id?: string;
+                instagram?: string;
+                twitter?: string;
+              };
+              stats?: {
+                /** Format: int32 */
+                total_photos?: number;
+                /** Format: int64 */
+                total_ratings?: number;
+                /** Format: int32 */
+                total_tips?: number;
+              };
+              store_id?: string;
+              tastes?: string[];
+              tel?: string;
+              timezone?: string;
+              tips?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                text?: string;
+                url?: string;
+                photo?: unknown;
+                lang?: string;
+                /** Format: int32 */
+                agree_count?: number;
+                /** Format: int32 */
+                disagree_count?: number;
+              }[];
+              venue_reality_bucket?: string;
+              verified?: boolean;
+              website?: string;
+            }[];
+            context?: {
+              geo_bounds?: {
+                circle?: {
+                  center?: {
+                    /** Format: double */
+                    latitude?: number;
+                    /** Format: double */
+                    longitude?: number;
+                  };
+                  /** Format: int32 */
+                  radius?: number;
                 };
-                hours?: {
-                    display?: string;
-                    is_local_holiday?: boolean;
-                    open_now?: boolean;
-                    regular?: {
-                        close?: string;
-                        /** Format: int32 */
-                        day?: number;
-                        open?: string;
-                    }[];
-                };
-                hours_popular?: {
-                    close?: string;
-                    /** Format: int32 */
-                    day?: number;
-                    open?: string;
-                }[];
-                link?: string;
-                location?: {
-                    address?: string;
-                    address_extended?: string;
-                    admin_region?: string;
-                    census_block?: string;
-                    country?: string;
-                    cross_street?: string;
-                    dma?: string;
-                    formatted_address?: string;
-                    locality?: string;
-                    neighborhood?: string[];
-                    po_box?: string;
-                    post_town?: string;
-                    postcode?: string;
-                    region?: string;
-                };
-                menu?: string;
+              };
+            };
+          };
+        };
+      };
+      /** @description bad request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'place-tips': {
+    parameters: {
+      query?: {
+        /** @description The specified number of tips per page. Returns 10 tips by default, up to a maximum number of 50. */
+        limit?: number;
+        /** @description Indicate which fields to return in the response, separated by commas. Supported fields are:<ul><li> id - The ID of the tip to be returned.</li><li> created_at - The timestamp indicating when the tip was created; UNIX timestamp in seconds since Epoch.</li><li> text - The text of the returned tip.</li><li> lang - The language of the returned tip.</li><li> url - The URL associated with the returned tip.</li><li> agree_count - The count of users who have agreed with the returned tip.</li><li> disagree_count - The count of users who have disagreed with the returned tip.</li><li> photo - The ID of the photo asociated with the returned tip.</li></ul>Default fields if this param is omitted are "id", "created_at", and "text". */
+        fields?: string;
+        /** @description Specifies the order in which results are listed. Possible values are:<ul><li>popular (default) - sorts results based on their popularity among Foursquare users</li><li>newest - sorts results from most recently added to least recently added</li></ul> */
+        sort?: 'POPULAR' | 'NEWEST';
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path: {
+        /** @description A unique string identifier for a FSQ Place (formerly known as Venue ID). E.g., Foursquare HQ's fsq_id = 5a187743ccad6b307315e6fe */
+        fsq_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            text?: string;
+            url?: string;
+            photo?: {
+              id?: string;
+              /** Format: date-time */
+              created_at?: string;
+              prefix?: string;
+              suffix?: string;
+              /** Format: int32 */
+              width?: number;
+              /** Format: int32 */
+              height?: number;
+              classifications?: string[];
+              tip?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                text?: string;
+                url?: string;
+                photo?: unknown;
+                lang?: string;
+                /** Format: int32 */
+                agree_count?: number;
+                /** Format: int32 */
+                disagree_count?: number;
+              };
+            };
+            lang?: string;
+            /** Format: int32 */
+            agree_count?: number;
+            /** Format: int32 */
+            disagree_count?: number;
+          }[];
+        };
+      };
+      /** @description invalid place specified */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'place-match': {
+    parameters: {
+      query: {
+        /** @description Name of the place to match. */
+        name: string;
+        /** @description Street address of the place to match (e.g. 1060 W Addison St). */
+        address?: string;
+        /** @description City, or Locality, where the place is located (e.g. Chicago). */
+        city?: string;
+        /** @description State, or Region, where the place is located (e.g. Illinois). */
+        state?: string;
+        /** @description The postal code for the address where the place is located (e.g. 60613). */
+        postal_code?: string;
+        /** @description The 2-digit country code where the place is located (e.g. US). */
+        cc?: string;
+        /** @description The latitude/longitude of the venue location. This must be specified as latitude,longitude (e.g., ll=41.9484,-87.6553). */
+        ll?: string;
+        /**
+         * @description Indicate which fields to return in the response, separated by commas. If no fields are specified, all <a href="https://docs.foursquare.com/reference/response-fields#core-data-fields" target="_blank">Core Fields</a> are returned by default.
+         *
+         *     For a complete list of returnable fields, refer to the <a href="https://docs.foursquare.com/reference/response-fields" target="_blank">Response Fields</a> page.
+         */
+        fields?: string;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            place?: {
+              fsq_id?: string;
+              categories?: {
+                /** Format: int32 */
+                id?: number;
                 name?: string;
-                photos?: {
-                    id?: string;
-                    /** Format: date-time */
-                    created_at?: string;
-                    prefix?: string;
-                    suffix?: string;
-                    /** Format: int32 */
-                    width?: number;
-                    /** Format: int32 */
-                    height?: number;
-                    classifications?: string[];
-                    tip?: {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: unknown;
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    };
-                }[];
-                /** Format: double */
-                popularity?: number;
-                /** Format: int32 */
-                price?: number;
-                /** Format: double */
-                rating?: number;
-                related_places?: {
-                    parent?: unknown;
-                };
-                social_media?: {
-                    facebook_id?: string;
-                    instagram?: string;
-                    twitter?: string;
-                };
-                stats?: {
-                    /** Format: int32 */
-                    total_photos?: number;
-                    /** Format: int64 */
-                    total_ratings?: number;
-                    /** Format: int32 */
-                    total_tips?: number;
-                };
-                store_id?: string;
-                tastes?: string[];
-                tel?: string;
-                timezone?: string;
-                tips?: {
+                short_name?: string;
+                plural_name?: string;
+                icon?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
                     id?: string;
                     /** Format: date-time */
                     created_at?: string;
@@ -2223,1886 +2848,1261 @@ export interface components {
                     agree_count?: number;
                     /** Format: int32 */
                     disagree_count?: number;
+                  };
+                };
+              }[];
+              chains?: {
+                id?: string;
+                name?: string;
+                logo?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
+                    id?: string;
+                    /** Format: date-time */
+                    created_at?: string;
+                    text?: string;
+                    url?: string;
+                    photo?: unknown;
+                    lang?: string;
+                    /** Format: int32 */
+                    agree_count?: number;
+                    /** Format: int32 */
+                    disagree_count?: number;
+                  };
+                };
+                parent_id?: string;
+              }[];
+              closed_bucket?: string;
+              /** Format: date */
+              date_closed?: string;
+              description?: string;
+              /** Format: int32 */
+              distance?: number;
+              email?: string;
+              fax?: string;
+              features?: {
+                payment?: {
+                  credit_cards?: {
+                    accepts_credit_cards?: Record<string, never>;
+                    amex?: Record<string, never>;
+                    discover?: Record<string, never>;
+                    visa?: Record<string, never>;
+                    diners_club?: Record<string, never>;
+                    master_card?: Record<string, never>;
+                    union_pay?: Record<string, never>;
+                  };
+                  digital_wallet?: {
+                    accepts_nfc?: Record<string, never>;
+                  };
+                };
+                food_and_drink?: {
+                  alcohol?: {
+                    bar_service?: Record<string, never>;
+                    beer?: Record<string, never>;
+                    byo?: Record<string, never>;
+                    cocktails?: Record<string, never>;
+                    full_bar?: Record<string, never>;
+                    wine?: Record<string, never>;
+                  };
+                  meals?: {
+                    bar_snacks?: Record<string, never>;
+                    breakfast?: Record<string, never>;
+                    brunch?: Record<string, never>;
+                    lunch?: Record<string, never>;
+                    happy_hour?: Record<string, never>;
+                    dessert?: Record<string, never>;
+                    dinner?: Record<string, never>;
+                    tasting_menu?: Record<string, never>;
+                  };
+                };
+                services?: {
+                  delivery?: Record<string, never>;
+                  takeout?: Record<string, never>;
+                  drive_through?: Record<string, never>;
+                  dine_in?: {
+                    reservations?: Record<string, never>;
+                    online_reservations?: Record<string, never>;
+                    groups_only_reservations?: Record<string, never>;
+                    essential_reservations?: Record<string, never>;
+                  };
+                };
+                amenities?: {
+                  restroom?: Record<string, never>;
+                  smoking?: Record<string, never>;
+                  jukebox?: Record<string, never>;
+                  music?: Record<string, never>;
+                  live_music?: Record<string, never>;
+                  private_room?: Record<string, never>;
+                  outdoor_seating?: Record<string, never>;
+                  tvs?: Record<string, never>;
+                  atm?: Record<string, never>;
+                  coat_check?: Record<string, never>;
+                  wheelchair_accessible?: Record<string, never>;
+                  parking?: {
+                    parking?: Record<string, never>;
+                    street_parking?: Record<string, never>;
+                    valet_parking?: Record<string, never>;
+                    public_lot?: Record<string, never>;
+                    private_lot?: Record<string, never>;
+                  };
+                  sit_down_dining?: Record<string, never>;
+                  wifi?: string;
+                };
+                attributes?: {
+                  business_meeting?: string;
+                  clean?: string;
+                  crowded?: string;
+                  dates_popular?: string;
+                  dressy?: string;
+                  families_popular?: string;
+                  gluten_free_diet?: string;
+                  good_for_dogs?: string;
+                  groups_popular?: string;
+                  healthy_diet?: string;
+                  late_night?: string;
+                  noisy?: string;
+                  quick_bite?: string;
+                  romantic?: string;
+                  service_quality?: string;
+                  singles_popular?: string;
+                  special_occasion?: string;
+                  trendy?: string;
+                  value_for_money?: string;
+                  vegan_diet?: string;
+                  vegetarian_diet?: string;
+                };
+              };
+              geocodes?: {
+                drop_off?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                front_door?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                main?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                road?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                roof?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+              };
+              hours?: {
+                display?: string;
+                is_local_holiday?: boolean;
+                open_now?: boolean;
+                regular?: {
+                  close?: string;
+                  /** Format: int32 */
+                  day?: number;
+                  open?: string;
                 }[];
-                venue_reality_bucket?: string;
-                verified?: boolean;
-                website?: string;
-            }[];
+              };
+              hours_popular?: {
+                close?: string;
+                /** Format: int32 */
+                day?: number;
+                open?: string;
+              }[];
+              link?: string;
+              location?: {
+                address?: string;
+                address_extended?: string;
+                admin_region?: string;
+                census_block?: string;
+                country?: string;
+                cross_street?: string;
+                dma?: string;
+                formatted_address?: string;
+                locality?: string;
+                neighborhood?: string[];
+                po_box?: string;
+                post_town?: string;
+                postcode?: string;
+                region?: string;
+              };
+              menu?: string;
+              name?: string;
+              photos?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                prefix?: string;
+                suffix?: string;
+                /** Format: int32 */
+                width?: number;
+                /** Format: int32 */
+                height?: number;
+                classifications?: string[];
+                tip?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  text?: string;
+                  url?: string;
+                  photo?: unknown;
+                  lang?: string;
+                  /** Format: int32 */
+                  agree_count?: number;
+                  /** Format: int32 */
+                  disagree_count?: number;
+                };
+              }[];
+              /** Format: double */
+              popularity?: number;
+              /** Format: int32 */
+              price?: number;
+              /** Format: double */
+              rating?: number;
+              related_places?: {
+                parent?: unknown;
+              };
+              social_media?: {
+                facebook_id?: string;
+                instagram?: string;
+                twitter?: string;
+              };
+              stats?: {
+                /** Format: int32 */
+                total_photos?: number;
+                /** Format: int64 */
+                total_ratings?: number;
+                /** Format: int32 */
+                total_tips?: number;
+              };
+              store_id?: string;
+              tastes?: string[];
+              tel?: string;
+              timezone?: string;
+              tips?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                text?: string;
+                url?: string;
+                photo?: unknown;
+                lang?: string;
+                /** Format: int32 */
+                agree_count?: number;
+                /** Format: int32 */
+                disagree_count?: number;
+              }[];
+              venue_reality_bucket?: string;
+              verified?: boolean;
+              website?: string;
+            };
+            /** Format: double */
+            match_score?: number;
+            context?: {
+              /** Format: double */
+              latitude?: number;
+              /** Format: double */
+              longitude?: number;
+            };
+          };
         };
-        FeedbackStatusResponse: {
+      };
+      /** @description Unable to resolve address. Please provide a latitude and longitude using the ll parameter. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Match not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'places-nearby': {
+    parameters: {
+      query?: {
+        /**
+         * @description Indicate which fields to return in the response, separated by commas. If no fields are specified, all <a href="https://docs.foursquare.com/reference/response-fields#core-data-fields" target="_blank">Core Fields</a> are returned by default.
+         *
+         *     For a complete list of returnable fields, refer to the <a href="https://docs.foursquare.com/reference/response-fields" target="_blank">Response Fields</a> page.
+         */
+        fields?: string;
+        /** @description The latitude/longitude around which to retrieve place information. This must be specified as latitude,longitude (e.g., ll=41.8781,-87.6298). If you do not specify ll, the server will attempt to retrieve the IP address from the request, and geolocate that IP address. */
+        ll?: string;
+        /** @description The estimated horizontal accuracy radius in meters of the user’s location at the 68th percentile confidence level as returned by the user’s cell phone OS. */
+        hacc?: number;
+        /** @description The altitude of the user’s location in meters above the World Geodetic System 1984 (WGS84) reference ellipsoid as returned by the user’s cell phone OS. */
+        altitude?: number;
+        /** @description A string to be matched against venue name for this place. */
+        query?: string;
+        /** @description The number of results to return, up to 50. Defaults to 10. */
+        limit?: number;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            results?: {
+              fsq_id?: string;
+              categories?: {
+                /** Format: int32 */
+                id?: number;
+                name?: string;
+                short_name?: string;
+                plural_name?: string;
+                icon?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
+                    id?: string;
+                    /** Format: date-time */
+                    created_at?: string;
+                    text?: string;
+                    url?: string;
+                    photo?: unknown;
+                    lang?: string;
+                    /** Format: int32 */
+                    agree_count?: number;
+                    /** Format: int32 */
+                    disagree_count?: number;
+                  };
+                };
+              }[];
+              chains?: {
+                id?: string;
+                name?: string;
+                logo?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
+                    id?: string;
+                    /** Format: date-time */
+                    created_at?: string;
+                    text?: string;
+                    url?: string;
+                    photo?: unknown;
+                    lang?: string;
+                    /** Format: int32 */
+                    agree_count?: number;
+                    /** Format: int32 */
+                    disagree_count?: number;
+                  };
+                };
+                parent_id?: string;
+              }[];
+              closed_bucket?: string;
+              /** Format: date */
+              date_closed?: string;
+              description?: string;
+              /** Format: int32 */
+              distance?: number;
+              email?: string;
+              fax?: string;
+              features?: {
+                payment?: {
+                  credit_cards?: {
+                    accepts_credit_cards?: Record<string, never>;
+                    amex?: Record<string, never>;
+                    discover?: Record<string, never>;
+                    visa?: Record<string, never>;
+                    diners_club?: Record<string, never>;
+                    master_card?: Record<string, never>;
+                    union_pay?: Record<string, never>;
+                  };
+                  digital_wallet?: {
+                    accepts_nfc?: Record<string, never>;
+                  };
+                };
+                food_and_drink?: {
+                  alcohol?: {
+                    bar_service?: Record<string, never>;
+                    beer?: Record<string, never>;
+                    byo?: Record<string, never>;
+                    cocktails?: Record<string, never>;
+                    full_bar?: Record<string, never>;
+                    wine?: Record<string, never>;
+                  };
+                  meals?: {
+                    bar_snacks?: Record<string, never>;
+                    breakfast?: Record<string, never>;
+                    brunch?: Record<string, never>;
+                    lunch?: Record<string, never>;
+                    happy_hour?: Record<string, never>;
+                    dessert?: Record<string, never>;
+                    dinner?: Record<string, never>;
+                    tasting_menu?: Record<string, never>;
+                  };
+                };
+                services?: {
+                  delivery?: Record<string, never>;
+                  takeout?: Record<string, never>;
+                  drive_through?: Record<string, never>;
+                  dine_in?: {
+                    reservations?: Record<string, never>;
+                    online_reservations?: Record<string, never>;
+                    groups_only_reservations?: Record<string, never>;
+                    essential_reservations?: Record<string, never>;
+                  };
+                };
+                amenities?: {
+                  restroom?: Record<string, never>;
+                  smoking?: Record<string, never>;
+                  jukebox?: Record<string, never>;
+                  music?: Record<string, never>;
+                  live_music?: Record<string, never>;
+                  private_room?: Record<string, never>;
+                  outdoor_seating?: Record<string, never>;
+                  tvs?: Record<string, never>;
+                  atm?: Record<string, never>;
+                  coat_check?: Record<string, never>;
+                  wheelchair_accessible?: Record<string, never>;
+                  parking?: {
+                    parking?: Record<string, never>;
+                    street_parking?: Record<string, never>;
+                    valet_parking?: Record<string, never>;
+                    public_lot?: Record<string, never>;
+                    private_lot?: Record<string, never>;
+                  };
+                  sit_down_dining?: Record<string, never>;
+                  wifi?: string;
+                };
+                attributes?: {
+                  business_meeting?: string;
+                  clean?: string;
+                  crowded?: string;
+                  dates_popular?: string;
+                  dressy?: string;
+                  families_popular?: string;
+                  gluten_free_diet?: string;
+                  good_for_dogs?: string;
+                  groups_popular?: string;
+                  healthy_diet?: string;
+                  late_night?: string;
+                  noisy?: string;
+                  quick_bite?: string;
+                  romantic?: string;
+                  service_quality?: string;
+                  singles_popular?: string;
+                  special_occasion?: string;
+                  trendy?: string;
+                  value_for_money?: string;
+                  vegan_diet?: string;
+                  vegetarian_diet?: string;
+                };
+              };
+              geocodes?: {
+                drop_off?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                front_door?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                main?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                road?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                roof?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+              };
+              hours?: {
+                display?: string;
+                is_local_holiday?: boolean;
+                open_now?: boolean;
+                regular?: {
+                  close?: string;
+                  /** Format: int32 */
+                  day?: number;
+                  open?: string;
+                }[];
+              };
+              hours_popular?: {
+                close?: string;
+                /** Format: int32 */
+                day?: number;
+                open?: string;
+              }[];
+              link?: string;
+              location?: {
+                address?: string;
+                address_extended?: string;
+                admin_region?: string;
+                census_block?: string;
+                country?: string;
+                cross_street?: string;
+                dma?: string;
+                formatted_address?: string;
+                locality?: string;
+                neighborhood?: string[];
+                po_box?: string;
+                post_town?: string;
+                postcode?: string;
+                region?: string;
+              };
+              menu?: string;
+              name?: string;
+              photos?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                prefix?: string;
+                suffix?: string;
+                /** Format: int32 */
+                width?: number;
+                /** Format: int32 */
+                height?: number;
+                classifications?: string[];
+                tip?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  text?: string;
+                  url?: string;
+                  photo?: unknown;
+                  lang?: string;
+                  /** Format: int32 */
+                  agree_count?: number;
+                  /** Format: int32 */
+                  disagree_count?: number;
+                };
+              }[];
+              /** Format: double */
+              popularity?: number;
+              /** Format: int32 */
+              price?: number;
+              /** Format: double */
+              rating?: number;
+              related_places?: {
+                parent?: unknown;
+              };
+              social_media?: {
+                facebook_id?: string;
+                instagram?: string;
+                twitter?: string;
+              };
+              stats?: {
+                /** Format: int32 */
+                total_photos?: number;
+                /** Format: int64 */
+                total_ratings?: number;
+                /** Format: int32 */
+                total_tips?: number;
+              };
+              store_id?: string;
+              tastes?: string[];
+              tel?: string;
+              timezone?: string;
+              tips?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                text?: string;
+                url?: string;
+                photo?: unknown;
+                lang?: string;
+                /** Format: int32 */
+                agree_count?: number;
+                /** Format: int32 */
+                disagree_count?: number;
+              }[];
+              venue_reality_bucket?: string;
+              verified?: boolean;
+              website?: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+  'place-select': {
+    parameters: {
+      query?: {
+        /** @description The request ID pulled from the header of the /v3/places/nearby request that generated the list of places to show the user */
+        request_id?: string;
+        /** @description The place ID of the place which was selected by the user in the UI */
+        fsq_id?: string;
+        /** @description Specify the use case for specified request */
+        select_context?: string;
+        delayed?: boolean;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            response?: string;
+          };
+        };
+      };
+    };
+  };
+  'address-details': {
+    parameters: {
+      query?: {
+        /** @description A user-generated token to identify a session for billing purposes. Learn more about [session tokens](https://docs.foursquare.com/reference/session-tokens). */
+        session_token?: string;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path: {
+        /** @description A unique string identifier used to retrieve further details for an address result returned by the [autocomplete endpoint](https://docs.foursquare.com/reference/autocomplete). Note this id format may change or be updated in the future and therefore should be treated as temporary. */
+        fsq_addr_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            fsq_addr_id?: string;
+            location?: {
+              address?: string;
+              address_extended?: string;
+              admin_region?: string;
+              census_block?: string;
+              country?: string;
+              cross_street?: string;
+              dma?: string;
+              formatted_address?: string;
+              locality?: string;
+              neighborhood?: string[];
+              po_box?: string;
+              post_town?: string;
+              postcode?: string;
+              region?: string;
+            };
+            geocodes?: {
+              drop_off?: {
+                /** Format: double */
+                latitude?: number;
+                /** Format: double */
+                longitude?: number;
+              };
+              front_door?: {
+                /** Format: double */
+                latitude?: number;
+                /** Format: double */
+                longitude?: number;
+              };
+              main?: {
+                /** Format: double */
+                latitude?: number;
+                /** Format: double */
+                longitude?: number;
+              };
+              road?: {
+                /** Format: double */
+                latitude?: number;
+                /** Format: double */
+                longitude?: number;
+              };
+              roof?: {
+                /** Format: double */
+                latitude?: number;
+                /** Format: double */
+                longitude?: number;
+              };
+            };
+            directory?: {
+              fsq_id?: string;
+              categories?: {
+                /** Format: int32 */
+                id?: number;
+                name?: string;
+                short_name?: string;
+                plural_name?: string;
+                icon?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
+                    id?: string;
+                    /** Format: date-time */
+                    created_at?: string;
+                    text?: string;
+                    url?: string;
+                    photo?: unknown;
+                    lang?: string;
+                    /** Format: int32 */
+                    agree_count?: number;
+                    /** Format: int32 */
+                    disagree_count?: number;
+                  };
+                };
+              }[];
+              chains?: {
+                id?: string;
+                name?: string;
+                logo?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  prefix?: string;
+                  suffix?: string;
+                  /** Format: int32 */
+                  width?: number;
+                  /** Format: int32 */
+                  height?: number;
+                  classifications?: string[];
+                  tip?: {
+                    id?: string;
+                    /** Format: date-time */
+                    created_at?: string;
+                    text?: string;
+                    url?: string;
+                    photo?: unknown;
+                    lang?: string;
+                    /** Format: int32 */
+                    agree_count?: number;
+                    /** Format: int32 */
+                    disagree_count?: number;
+                  };
+                };
+                parent_id?: string;
+              }[];
+              closed_bucket?: string;
+              /** Format: date */
+              date_closed?: string;
+              description?: string;
+              /** Format: int32 */
+              distance?: number;
+              email?: string;
+              fax?: string;
+              features?: {
+                payment?: {
+                  credit_cards?: {
+                    accepts_credit_cards?: Record<string, never>;
+                    amex?: Record<string, never>;
+                    discover?: Record<string, never>;
+                    visa?: Record<string, never>;
+                    diners_club?: Record<string, never>;
+                    master_card?: Record<string, never>;
+                    union_pay?: Record<string, never>;
+                  };
+                  digital_wallet?: {
+                    accepts_nfc?: Record<string, never>;
+                  };
+                };
+                food_and_drink?: {
+                  alcohol?: {
+                    bar_service?: Record<string, never>;
+                    beer?: Record<string, never>;
+                    byo?: Record<string, never>;
+                    cocktails?: Record<string, never>;
+                    full_bar?: Record<string, never>;
+                    wine?: Record<string, never>;
+                  };
+                  meals?: {
+                    bar_snacks?: Record<string, never>;
+                    breakfast?: Record<string, never>;
+                    brunch?: Record<string, never>;
+                    lunch?: Record<string, never>;
+                    happy_hour?: Record<string, never>;
+                    dessert?: Record<string, never>;
+                    dinner?: Record<string, never>;
+                    tasting_menu?: Record<string, never>;
+                  };
+                };
+                services?: {
+                  delivery?: Record<string, never>;
+                  takeout?: Record<string, never>;
+                  drive_through?: Record<string, never>;
+                  dine_in?: {
+                    reservations?: Record<string, never>;
+                    online_reservations?: Record<string, never>;
+                    groups_only_reservations?: Record<string, never>;
+                    essential_reservations?: Record<string, never>;
+                  };
+                };
+                amenities?: {
+                  restroom?: Record<string, never>;
+                  smoking?: Record<string, never>;
+                  jukebox?: Record<string, never>;
+                  music?: Record<string, never>;
+                  live_music?: Record<string, never>;
+                  private_room?: Record<string, never>;
+                  outdoor_seating?: Record<string, never>;
+                  tvs?: Record<string, never>;
+                  atm?: Record<string, never>;
+                  coat_check?: Record<string, never>;
+                  wheelchair_accessible?: Record<string, never>;
+                  parking?: {
+                    parking?: Record<string, never>;
+                    street_parking?: Record<string, never>;
+                    valet_parking?: Record<string, never>;
+                    public_lot?: Record<string, never>;
+                    private_lot?: Record<string, never>;
+                  };
+                  sit_down_dining?: Record<string, never>;
+                  wifi?: string;
+                };
+                attributes?: {
+                  business_meeting?: string;
+                  clean?: string;
+                  crowded?: string;
+                  dates_popular?: string;
+                  dressy?: string;
+                  families_popular?: string;
+                  gluten_free_diet?: string;
+                  good_for_dogs?: string;
+                  groups_popular?: string;
+                  healthy_diet?: string;
+                  late_night?: string;
+                  noisy?: string;
+                  quick_bite?: string;
+                  romantic?: string;
+                  service_quality?: string;
+                  singles_popular?: string;
+                  special_occasion?: string;
+                  trendy?: string;
+                  value_for_money?: string;
+                  vegan_diet?: string;
+                  vegetarian_diet?: string;
+                };
+              };
+              geocodes?: {
+                drop_off?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                front_door?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                main?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                road?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+                roof?: {
+                  /** Format: double */
+                  latitude?: number;
+                  /** Format: double */
+                  longitude?: number;
+                };
+              };
+              hours?: {
+                display?: string;
+                is_local_holiday?: boolean;
+                open_now?: boolean;
+                regular?: {
+                  close?: string;
+                  /** Format: int32 */
+                  day?: number;
+                  open?: string;
+                }[];
+              };
+              hours_popular?: {
+                close?: string;
+                /** Format: int32 */
+                day?: number;
+                open?: string;
+              }[];
+              link?: string;
+              location?: {
+                address?: string;
+                address_extended?: string;
+                admin_region?: string;
+                census_block?: string;
+                country?: string;
+                cross_street?: string;
+                dma?: string;
+                formatted_address?: string;
+                locality?: string;
+                neighborhood?: string[];
+                po_box?: string;
+                post_town?: string;
+                postcode?: string;
+                region?: string;
+              };
+              menu?: string;
+              name?: string;
+              photos?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                prefix?: string;
+                suffix?: string;
+                /** Format: int32 */
+                width?: number;
+                /** Format: int32 */
+                height?: number;
+                classifications?: string[];
+                tip?: {
+                  id?: string;
+                  /** Format: date-time */
+                  created_at?: string;
+                  text?: string;
+                  url?: string;
+                  photo?: unknown;
+                  lang?: string;
+                  /** Format: int32 */
+                  agree_count?: number;
+                  /** Format: int32 */
+                  disagree_count?: number;
+                };
+              }[];
+              /** Format: double */
+              popularity?: number;
+              /** Format: int32 */
+              price?: number;
+              /** Format: double */
+              rating?: number;
+              related_places?: {
+                parent?: unknown;
+              };
+              social_media?: {
+                facebook_id?: string;
+                instagram?: string;
+                twitter?: string;
+              };
+              stats?: {
+                /** Format: int32 */
+                total_photos?: number;
+                /** Format: int64 */
+                total_ratings?: number;
+                /** Format: int32 */
+                total_tips?: number;
+              };
+              store_id?: string;
+              tastes?: string[];
+              tel?: string;
+              timezone?: string;
+              tips?: {
+                id?: string;
+                /** Format: date-time */
+                created_at?: string;
+                text?: string;
+                url?: string;
+                photo?: unknown;
+                lang?: string;
+                /** Format: int32 */
+                agree_count?: number;
+                /** Format: int32 */
+                disagree_count?: number;
+              }[];
+              venue_reality_bucket?: string;
+              verified?: boolean;
+              website?: string;
+            }[];
+          };
+        };
+      };
+      /** @description unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description fsq_addr_id not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'feedback-status': {
+    parameters: {
+      query?: {
+        /** @description A comma seperated list of proposed edit ids. If specified, shows only proposed edits with these IDs */
+        proposed_edit_ids?: string;
+        /** @description The specified number of proposed edits per page. Returns 10 proposed edits by default, up to a maximum number of 50. */
+        limit?: number;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
             woes?: {
-                id?: string;
-                fsq_id?: string;
-                proposed_edit_type?: string;
-                /** Format: date-time */
-                created_at?: string;
-                /** Format: date-time */
-                resolved_time?: string;
-                rolled_back?: Record<string, never>;
-                status?: string;
+              id?: string;
+              fsq_id?: string;
+              proposed_edit_type?: string;
+              /** Format: date-time */
+              created_at?: string;
+              /** Format: date-time */
+              resolved_time?: string;
+              rolled_back?: Record<string, never>;
+              status?: string;
             }[];
+          };
         };
-        VenueWoeModel: {
-            id?: string;
-            fsq_id?: string;
-            proposed_edit_type?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            resolved_time?: string;
-            rolled_back?: Record<string, never>;
-            status?: string;
+      };
+    };
+  };
+  'place-flag': {
+    parameters: {
+      query: {
+        /** @description Problem being flagged. Possible values are:<ul><li>closed</li><li>doesnt_exist</li><li>duplicate</li><li>inappropriate</li><li>incorrect_items</li><li>locationreview</li><li>mislocated</li><li>not_closed</li><li>other</li><li>private</li><li>public</li><li>suspicious_hours</li></ul> */
+        problem: string;
+        /** @description A comment describing the issue being flagged. */
+        comment?: string;
+        /** @description Correct Lat/Long for the venue if location is being flagged. */
+        ll?: string;
+        /** @description Label for the venue lat long if location is being flagged. */
+        ll_label?: string;
+        /** @description Correct Lat/Long for the venue if location is being flagged. */
+        additional_ll?: string;
+        /** @description Label for the venue lat long if location is being flagged. */
+        additional_ll_label?: string;
+        /** @description Venue ids to flag as duplicates of the venue. */
+        duplicate_ids?: string;
+        /** @description The partnerID for partner provided attributes. */
+        partner_id?: string;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path: {
+        /** @description A unique string identifier for a FSQ Place (formerly known as Venue ID). E.g., Foursquare HQ's fsq_id = 5a187743ccad6b307315e6fe */
+        fsq_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        UnversionedFeedbackResponse: {
+        content: {
+          'application/json': {
             proposed_edits?: {
-                id?: string;
-                fsq_id?: string;
-                proposed_edit_type?: string;
-                /** Format: date-time */
-                created_at?: string;
-                /** Format: date-time */
-                resolved_time?: string;
-                rolled_back?: Record<string, never>;
-                status?: string;
+              id?: string;
+              fsq_id?: string;
+              proposed_edit_type?: string;
+              /** Format: date-time */
+              created_at?: string;
+              /** Format: date-time */
+              resolved_time?: string;
+              rolled_back?: Record<string, never>;
+              status?: string;
             }[];
             errors?: string[];
+          };
         };
-        LatLngType: {
-            /** Format: int32 */
-            id?: number;
-            name?: string;
-            string_value?: string;
-            /** Format: int32 */
-            value?: number;
-        };
+      };
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
-}
-export type $defs = Record<string, never>;
-export interface operations {
-    "place-search": {
-        parameters: {
-            query?: {
-                /** @description A string to be matched against all content for this place, including but not limited to venue name, category, telephone number, taste, and tips. */
-                query?: string;
-                /** @description The latitude/longitude around which to retrieve place information. This must be specified as latitude,longitude (e.g., ll=41.8781,-87.6298). */
-                ll?: string;
-                /** @description Sets a radius distance (in meters) used to define an area to bias search results. The maximum allowed radius is 100,000 meters. Radius can be used in combination with ll or ip biased geolocation only. By using radius, global search results will be omitted. If not provided, default radius applied is 22000 meters. */
-                radius?: number;
-                /**
-                 * @description Filters the response and returns FSQ Places matching the specified categories. Supports multiple Category IDs, separated by commas.
-                 *
-                 *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id]
-                 */
-                categories?: string;
-                /**
-                 * @description Filters the response and returns FSQ Places matching the specified chains. Supports multiple chain IDs, separated by commas.
-                 *
-                 *     For more information on Foursquare Chain IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/chains" target="blank">Chains</a> page.
-                 */
-                chains?: string;
-                /**
-                 * @description Filters the response and returns FSQ Places not matching any of the specified chains. Supports multiple chain IDs, separated by commas. Cannot be used in conjunction with exclude_all_chains.
-                 *
-                 *     For more information on Foursquare Chain IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/chains" target="blank">Chains</a> page.
-                 */
-                exclude_chains?: string;
-                /** @description Filters the response by only returning FSQ Places that are not known to be part of any chain. Cannot be used in conjunction with exclude_chains. */
-                exclude_all_chains?: boolean;
-                /**
-                 * @description Indicate which fields to return in the response, separated by commas. If no fields are specified, all <a href="https://docs.foursquare.com/reference/response-fields#core-data-fields" target="_blank">Core Fields</a> are returned by default.
-                 *
-                 *     For a complete list of returnable fields, refer to the <a href="https://docs.foursquare.com/reference/response-fields" target="_blank">Response Fields</a> page.
-                 */
-                fields?: string;
-                /** @description Restricts results to only those places within the specified price range. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive. */
-                min_price?: number;
-                /** @description Restricts results to only those places within the specified price range. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive. */
-                max_price?: number;
-                /**
-                 * @description Support local day and local time requests through this parameter. To be specified as DOWTHHMM (e.g., 1T2130), where DOW is the day number 1-7 (Monday = 1, Sunday = 7) and time is in 24 hour format.
-                 *
-                 *     Places that do not have opening hours will not be returned if this parameter is specified. Cannot be specified in conjunction with `open_now`.
-                 */
-                open_at?: string;
-                /**
-                 * @description Restricts results to only those places that are open now.
-                 *
-                 *     Places that do not have opening hours will not be returned if this parameter is specified. Cannot be specified in conjunction with `open_at`.
-                 */
-                open_now?: boolean;
-                /** @description The latitude/longitude representing the north/east points of a rectangle. Must be used with sw parameter to specify a rectangular search box. Global search results will be omitted. */
-                ne?: string;
-                /** @description The latitude/longitude representing the south/west points of a rectangle. Must be used with ne parameter to specify a rectangular search box. Global search results will be omitted. */
-                sw?: string;
-                /** @description A string naming a locality in the world (e.g., "Chicago, IL"). If the value is not geocodable, returns an error. Global search results will be omitted. */
-                near?: string;
-                /** @description A string containing a list of coordinate pairs which define the edges of the polygon. Each pair must include latitude and longitude separated by a comma, with each pair separated by a tilde ~. Must have at least 4 coordinate pairs and be considered a "closed" polygon. Global search results will be omitted. */
-                polygon?: string;
-                /** @description Specifies the order in which results are listed. */
-                sort?: "RELEVANCE" | "RATING" | "DISTANCE" | "POPULARITY";
-                /** @description The number of results to return, up to 50. Defaults to 10. */
-                limit?: number;
-                /** @description A user-generated token to identify a session for billing purposes. Learn more about [session tokens](https://docs.foursquare.com/reference/session-tokens). */
-                session_token?: string;
-                /** @description A Foursquare Venue ID to use as search bounds so only places within that venue are returned */
-                super_venue_id?: string;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        results?: {
-                            fsq_id?: string;
-                            categories?: {
-                                /** Format: int32 */
-                                id?: number;
-                                name?: string;
-                                short_name?: string;
-                                plural_name?: string;
-                                icon?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                            }[];
-                            chains?: {
-                                id?: string;
-                                name?: string;
-                                logo?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                                parent_id?: string;
-                            }[];
-                            closed_bucket?: string;
-                            /** Format: date */
-                            date_closed?: string;
-                            description?: string;
-                            /** Format: int32 */
-                            distance?: number;
-                            email?: string;
-                            fax?: string;
-                            features?: {
-                                payment?: {
-                                    credit_cards?: {
-                                        accepts_credit_cards?: Record<string, never>;
-                                        amex?: Record<string, never>;
-                                        discover?: Record<string, never>;
-                                        visa?: Record<string, never>;
-                                        diners_club?: Record<string, never>;
-                                        master_card?: Record<string, never>;
-                                        union_pay?: Record<string, never>;
-                                    };
-                                    digital_wallet?: {
-                                        accepts_nfc?: Record<string, never>;
-                                    };
-                                };
-                                food_and_drink?: {
-                                    alcohol?: {
-                                        bar_service?: Record<string, never>;
-                                        beer?: Record<string, never>;
-                                        byo?: Record<string, never>;
-                                        cocktails?: Record<string, never>;
-                                        full_bar?: Record<string, never>;
-                                        wine?: Record<string, never>;
-                                    };
-                                    meals?: {
-                                        bar_snacks?: Record<string, never>;
-                                        breakfast?: Record<string, never>;
-                                        brunch?: Record<string, never>;
-                                        lunch?: Record<string, never>;
-                                        happy_hour?: Record<string, never>;
-                                        dessert?: Record<string, never>;
-                                        dinner?: Record<string, never>;
-                                        tasting_menu?: Record<string, never>;
-                                    };
-                                };
-                                services?: {
-                                    delivery?: Record<string, never>;
-                                    takeout?: Record<string, never>;
-                                    drive_through?: Record<string, never>;
-                                    dine_in?: {
-                                        reservations?: Record<string, never>;
-                                        online_reservations?: Record<string, never>;
-                                        groups_only_reservations?: Record<string, never>;
-                                        essential_reservations?: Record<string, never>;
-                                    };
-                                };
-                                amenities?: {
-                                    restroom?: Record<string, never>;
-                                    smoking?: Record<string, never>;
-                                    jukebox?: Record<string, never>;
-                                    music?: Record<string, never>;
-                                    live_music?: Record<string, never>;
-                                    private_room?: Record<string, never>;
-                                    outdoor_seating?: Record<string, never>;
-                                    tvs?: Record<string, never>;
-                                    atm?: Record<string, never>;
-                                    coat_check?: Record<string, never>;
-                                    wheelchair_accessible?: Record<string, never>;
-                                    parking?: {
-                                        parking?: Record<string, never>;
-                                        street_parking?: Record<string, never>;
-                                        valet_parking?: Record<string, never>;
-                                        public_lot?: Record<string, never>;
-                                        private_lot?: Record<string, never>;
-                                    };
-                                    sit_down_dining?: Record<string, never>;
-                                    wifi?: string;
-                                };
-                                attributes?: {
-                                    business_meeting?: string;
-                                    clean?: string;
-                                    crowded?: string;
-                                    dates_popular?: string;
-                                    dressy?: string;
-                                    families_popular?: string;
-                                    gluten_free_diet?: string;
-                                    good_for_dogs?: string;
-                                    groups_popular?: string;
-                                    healthy_diet?: string;
-                                    late_night?: string;
-                                    noisy?: string;
-                                    quick_bite?: string;
-                                    romantic?: string;
-                                    service_quality?: string;
-                                    singles_popular?: string;
-                                    special_occasion?: string;
-                                    trendy?: string;
-                                    value_for_money?: string;
-                                    vegan_diet?: string;
-                                    vegetarian_diet?: string;
-                                };
-                            };
-                            geocodes?: {
-                                drop_off?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                front_door?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                main?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                road?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                roof?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                            };
-                            hours?: {
-                                display?: string;
-                                is_local_holiday?: boolean;
-                                open_now?: boolean;
-                                regular?: {
-                                    close?: string;
-                                    /** Format: int32 */
-                                    day?: number;
-                                    open?: string;
-                                }[];
-                            };
-                            hours_popular?: {
-                                close?: string;
-                                /** Format: int32 */
-                                day?: number;
-                                open?: string;
-                            }[];
-                            link?: string;
-                            location?: {
-                                address?: string;
-                                address_extended?: string;
-                                admin_region?: string;
-                                census_block?: string;
-                                country?: string;
-                                cross_street?: string;
-                                dma?: string;
-                                formatted_address?: string;
-                                locality?: string;
-                                neighborhood?: string[];
-                                po_box?: string;
-                                post_town?: string;
-                                postcode?: string;
-                                region?: string;
-                            };
-                            menu?: string;
-                            name?: string;
-                            photos?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                prefix?: string;
-                                suffix?: string;
-                                /** Format: int32 */
-                                width?: number;
-                                /** Format: int32 */
-                                height?: number;
-                                classifications?: string[];
-                                tip?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    text?: string;
-                                    url?: string;
-                                    photo?: unknown;
-                                    lang?: string;
-                                    /** Format: int32 */
-                                    agree_count?: number;
-                                    /** Format: int32 */
-                                    disagree_count?: number;
-                                };
-                            }[];
-                            /** Format: double */
-                            popularity?: number;
-                            /** Format: int32 */
-                            price?: number;
-                            /** Format: double */
-                            rating?: number;
-                            related_places?: {
-                                parent?: unknown;
-                            };
-                            social_media?: {
-                                facebook_id?: string;
-                                instagram?: string;
-                                twitter?: string;
-                            };
-                            stats?: {
-                                /** Format: int32 */
-                                total_photos?: number;
-                                /** Format: int64 */
-                                total_ratings?: number;
-                                /** Format: int32 */
-                                total_tips?: number;
-                            };
-                            store_id?: string;
-                            tastes?: string[];
-                            tel?: string;
-                            timezone?: string;
-                            tips?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                text?: string;
-                                url?: string;
-                                photo?: unknown;
-                                lang?: string;
-                                /** Format: int32 */
-                                agree_count?: number;
-                                /** Format: int32 */
-                                disagree_count?: number;
-                            }[];
-                            venue_reality_bucket?: string;
-                            verified?: boolean;
-                            website?: string;
-                        }[];
-                        context?: {
-                            geo_bounds?: {
-                                circle?: {
-                                    center?: {
-                                        /** Format: double */
-                                        latitude?: number;
-                                        /** Format: double */
-                                        longitude?: number;
-                                    };
-                                    /** Format: int32 */
-                                    radius?: number;
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-            /** @description bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
+  };
+  'place-propose-edit': {
+    parameters: {
+      query?: {
+        /** @description The proposed new value for the latitude and longitude at which the place should be located (e.g., ll=41.8781,-87.6298). */
+        ll?: string;
+        /** @description The proposed new value for the url where the menu of the place can be found. */
+        menu_url?: string;
+        /** @description The proposed new value for the  url for this place's Facebook Page. */
+        facebook_url?: string;
+        /** @description The proposed new value if the place is a subvenue of a larger place (such as a coffee shop within a Target), set this attribute to the ID of the parent place. Set to "" to remove parent. */
+        parent_id?: string;
+        /**
+         * @description The proposed new value for the hours for the venue, as a semi-colon separated list of open segments and named segments (e.g., brunch or happy hour). Open segments are formatted as day,start,end. Named segments additionally have a label, formatted as day,start,end,label. Days are formatted as integers with Monday = 1,...,Sunday = 7. Start and End are formatted as [+]HHMM format. Use 24 hour format (no colon), prefix with 0 for HH or MM less than 10. Use '+' prefix, i.e., +0230 to represent 2:30 am past midnight into the following day.
+         *
+         *     To indicate that a venue is open 24/7, send this value with the hours attribute: 1,0000,2400;2,0000,2400;3,0000,2400;4,0000,2400;5,0000,2400;6,0000,2400;7,0000,2400
+         */
+        hours?: string;
+        /** @description The proposed new value for the  name of the place. */
+        name?: string;
+        /** @description The proposed new value for the freeform description of the place, up to 300 characters. */
+        description?: string;
+        /** @description The proposed new value for the  phone number of the place. */
+        phone?: string;
+        /** @description The proposed new value for the  twitter handle of the place. */
+        twitter?: string;
+        /** @description The proposed new value for the  url of the homepage of the place. */
+        url?: string;
+        /** @description The proposed new value for the  address of the place. */
+        address?: string;
+        /** @description The proposed new value for the  nearest intersecting street or streets. */
+        cross_street?: string;
+        /** @description The proposed new value for the  name of the locality (city) where this place is. */
+        locality?: string;
+        /** @description The proposed new value for the  nearest state or province to the place. */
+        region?: string;
+        /** @description The proposed new value for the  zip or postal code for the place. */
+        postcode?: string;
+        /**
+         * @description Add category IDs. Supports multiple Category IDs, separated by commas.
+         *
+         *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id].
+         */
+        add_categories?: string;
+        /**
+         * @description Remove category IDs. Supports multiple Category IDs, separated by commas.
+         *
+         *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id].
+         */
+        remove_categories?: string;
+        /**
+         * @description Change the primary category ID.
+         *
+         *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id].
+         */
+        primary_category?: string;
+        /** @description Add chain IDs to the venue. */
+        add_chains?: string;
+        /** @description Remove chain IDs to the venue. */
+        remove_chains?: string;
+        /** @description Change the primary chain ID for the venue. */
+        primary_chain?: string;
+      };
+      header: {
+        /** @description The version of the API to use. */
+        'X-Places-Api-Version': '1970-01-01';
+      };
+      path: {
+        /** @description A unique string identifier for a FSQ Place (formerly known as Venue ID). E.g., Foursquare HQ's fsq_id = 5a187743ccad6b307315e6fe. */
+        fsq_id: string;
+      };
+      cookie?: never;
     };
-    "place-tips": {
-        parameters: {
-            query?: {
-                /** @description The specified number of tips per page. Returns 10 tips by default, up to a maximum number of 50. */
-                limit?: number;
-                /** @description Indicate which fields to return in the response, separated by commas. Supported fields are:<ul><li> id - The ID of the tip to be returned.</li><li> created_at - The timestamp indicating when the tip was created; UNIX timestamp in seconds since Epoch.</li><li> text - The text of the returned tip.</li><li> lang - The language of the returned tip.</li><li> url - The URL associated with the returned tip.</li><li> agree_count - The count of users who have agreed with the returned tip.</li><li> disagree_count - The count of users who have disagreed with the returned tip.</li><li> photo - The ID of the photo asociated with the returned tip.</li></ul>Default fields if this param is omitted are "id", "created_at", and "text". */
-                fields?: string;
-                /** @description Specifies the order in which results are listed. Possible values are:<ul><li>popular (default) - sorts results based on their popularity among Foursquare users</li><li>newest - sorts results from most recently added to least recently added</li></ul> */
-                sort?: "POPULAR" | "NEWEST";
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path: {
-                /** @description A unique string identifier for a FSQ Place (formerly known as Venue ID). E.g., Foursquare HQ's fsq_id = 5a187743ccad6b307315e6fe */
-                fsq_id: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description success */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id?: string;
-                        /** Format: date-time */
-                        created_at?: string;
-                        text?: string;
-                        url?: string;
-                        photo?: {
-                            id?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            prefix?: string;
-                            suffix?: string;
-                            /** Format: int32 */
-                            width?: number;
-                            /** Format: int32 */
-                            height?: number;
-                            classifications?: string[];
-                            tip?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                text?: string;
-                                url?: string;
-                                photo?: unknown;
-                                lang?: string;
-                                /** Format: int32 */
-                                agree_count?: number;
-                                /** Format: int32 */
-                                disagree_count?: number;
-                            };
-                        };
-                        lang?: string;
-                        /** Format: int32 */
-                        agree_count?: number;
-                        /** Format: int32 */
-                        disagree_count?: number;
-                    }[];
-                };
-            };
-            /** @description invalid place specified */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
+        content: {
+          'application/json': {
+            proposed_edits?: {
+              id?: string;
+              fsq_id?: string;
+              proposed_edit_type?: string;
+              /** Format: date-time */
+              created_at?: string;
+              /** Format: date-time */
+              resolved_time?: string;
+              rolled_back?: Record<string, never>;
+              status?: string;
+            }[];
+            errors?: string[];
+          };
         };
+      };
     };
-    "place-match": {
-        parameters: {
-            query: {
-                /** @description Name of the place to match. */
-                name: string;
-                /** @description Street address of the place to match (e.g. 1060 W Addison St). */
-                address?: string;
-                /** @description City, or Locality, where the place is located (e.g. Chicago). */
-                city?: string;
-                /** @description State, or Region, where the place is located (e.g. Illinois). */
-                state?: string;
-                /** @description The postal code for the address where the place is located (e.g. 60613). */
-                postal_code?: string;
-                /** @description The 2-digit country code where the place is located (e.g. US). */
-                cc?: string;
-                /** @description The latitude/longitude of the venue location. This must be specified as latitude,longitude (e.g., ll=41.9484,-87.6553). */
-                ll?: string;
-                /**
-                 * @description Indicate which fields to return in the response, separated by commas. If no fields are specified, all <a href="https://docs.foursquare.com/reference/response-fields#core-data-fields" target="_blank">Core Fields</a> are returned by default.
-                 *
-                 *     For a complete list of returnable fields, refer to the <a href="https://docs.foursquare.com/reference/response-fields" target="_blank">Response Fields</a> page.
-                 */
-                fields?: string;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        place?: {
-                            fsq_id?: string;
-                            categories?: {
-                                /** Format: int32 */
-                                id?: number;
-                                name?: string;
-                                short_name?: string;
-                                plural_name?: string;
-                                icon?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                            }[];
-                            chains?: {
-                                id?: string;
-                                name?: string;
-                                logo?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                                parent_id?: string;
-                            }[];
-                            closed_bucket?: string;
-                            /** Format: date */
-                            date_closed?: string;
-                            description?: string;
-                            /** Format: int32 */
-                            distance?: number;
-                            email?: string;
-                            fax?: string;
-                            features?: {
-                                payment?: {
-                                    credit_cards?: {
-                                        accepts_credit_cards?: Record<string, never>;
-                                        amex?: Record<string, never>;
-                                        discover?: Record<string, never>;
-                                        visa?: Record<string, never>;
-                                        diners_club?: Record<string, never>;
-                                        master_card?: Record<string, never>;
-                                        union_pay?: Record<string, never>;
-                                    };
-                                    digital_wallet?: {
-                                        accepts_nfc?: Record<string, never>;
-                                    };
-                                };
-                                food_and_drink?: {
-                                    alcohol?: {
-                                        bar_service?: Record<string, never>;
-                                        beer?: Record<string, never>;
-                                        byo?: Record<string, never>;
-                                        cocktails?: Record<string, never>;
-                                        full_bar?: Record<string, never>;
-                                        wine?: Record<string, never>;
-                                    };
-                                    meals?: {
-                                        bar_snacks?: Record<string, never>;
-                                        breakfast?: Record<string, never>;
-                                        brunch?: Record<string, never>;
-                                        lunch?: Record<string, never>;
-                                        happy_hour?: Record<string, never>;
-                                        dessert?: Record<string, never>;
-                                        dinner?: Record<string, never>;
-                                        tasting_menu?: Record<string, never>;
-                                    };
-                                };
-                                services?: {
-                                    delivery?: Record<string, never>;
-                                    takeout?: Record<string, never>;
-                                    drive_through?: Record<string, never>;
-                                    dine_in?: {
-                                        reservations?: Record<string, never>;
-                                        online_reservations?: Record<string, never>;
-                                        groups_only_reservations?: Record<string, never>;
-                                        essential_reservations?: Record<string, never>;
-                                    };
-                                };
-                                amenities?: {
-                                    restroom?: Record<string, never>;
-                                    smoking?: Record<string, never>;
-                                    jukebox?: Record<string, never>;
-                                    music?: Record<string, never>;
-                                    live_music?: Record<string, never>;
-                                    private_room?: Record<string, never>;
-                                    outdoor_seating?: Record<string, never>;
-                                    tvs?: Record<string, never>;
-                                    atm?: Record<string, never>;
-                                    coat_check?: Record<string, never>;
-                                    wheelchair_accessible?: Record<string, never>;
-                                    parking?: {
-                                        parking?: Record<string, never>;
-                                        street_parking?: Record<string, never>;
-                                        valet_parking?: Record<string, never>;
-                                        public_lot?: Record<string, never>;
-                                        private_lot?: Record<string, never>;
-                                    };
-                                    sit_down_dining?: Record<string, never>;
-                                    wifi?: string;
-                                };
-                                attributes?: {
-                                    business_meeting?: string;
-                                    clean?: string;
-                                    crowded?: string;
-                                    dates_popular?: string;
-                                    dressy?: string;
-                                    families_popular?: string;
-                                    gluten_free_diet?: string;
-                                    good_for_dogs?: string;
-                                    groups_popular?: string;
-                                    healthy_diet?: string;
-                                    late_night?: string;
-                                    noisy?: string;
-                                    quick_bite?: string;
-                                    romantic?: string;
-                                    service_quality?: string;
-                                    singles_popular?: string;
-                                    special_occasion?: string;
-                                    trendy?: string;
-                                    value_for_money?: string;
-                                    vegan_diet?: string;
-                                    vegetarian_diet?: string;
-                                };
-                            };
-                            geocodes?: {
-                                drop_off?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                front_door?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                main?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                road?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                roof?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                            };
-                            hours?: {
-                                display?: string;
-                                is_local_holiday?: boolean;
-                                open_now?: boolean;
-                                regular?: {
-                                    close?: string;
-                                    /** Format: int32 */
-                                    day?: number;
-                                    open?: string;
-                                }[];
-                            };
-                            hours_popular?: {
-                                close?: string;
-                                /** Format: int32 */
-                                day?: number;
-                                open?: string;
-                            }[];
-                            link?: string;
-                            location?: {
-                                address?: string;
-                                address_extended?: string;
-                                admin_region?: string;
-                                census_block?: string;
-                                country?: string;
-                                cross_street?: string;
-                                dma?: string;
-                                formatted_address?: string;
-                                locality?: string;
-                                neighborhood?: string[];
-                                po_box?: string;
-                                post_town?: string;
-                                postcode?: string;
-                                region?: string;
-                            };
-                            menu?: string;
-                            name?: string;
-                            photos?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                prefix?: string;
-                                suffix?: string;
-                                /** Format: int32 */
-                                width?: number;
-                                /** Format: int32 */
-                                height?: number;
-                                classifications?: string[];
-                                tip?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    text?: string;
-                                    url?: string;
-                                    photo?: unknown;
-                                    lang?: string;
-                                    /** Format: int32 */
-                                    agree_count?: number;
-                                    /** Format: int32 */
-                                    disagree_count?: number;
-                                };
-                            }[];
-                            /** Format: double */
-                            popularity?: number;
-                            /** Format: int32 */
-                            price?: number;
-                            /** Format: double */
-                            rating?: number;
-                            related_places?: {
-                                parent?: unknown;
-                            };
-                            social_media?: {
-                                facebook_id?: string;
-                                instagram?: string;
-                                twitter?: string;
-                            };
-                            stats?: {
-                                /** Format: int32 */
-                                total_photos?: number;
-                                /** Format: int64 */
-                                total_ratings?: number;
-                                /** Format: int32 */
-                                total_tips?: number;
-                            };
-                            store_id?: string;
-                            tastes?: string[];
-                            tel?: string;
-                            timezone?: string;
-                            tips?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                text?: string;
-                                url?: string;
-                                photo?: unknown;
-                                lang?: string;
-                                /** Format: int32 */
-                                agree_count?: number;
-                                /** Format: int32 */
-                                disagree_count?: number;
-                            }[];
-                            venue_reality_bucket?: string;
-                            verified?: boolean;
-                            website?: string;
-                        };
-                        /** Format: double */
-                        match_score?: number;
-                        context?: {
-                            /** Format: double */
-                            latitude?: number;
-                            /** Format: double */
-                            longitude?: number;
-                        };
-                    };
-                };
-            };
-            /** @description Unable to resolve address. Please provide a latitude and longitude using the ll parameter. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Match not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    "places-nearby": {
-        parameters: {
-            query?: {
-                /**
-                 * @description Indicate which fields to return in the response, separated by commas. If no fields are specified, all <a href="https://docs.foursquare.com/reference/response-fields#core-data-fields" target="_blank">Core Fields</a> are returned by default.
-                 *
-                 *     For a complete list of returnable fields, refer to the <a href="https://docs.foursquare.com/reference/response-fields" target="_blank">Response Fields</a> page.
-                 */
-                fields?: string;
-                /** @description The latitude/longitude around which to retrieve place information. This must be specified as latitude,longitude (e.g., ll=41.8781,-87.6298). If you do not specify ll, the server will attempt to retrieve the IP address from the request, and geolocate that IP address. */
-                ll?: string;
-                /** @description The estimated horizontal accuracy radius in meters of the user’s location at the 68th percentile confidence level as returned by the user’s cell phone OS. */
-                hacc?: number;
-                /** @description The altitude of the user’s location in meters above the World Geodetic System 1984 (WGS84) reference ellipsoid as returned by the user’s cell phone OS. */
-                altitude?: number;
-                /** @description A string to be matched against venue name for this place. */
-                query?: string;
-                /** @description The number of results to return, up to 50. Defaults to 10. */
-                limit?: number;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        results?: {
-                            fsq_id?: string;
-                            categories?: {
-                                /** Format: int32 */
-                                id?: number;
-                                name?: string;
-                                short_name?: string;
-                                plural_name?: string;
-                                icon?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                            }[];
-                            chains?: {
-                                id?: string;
-                                name?: string;
-                                logo?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                                parent_id?: string;
-                            }[];
-                            closed_bucket?: string;
-                            /** Format: date */
-                            date_closed?: string;
-                            description?: string;
-                            /** Format: int32 */
-                            distance?: number;
-                            email?: string;
-                            fax?: string;
-                            features?: {
-                                payment?: {
-                                    credit_cards?: {
-                                        accepts_credit_cards?: Record<string, never>;
-                                        amex?: Record<string, never>;
-                                        discover?: Record<string, never>;
-                                        visa?: Record<string, never>;
-                                        diners_club?: Record<string, never>;
-                                        master_card?: Record<string, never>;
-                                        union_pay?: Record<string, never>;
-                                    };
-                                    digital_wallet?: {
-                                        accepts_nfc?: Record<string, never>;
-                                    };
-                                };
-                                food_and_drink?: {
-                                    alcohol?: {
-                                        bar_service?: Record<string, never>;
-                                        beer?: Record<string, never>;
-                                        byo?: Record<string, never>;
-                                        cocktails?: Record<string, never>;
-                                        full_bar?: Record<string, never>;
-                                        wine?: Record<string, never>;
-                                    };
-                                    meals?: {
-                                        bar_snacks?: Record<string, never>;
-                                        breakfast?: Record<string, never>;
-                                        brunch?: Record<string, never>;
-                                        lunch?: Record<string, never>;
-                                        happy_hour?: Record<string, never>;
-                                        dessert?: Record<string, never>;
-                                        dinner?: Record<string, never>;
-                                        tasting_menu?: Record<string, never>;
-                                    };
-                                };
-                                services?: {
-                                    delivery?: Record<string, never>;
-                                    takeout?: Record<string, never>;
-                                    drive_through?: Record<string, never>;
-                                    dine_in?: {
-                                        reservations?: Record<string, never>;
-                                        online_reservations?: Record<string, never>;
-                                        groups_only_reservations?: Record<string, never>;
-                                        essential_reservations?: Record<string, never>;
-                                    };
-                                };
-                                amenities?: {
-                                    restroom?: Record<string, never>;
-                                    smoking?: Record<string, never>;
-                                    jukebox?: Record<string, never>;
-                                    music?: Record<string, never>;
-                                    live_music?: Record<string, never>;
-                                    private_room?: Record<string, never>;
-                                    outdoor_seating?: Record<string, never>;
-                                    tvs?: Record<string, never>;
-                                    atm?: Record<string, never>;
-                                    coat_check?: Record<string, never>;
-                                    wheelchair_accessible?: Record<string, never>;
-                                    parking?: {
-                                        parking?: Record<string, never>;
-                                        street_parking?: Record<string, never>;
-                                        valet_parking?: Record<string, never>;
-                                        public_lot?: Record<string, never>;
-                                        private_lot?: Record<string, never>;
-                                    };
-                                    sit_down_dining?: Record<string, never>;
-                                    wifi?: string;
-                                };
-                                attributes?: {
-                                    business_meeting?: string;
-                                    clean?: string;
-                                    crowded?: string;
-                                    dates_popular?: string;
-                                    dressy?: string;
-                                    families_popular?: string;
-                                    gluten_free_diet?: string;
-                                    good_for_dogs?: string;
-                                    groups_popular?: string;
-                                    healthy_diet?: string;
-                                    late_night?: string;
-                                    noisy?: string;
-                                    quick_bite?: string;
-                                    romantic?: string;
-                                    service_quality?: string;
-                                    singles_popular?: string;
-                                    special_occasion?: string;
-                                    trendy?: string;
-                                    value_for_money?: string;
-                                    vegan_diet?: string;
-                                    vegetarian_diet?: string;
-                                };
-                            };
-                            geocodes?: {
-                                drop_off?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                front_door?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                main?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                road?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                roof?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                            };
-                            hours?: {
-                                display?: string;
-                                is_local_holiday?: boolean;
-                                open_now?: boolean;
-                                regular?: {
-                                    close?: string;
-                                    /** Format: int32 */
-                                    day?: number;
-                                    open?: string;
-                                }[];
-                            };
-                            hours_popular?: {
-                                close?: string;
-                                /** Format: int32 */
-                                day?: number;
-                                open?: string;
-                            }[];
-                            link?: string;
-                            location?: {
-                                address?: string;
-                                address_extended?: string;
-                                admin_region?: string;
-                                census_block?: string;
-                                country?: string;
-                                cross_street?: string;
-                                dma?: string;
-                                formatted_address?: string;
-                                locality?: string;
-                                neighborhood?: string[];
-                                po_box?: string;
-                                post_town?: string;
-                                postcode?: string;
-                                region?: string;
-                            };
-                            menu?: string;
-                            name?: string;
-                            photos?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                prefix?: string;
-                                suffix?: string;
-                                /** Format: int32 */
-                                width?: number;
-                                /** Format: int32 */
-                                height?: number;
-                                classifications?: string[];
-                                tip?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    text?: string;
-                                    url?: string;
-                                    photo?: unknown;
-                                    lang?: string;
-                                    /** Format: int32 */
-                                    agree_count?: number;
-                                    /** Format: int32 */
-                                    disagree_count?: number;
-                                };
-                            }[];
-                            /** Format: double */
-                            popularity?: number;
-                            /** Format: int32 */
-                            price?: number;
-                            /** Format: double */
-                            rating?: number;
-                            related_places?: {
-                                parent?: unknown;
-                            };
-                            social_media?: {
-                                facebook_id?: string;
-                                instagram?: string;
-                                twitter?: string;
-                            };
-                            stats?: {
-                                /** Format: int32 */
-                                total_photos?: number;
-                                /** Format: int64 */
-                                total_ratings?: number;
-                                /** Format: int32 */
-                                total_tips?: number;
-                            };
-                            store_id?: string;
-                            tastes?: string[];
-                            tel?: string;
-                            timezone?: string;
-                            tips?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                text?: string;
-                                url?: string;
-                                photo?: unknown;
-                                lang?: string;
-                                /** Format: int32 */
-                                agree_count?: number;
-                                /** Format: int32 */
-                                disagree_count?: number;
-                            }[];
-                            venue_reality_bucket?: string;
-                            verified?: boolean;
-                            website?: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    "place-select": {
-        parameters: {
-            query?: {
-                /** @description The request ID pulled from the header of the /v3/places/nearby request that generated the list of places to show the user */
-                request_id?: string;
-                /** @description The place ID of the place which was selected by the user in the UI */
-                fsq_id?: string;
-                /** @description Specify the use case for specified request */
-                select_context?: string;
-                delayed?: boolean;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        response?: string;
-                    };
-                };
-            };
-        };
-    };
-    "address-details": {
-        parameters: {
-            query?: {
-                /** @description A user-generated token to identify a session for billing purposes. Learn more about [session tokens](https://docs.foursquare.com/reference/session-tokens). */
-                session_token?: string;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path: {
-                /** @description A unique string identifier used to retrieve further details for an address result returned by the [autocomplete endpoint](https://docs.foursquare.com/reference/autocomplete). Note this id format may change or be updated in the future and therefore should be treated as temporary. */
-                fsq_addr_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        fsq_addr_id?: string;
-                        location?: {
-                            address?: string;
-                            address_extended?: string;
-                            admin_region?: string;
-                            census_block?: string;
-                            country?: string;
-                            cross_street?: string;
-                            dma?: string;
-                            formatted_address?: string;
-                            locality?: string;
-                            neighborhood?: string[];
-                            po_box?: string;
-                            post_town?: string;
-                            postcode?: string;
-                            region?: string;
-                        };
-                        geocodes?: {
-                            drop_off?: {
-                                /** Format: double */
-                                latitude?: number;
-                                /** Format: double */
-                                longitude?: number;
-                            };
-                            front_door?: {
-                                /** Format: double */
-                                latitude?: number;
-                                /** Format: double */
-                                longitude?: number;
-                            };
-                            main?: {
-                                /** Format: double */
-                                latitude?: number;
-                                /** Format: double */
-                                longitude?: number;
-                            };
-                            road?: {
-                                /** Format: double */
-                                latitude?: number;
-                                /** Format: double */
-                                longitude?: number;
-                            };
-                            roof?: {
-                                /** Format: double */
-                                latitude?: number;
-                                /** Format: double */
-                                longitude?: number;
-                            };
-                        };
-                        directory?: {
-                            fsq_id?: string;
-                            categories?: {
-                                /** Format: int32 */
-                                id?: number;
-                                name?: string;
-                                short_name?: string;
-                                plural_name?: string;
-                                icon?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                            }[];
-                            chains?: {
-                                id?: string;
-                                name?: string;
-                                logo?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    prefix?: string;
-                                    suffix?: string;
-                                    /** Format: int32 */
-                                    width?: number;
-                                    /** Format: int32 */
-                                    height?: number;
-                                    classifications?: string[];
-                                    tip?: {
-                                        id?: string;
-                                        /** Format: date-time */
-                                        created_at?: string;
-                                        text?: string;
-                                        url?: string;
-                                        photo?: unknown;
-                                        lang?: string;
-                                        /** Format: int32 */
-                                        agree_count?: number;
-                                        /** Format: int32 */
-                                        disagree_count?: number;
-                                    };
-                                };
-                                parent_id?: string;
-                            }[];
-                            closed_bucket?: string;
-                            /** Format: date */
-                            date_closed?: string;
-                            description?: string;
-                            /** Format: int32 */
-                            distance?: number;
-                            email?: string;
-                            fax?: string;
-                            features?: {
-                                payment?: {
-                                    credit_cards?: {
-                                        accepts_credit_cards?: Record<string, never>;
-                                        amex?: Record<string, never>;
-                                        discover?: Record<string, never>;
-                                        visa?: Record<string, never>;
-                                        diners_club?: Record<string, never>;
-                                        master_card?: Record<string, never>;
-                                        union_pay?: Record<string, never>;
-                                    };
-                                    digital_wallet?: {
-                                        accepts_nfc?: Record<string, never>;
-                                    };
-                                };
-                                food_and_drink?: {
-                                    alcohol?: {
-                                        bar_service?: Record<string, never>;
-                                        beer?: Record<string, never>;
-                                        byo?: Record<string, never>;
-                                        cocktails?: Record<string, never>;
-                                        full_bar?: Record<string, never>;
-                                        wine?: Record<string, never>;
-                                    };
-                                    meals?: {
-                                        bar_snacks?: Record<string, never>;
-                                        breakfast?: Record<string, never>;
-                                        brunch?: Record<string, never>;
-                                        lunch?: Record<string, never>;
-                                        happy_hour?: Record<string, never>;
-                                        dessert?: Record<string, never>;
-                                        dinner?: Record<string, never>;
-                                        tasting_menu?: Record<string, never>;
-                                    };
-                                };
-                                services?: {
-                                    delivery?: Record<string, never>;
-                                    takeout?: Record<string, never>;
-                                    drive_through?: Record<string, never>;
-                                    dine_in?: {
-                                        reservations?: Record<string, never>;
-                                        online_reservations?: Record<string, never>;
-                                        groups_only_reservations?: Record<string, never>;
-                                        essential_reservations?: Record<string, never>;
-                                    };
-                                };
-                                amenities?: {
-                                    restroom?: Record<string, never>;
-                                    smoking?: Record<string, never>;
-                                    jukebox?: Record<string, never>;
-                                    music?: Record<string, never>;
-                                    live_music?: Record<string, never>;
-                                    private_room?: Record<string, never>;
-                                    outdoor_seating?: Record<string, never>;
-                                    tvs?: Record<string, never>;
-                                    atm?: Record<string, never>;
-                                    coat_check?: Record<string, never>;
-                                    wheelchair_accessible?: Record<string, never>;
-                                    parking?: {
-                                        parking?: Record<string, never>;
-                                        street_parking?: Record<string, never>;
-                                        valet_parking?: Record<string, never>;
-                                        public_lot?: Record<string, never>;
-                                        private_lot?: Record<string, never>;
-                                    };
-                                    sit_down_dining?: Record<string, never>;
-                                    wifi?: string;
-                                };
-                                attributes?: {
-                                    business_meeting?: string;
-                                    clean?: string;
-                                    crowded?: string;
-                                    dates_popular?: string;
-                                    dressy?: string;
-                                    families_popular?: string;
-                                    gluten_free_diet?: string;
-                                    good_for_dogs?: string;
-                                    groups_popular?: string;
-                                    healthy_diet?: string;
-                                    late_night?: string;
-                                    noisy?: string;
-                                    quick_bite?: string;
-                                    romantic?: string;
-                                    service_quality?: string;
-                                    singles_popular?: string;
-                                    special_occasion?: string;
-                                    trendy?: string;
-                                    value_for_money?: string;
-                                    vegan_diet?: string;
-                                    vegetarian_diet?: string;
-                                };
-                            };
-                            geocodes?: {
-                                drop_off?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                front_door?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                main?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                road?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                                roof?: {
-                                    /** Format: double */
-                                    latitude?: number;
-                                    /** Format: double */
-                                    longitude?: number;
-                                };
-                            };
-                            hours?: {
-                                display?: string;
-                                is_local_holiday?: boolean;
-                                open_now?: boolean;
-                                regular?: {
-                                    close?: string;
-                                    /** Format: int32 */
-                                    day?: number;
-                                    open?: string;
-                                }[];
-                            };
-                            hours_popular?: {
-                                close?: string;
-                                /** Format: int32 */
-                                day?: number;
-                                open?: string;
-                            }[];
-                            link?: string;
-                            location?: {
-                                address?: string;
-                                address_extended?: string;
-                                admin_region?: string;
-                                census_block?: string;
-                                country?: string;
-                                cross_street?: string;
-                                dma?: string;
-                                formatted_address?: string;
-                                locality?: string;
-                                neighborhood?: string[];
-                                po_box?: string;
-                                post_town?: string;
-                                postcode?: string;
-                                region?: string;
-                            };
-                            menu?: string;
-                            name?: string;
-                            photos?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                prefix?: string;
-                                suffix?: string;
-                                /** Format: int32 */
-                                width?: number;
-                                /** Format: int32 */
-                                height?: number;
-                                classifications?: string[];
-                                tip?: {
-                                    id?: string;
-                                    /** Format: date-time */
-                                    created_at?: string;
-                                    text?: string;
-                                    url?: string;
-                                    photo?: unknown;
-                                    lang?: string;
-                                    /** Format: int32 */
-                                    agree_count?: number;
-                                    /** Format: int32 */
-                                    disagree_count?: number;
-                                };
-                            }[];
-                            /** Format: double */
-                            popularity?: number;
-                            /** Format: int32 */
-                            price?: number;
-                            /** Format: double */
-                            rating?: number;
-                            related_places?: {
-                                parent?: unknown;
-                            };
-                            social_media?: {
-                                facebook_id?: string;
-                                instagram?: string;
-                                twitter?: string;
-                            };
-                            stats?: {
-                                /** Format: int32 */
-                                total_photos?: number;
-                                /** Format: int64 */
-                                total_ratings?: number;
-                                /** Format: int32 */
-                                total_tips?: number;
-                            };
-                            store_id?: string;
-                            tastes?: string[];
-                            tel?: string;
-                            timezone?: string;
-                            tips?: {
-                                id?: string;
-                                /** Format: date-time */
-                                created_at?: string;
-                                text?: string;
-                                url?: string;
-                                photo?: unknown;
-                                lang?: string;
-                                /** Format: int32 */
-                                agree_count?: number;
-                                /** Format: int32 */
-                                disagree_count?: number;
-                            }[];
-                            venue_reality_bucket?: string;
-                            verified?: boolean;
-                            website?: string;
-                        }[];
-                    };
-                };
-            };
-            /** @description unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description fsq_addr_id not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    "feedback-status": {
-        parameters: {
-            query?: {
-                /** @description A comma seperated list of proposed edit ids. If specified, shows only proposed edits with these IDs */
-                proposed_edit_ids?: string;
-                /** @description The specified number of proposed edits per page. Returns 10 proposed edits by default, up to a maximum number of 50. */
-                limit?: number;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        woes?: {
-                            id?: string;
-                            fsq_id?: string;
-                            proposed_edit_type?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            /** Format: date-time */
-                            resolved_time?: string;
-                            rolled_back?: Record<string, never>;
-                            status?: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    "place-flag": {
-        parameters: {
-            query: {
-                /** @description Problem being flagged. Possible values are:<ul><li>closed</li><li>doesnt_exist</li><li>duplicate</li><li>inappropriate</li><li>incorrect_items</li><li>locationreview</li><li>mislocated</li><li>not_closed</li><li>other</li><li>private</li><li>public</li><li>suspicious_hours</li></ul> */
-                problem: string;
-                /** @description A comment describing the issue being flagged. */
-                comment?: string;
-                /** @description Correct Lat/Long for the venue if location is being flagged. */
-                ll?: string;
-                /** @description Label for the venue lat long if location is being flagged. */
-                ll_label?: string;
-                /** @description Correct Lat/Long for the venue if location is being flagged. */
-                additional_ll?: string;
-                /** @description Label for the venue lat long if location is being flagged. */
-                additional_ll_label?: string;
-                /** @description Venue ids to flag as duplicates of the venue. */
-                duplicate_ids?: string;
-                /** @description The partnerID for partner provided attributes. */
-                partner_id?: string;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path: {
-                /** @description A unique string identifier for a FSQ Place (formerly known as Venue ID). E.g., Foursquare HQ's fsq_id = 5a187743ccad6b307315e6fe */
-                fsq_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        proposed_edits?: {
-                            id?: string;
-                            fsq_id?: string;
-                            proposed_edit_type?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            /** Format: date-time */
-                            resolved_time?: string;
-                            rolled_back?: Record<string, never>;
-                            status?: string;
-                        }[];
-                        errors?: string[];
-                    };
-                };
-            };
-        };
-    };
-    "place-propose-edit": {
-        parameters: {
-            query?: {
-                /** @description The proposed new value for the latitude and longitude at which the place should be located (e.g., ll=41.8781,-87.6298). */
-                ll?: string;
-                /** @description The proposed new value for the url where the menu of the place can be found. */
-                menu_url?: string;
-                /** @description The proposed new value for the  url for this place's Facebook Page. */
-                facebook_url?: string;
-                /** @description The proposed new value if the place is a subvenue of a larger place (such as a coffee shop within a Target), set this attribute to the ID of the parent place. Set to "" to remove parent. */
-                parent_id?: string;
-                /**
-                 * @description The proposed new value for the hours for the venue, as a semi-colon separated list of open segments and named segments (e.g., brunch or happy hour). Open segments are formatted as day,start,end. Named segments additionally have a label, formatted as day,start,end,label. Days are formatted as integers with Monday = 1,...,Sunday = 7. Start and End are formatted as [+]HHMM format. Use 24 hour format (no colon), prefix with 0 for HH or MM less than 10. Use '+' prefix, i.e., +0230 to represent 2:30 am past midnight into the following day.
-                 *
-                 *     To indicate that a venue is open 24/7, send this value with the hours attribute: 1,0000,2400;2,0000,2400;3,0000,2400;4,0000,2400;5,0000,2400;6,0000,2400;7,0000,2400
-                 */
-                hours?: string;
-                /** @description The proposed new value for the  name of the place. */
-                name?: string;
-                /** @description The proposed new value for the freeform description of the place, up to 300 characters. */
-                description?: string;
-                /** @description The proposed new value for the  phone number of the place. */
-                phone?: string;
-                /** @description The proposed new value for the  twitter handle of the place. */
-                twitter?: string;
-                /** @description The proposed new value for the  url of the homepage of the place. */
-                url?: string;
-                /** @description The proposed new value for the  address of the place. */
-                address?: string;
-                /** @description The proposed new value for the  nearest intersecting street or streets. */
-                cross_street?: string;
-                /** @description The proposed new value for the  name of the locality (city) where this place is. */
-                locality?: string;
-                /** @description The proposed new value for the  nearest state or province to the place. */
-                region?: string;
-                /** @description The proposed new value for the  zip or postal code for the place. */
-                postcode?: string;
-                /**
-                 * @description Add category IDs. Supports multiple Category IDs, separated by commas.
-                 *
-                 *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id].
-                 */
-                add_categories?: string;
-                /**
-                 * @description Remove category IDs. Supports multiple Category IDs, separated by commas.
-                 *
-                 *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id].
-                 */
-                remove_categories?: string;
-                /**
-                 * @description Change the primary category ID.
-                 *
-                 *     For a complete list of Foursquare Category IDs, refer to the <a href="https://docs.foursquare.com/data-products/docs/categories" target="blank">Category Taxonomy</a> page. [This endpoint prefers the 5-integer style id, but can accept theBSON style id].
-                 */
-                primary_category?: string;
-                /** @description Add chain IDs to the venue. */
-                add_chains?: string;
-                /** @description Remove chain IDs to the venue. */
-                remove_chains?: string;
-                /** @description Change the primary chain ID for the venue. */
-                primary_chain?: string;
-            };
-            header: {
-                /** @description The version of the API to use. */
-                "X-Places-Api-Version": "1970-01-01";
-            };
-            path: {
-                /** @description A unique string identifier for a FSQ Place (formerly known as Venue ID). E.g., Foursquare HQ's fsq_id = 5a187743ccad6b307315e6fe. */
-                fsq_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        proposed_edits?: {
-                            id?: string;
-                            fsq_id?: string;
-                            proposed_edit_type?: string;
-                            /** Format: date-time */
-                            created_at?: string;
-                            /** Format: date-time */
-                            resolved_time?: string;
-                            rolled_back?: Record<string, never>;
-                            status?: string;
-                        }[];
-                        errors?: string[];
-                    };
-                };
-            };
-        };
-    };
+  };
 }

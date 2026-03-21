@@ -71,12 +71,15 @@ interface ActionType {
   selected_option?: { value: string };
 }
 
-type ValuesType = Record<string, {
+type ValuesType = Record<
+  string,
+  {
     'address-action'?: ActionType;
     'radius-action'?: ActionType;
     'min-rating-action'?: ActionType;
     'max-price-action'?: ActionType;
-  }>;
+  }
+>;
 
 interface ModalViewWithState extends ModalView {
   state: { values: ValuesType };

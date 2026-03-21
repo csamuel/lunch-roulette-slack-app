@@ -5,7 +5,15 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { toRestaurantBlock, toSlackMessageBlocks } from './lib/blocks';
 import { addVote, finalize, respin } from './service/game';
 import { saveConfiguration } from './service/mongodb';
-import { type ActionType, type BasePayload, EventType, type ValuesType, type ViewSubmissionPayload , type ActionPayload, type Message } from './types/lunchr';
+import {
+  type ActionType,
+  type BasePayload,
+  EventType,
+  type ValuesType,
+  type ViewSubmissionPayload,
+  type ActionPayload,
+  type Message,
+} from './types/lunchr';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
 const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN ?? 'YOUR_SLACK_VERIFICATION_TOKEN';
@@ -80,7 +88,13 @@ async function handleViewSubmission(payload: ViewSubmissionPayload) {
 
   const { address, radius, minRating, maxPrice } = extractConfig(values);
   if (address && radius && minRating && maxPrice && channelId) {
-    await saveConfiguration({ address, radius: parseInt(radius), minRating: parseFloat(minRating), maxPrice, channelId });
+    await saveConfiguration({
+      address,
+      radius: parseInt(radius),
+      minRating: parseFloat(minRating),
+      maxPrice,
+      channelId,
+    });
     await slackClient.chat.postMessage({
       channel: channelId,
       text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,

@@ -18,9 +18,7 @@
   "paths": {
     "/v3/places/search": {
       "get": {
-        "tags": [
-          "Search & Data"
-        ],
+        "tags": ["Search & Data"],
         "summary": "Place Search",
         "description": "Search for places in the FSQ Places database using a location and querying by name, category name, telephone number, taste label, or chain name. For example, search for \"coffee\" to get back a list of recommended coffee shops. \n\nYou may pass a location with your request by using one of the following options. If none of the following options are passed, Place Search defaults to geolocation using ip biasing with the optional radius parameter.\n\n<ul><li>ll & radius (circular boundary)</li><li>near (geocodable locality)</li><li>ne & sw (rectangular boundary)</li></ul>",
         "operationId": "place-search",
@@ -185,12 +183,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "RELEVANCE",
-                "RATING",
-                "DISTANCE",
-                "POPULARITY"
-              ]
+              "enum": ["RELEVANCE", "RATING", "DISTANCE", "POPULARITY"]
             }
           },
           {
@@ -230,9 +223,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -1160,9 +1151,7 @@
     },
     "/v3/places/{fsq_id}/tips": {
       "get": {
-        "tags": [
-          "Search & Data"
-        ],
+        "tags": ["Search & Data"],
         "summary": "Get Place Tips",
         "description": "Retrieve tips for a FSQ Place using the fsq_id.",
         "operationId": "place-tips",
@@ -1204,10 +1193,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "POPULAR",
-                "NEWEST"
-              ]
+              "enum": ["POPULAR", "NEWEST"]
             }
           },
           {
@@ -1217,9 +1203,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -1339,9 +1323,7 @@
     },
     "/v3/places/match": {
       "get": {
-        "tags": [
-          "Search & Data"
-        ],
+        "tags": ["Search & Data"],
         "summary": "Place Match",
         "description": "Return the Foursquare record of a POI (via fsq_id) given a name and location.",
         "operationId": "place-match",
@@ -1425,9 +1407,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -2332,9 +2312,7 @@
     },
     "/v3/places/nearby": {
       "get": {
-        "tags": [
-          "Geotagging & Check-in"
-        ],
+        "tags": ["Geotagging & Check-in"],
         "summary": "Find Nearby Places",
         "description": "Utilize Foursquare's Snap to Place technology to detect where your user's device is and what is around them. \nThe endpoint is designed to provide POI tagging that supports a check-in use case. It will intentionally return lower quality results not found in Place Search. It is not intended to replace Place Search as the primary way to search for top, recommended POIs.",
         "operationId": "places-nearby",
@@ -2405,9 +2383,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -3297,9 +3273,7 @@
     },
     "/v3/place/select": {
       "post": {
-        "tags": [
-          "Geotagging & Check-in"
-        ],
+        "tags": ["Geotagging & Check-in"],
         "summary": "Report Nearby Place Selection",
         "description": "Report the selection of a place as the result of a Nearby Places request.",
         "operationId": "place-select",
@@ -3347,9 +3321,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -3375,9 +3347,7 @@
     },
     "/v3/address/{fsq_addr_id}": {
       "get": {
-        "tags": [
-          "Address Data"
-        ],
+        "tags": ["Address Data"],
         "summary": "Get Address Details",
         "description": "Retrieve details for any address including non-Places. For addresses that do include FSQ Places, the response will include a `directory` field that contains a list of said FSQ Places.",
         "operationId": "address-details",
@@ -3407,9 +3377,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -4433,9 +4401,7 @@
     },
     "/v3/feedback/status": {
       "get": {
-        "tags": [
-          "Places Feedback"
-        ],
+        "tags": ["Places Feedback"],
         "summary": "Get Feedback Status",
         "description": "Monitor the status of the feedback items provided by your users.",
         "operationId": "feedback-status",
@@ -4468,9 +4434,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -4534,9 +4498,7 @@
     },
     "/v3/places/{fsq_id}/flag": {
       "post": {
-        "tags": [
-          "Places Feedback"
-        ],
+        "tags": ["Places Feedback"],
         "summary": "Flag Problematic Place",
         "description": "Provide Feedback about a problematic Place due to a variety of reasons such as closed, and mislocated via its `fsq_id`.",
         "operationId": "place-flag",
@@ -4629,9 +4591,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -4706,9 +4666,7 @@
     },
     "/v3/places/{fsq_id}/proposeedit": {
       "post": {
-        "tags": [
-          "Places Feedback"
-        ],
+        "tags": ["Places Feedback"],
         "summary": "Propose Place Edit",
         "description": "Propose edits to an existing Place’s information such as address, phone number, and hours of operation via its `fsq_id`. Providing values for the parameters below constitue the proposed edit. ",
         "operationId": "place-propose-edit",
@@ -4918,9 +4876,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "1970-01-01"
-              ],
+              "enum": ["1970-01-01"],
               "default": "1970-01-01"
             }
           }
@@ -7981,15 +7937,7 @@
         "properties": {
           "day": {
             "type": "string",
-            "enum": [
-              "MONDAY",
-              "TUESDAY",
-              "WEDNESDAY",
-              "THURSDAY",
-              "FRIDAY",
-              "SATURDAY",
-              "SUNDAY"
-            ]
+            "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
           },
           "time": {
             "type": "string",

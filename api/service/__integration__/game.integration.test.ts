@@ -69,9 +69,7 @@ describe('Game lifecycle (Foursquare + MongoDB, no Slack)', () => {
   it('step 3: create a new game with 3 random restaurants', async () => {
     const config = (await getConfiguration(TEST_CHANNEL_ID))!;
     const selectedRestaurants = getRandomElements(allRestaurants, 3);
-    const remainingOptions = allRestaurants.filter(
-      (r) => !selectedRestaurants.some((s) => s.id === r.id),
-    );
+    const remainingOptions = allRestaurants.filter((r) => !selectedRestaurants.some((s) => s.id === r.id));
 
     gameId = `test-game-${Date.now().toString()}`;
 
@@ -107,9 +105,7 @@ describe('Game lifecycle (Foursquare + MongoDB, no Slack)', () => {
     const firstOption = game.currentOptions[0];
 
     // User 1 votes for the first restaurant
-    const votesAfterFirst = [
-      { messageTs: gameId, restaurantId: firstOption.id, userId: TEST_USER_ID },
-    ];
+    const votesAfterFirst = [{ messageTs: gameId, restaurantId: firstOption.id, userId: TEST_USER_ID }];
 
     await saveGame({ ...game, votes: votesAfterFirst });
 
@@ -131,9 +127,7 @@ describe('Game lifecycle (Foursquare + MongoDB, no Slack)', () => {
     const previousOptionIds = game.currentOptions.map((r) => r.id);
 
     const newSelected = getRandomElements(game.possibleOptions, 3);
-    const newRemaining = game.possibleOptions.filter(
-      (r) => !newSelected.some((s) => s.id === r.id),
-    );
+    const newRemaining = game.possibleOptions.filter((r) => !newSelected.some((s) => s.id === r.id));
 
     const respunGame: GameState = {
       ...game,

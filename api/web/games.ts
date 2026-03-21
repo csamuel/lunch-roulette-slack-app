@@ -37,11 +37,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       maxPrice,
     };
 
-    const { game } = await createGame(
-      { id: gameId, displayName: spinnerName },
-      config,
-      { source: 'web', spinnerToken },
-    );
+    const { game } = await createGame({ id: gameId, displayName: spinnerName }, config, {
+      source: 'web',
+      spinnerToken,
+    });
 
     const savedGame = { ...game, id: gameId };
     await saveGame(savedGame);

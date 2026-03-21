@@ -20,7 +20,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     return;
   }
 
-  const { body } = req as { body: { token: string; text?: string; channel_id: string; user_id: string; trigger_id: string } };
+  const { body } = req as {
+    body: { token: string; text?: string; channel_id: string; user_id: string; trigger_id: string };
+  };
   const { token, text, channel_id: channelId, user_id: userId, trigger_id: triggerId } = body;
 
   // validate slack tocken
@@ -63,11 +65,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const spinnerProfile = await slackClient.users.profile.get({ user: userId });
   const displayName = spinnerProfile.profile?.display_name ?? 'Unknown User';
 
-  const { game } = await createGame(
-    { id: userId, displayName },
-    configuration,
-    { source: 'slack' },
-  );
+  const { game } = await createGame({ id: userId, displayName }, configuration, { source: 'slack' });
 
   const result = await slackClient.chat.postMessage({
     channel: channelId,
@@ -84,7 +82,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   });
 
   res.status(200).send('');
-
 };
 
 async function handleConfigure(triggerId: string, channelId: string): Promise<void> {

@@ -25,18 +25,28 @@ function makePlace(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function mockResponse(body: unknown, statusCode = 200) {
+function mockResponse(body: unknown, statusCode = 200, headers: Record<string, string> = {}) {
   const res = new EventEmitter();
-  Object.assign(res, { statusCode });
+  Object.assign(res, { statusCode, headers });
   mockGet.mockImplementationOnce((_url, _opts, callback) => {
     if (typeof callback === 'function') {
-        callback(res as never);
+      callback(res as never);
     }
     process.nextTick(() => {
       res.emit('data', JSON.stringify(body));
       res.emit('end');
     });
     return new EventEmitter() as never;
+  });
+}
+
+function mockRequestError(error: Error) {
+  mockGet.mockImplementationOnce((_url, _opts, _callback) => {
+    const req = new EventEmitter();
+    process.nextTick(() => {
+      req.emit('error', error);
+    });
+    return req as never;
   });
 }
 
@@ -200,6 +210,42 @@ describe('findRestaurants', () => {
     expect(mockGet).toHaveBeenCalledTimes(2);
   });
 
+  it('does not repeat the same search when the first page is full', async () => {
+    const fullPage = Array.from({ length: 50 }, (_, i) => makePlace({ fsq_id: `r-${i.toString()}` }));
+    mockResponse(geocodeSearchResponse);
+    mockResponse({ results: fullPage });
+
+    const results = await findRestaurants('NYC', 1000, '$$$$');
+
+    expect(results).toHaveLength(50);
+    expect(mockGet).toHaveBeenCalledTimes(2);
+  });
+
+  it('follows next-page links until it has collected 200 restaurants', async () => {
+    const makePage = (page: number) =>
+      Array.from({ length: 50 }, (_, i) => makePlace({ fsq_id: `p${page}-${i.toString()}` }));
+
+    mockResponse(geocodeSearchResponse);
+    mockResponse({ results: makePage(1) }, 200, {
+      link: '<https://api.foursquare.com/v3/places/search?page=2>; rel="next"',
+    });
+    mockResponse({ results: makePage(2) }, 200, {
+      link: '<https://api.foursquare.com/v3/places/search?page=3>; rel="next"',
+    });
+    mockResponse({ results: makePage(3) }, 200, {
+      link: '<https://api.foursquare.com/v3/places/search?page=4>; rel="next"',
+    });
+    mockResponse({ results: makePage(4) });
+
+    const results = await findRestaurants('NYC', 1000, '$$$$');
+
+    expect(results).toHaveLength(200);
+    expect(mockGet).toHaveBeenCalledTimes(5);
+    expect(getCallUrl(2).searchParams.get('page')).toBe('2');
+    expect(getCallUrl(3).searchParams.get('page')).toBe('3');
+    expect(getCallUrl(4).searchParams.get('page')).toBe('4');
+  });
+
   it('sends Authorization header with API key', async () => {
     mockResponse(geocodeSearchResponse);
     mockResponse({ results: [] });
@@ -209,6 +255,30 @@ describe('findRestaurants', () => {
     for (const call of mockGet.mock.calls) {
       const opts = call[1] as { headers: Record<string, string> };
       expect(opts.headers.Authorization).toBe('YOUR_FOURSQUARE_API_KEY');
+    }
+  });
+
+  it('sends the required Foursquare API version header', async () => {
+    mockResponse(geocodeSearchResponse);
+    mockResponse({ results: [] });
+
+    await findRestaurants('NYC', 1000, '$$');
+
+    for (const call of mockGet.mock.calls) {
+      const opts = call[1] as { headers: Record<string, string> };
+      expect(opts.headers['X-Places-Api-Version']).toBe('1970-01-01');
+    }
+  });
+
+  it('disables socket pooling for outbound requests', async () => {
+    mockResponse(geocodeSearchResponse);
+    mockResponse({ results: [] });
+
+    await findRestaurants('NYC', 1000, '$$');
+
+    for (const call of mockGet.mock.calls) {
+      const opts = call[1] as { agent: boolean };
+      expect(opts.agent).toBe(false);
     }
   });
 
@@ -238,6 +308,18 @@ describe('findRestaurants', () => {
     mockResponse({}, 500);
 
     await expect(findRestaurants('NYC', 1000, '$$')).rejects.toThrow('Foursquare API error: 500');
+  });
+
+  it('retries transient connection resets', async () => {
+    const resetError = new Error('aborted') as Error & { code?: string };
+    resetError.code = 'ECONNRESET';
+
+    mockRequestError(resetError);
+    mockResponse(geocodeSearchResponse);
+    mockResponse({ results: [] });
+
+    await expect(findRestaurants('NYC', 1000, '$$')).resolves.toEqual([]);
+    expect(mockGet).toHaveBeenCalledTimes(3);
   });
 });
 
