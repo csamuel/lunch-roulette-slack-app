@@ -6,6 +6,14 @@ import type { Configuration } from '../types/lunchr';
 
 export const maxDuration = 30;
 
+function toErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.stack ?? error.message;
+  }
+
+  return String(error);
+}
+
 export default async (req: VercelRequest, res: VercelResponse) => {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method Not Allowed' });
@@ -37,13 +45,26 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       maxPrice,
     };
 
-    const { game } = await createGame({ id: gameId, displayName: spinnerName }, config, {
-      source: 'web',
-      spinnerToken,
-    });
+    let game;
+    try {
+      ({ game } = await createGame({ id: gameId, displayName: spinnerName }, config, {
+        source: 'web',
+        spinnerToken,
+      }));
+    } catch (error: unknown) {
+      // eslint-disable-next-line no-console -- serverless function error logging
+      console.error('Error creating game during createGame:', toErrorMessage(error));
+      throw error;
+    }
 
     const savedGame = { ...game, id: gameId };
-    await saveGame(savedGame);
+    try {
+      await saveGame(savedGame);
+    } catch (error: unknown) {
+      // eslint-disable-next-line no-console -- serverless function error logging
+      console.error('Error creating game during saveGame:', toErrorMessage(error));
+      throw error;
+    }
 
     // Return game without possibleOptions or spinnerToken
     const { possibleOptions: _, spinnerToken: __, ...publicGame } = savedGame;
@@ -51,7 +72,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     res.status(200).json({ gameId, spinnerToken, game: publicGame });
   } catch (error: unknown) {
     // eslint-disable-next-line no-console -- serverless function error logging
-    console.error('Error creating game:', error);
+    console.error('Error creating game:', toErrorMessage(error));
     res.status(500).json({ error: 'Failed to create game' });
   }
 };

@@ -94,7 +94,6 @@ async function foursquareGetByUrl(url: string): Promise<FoursquareResponse> {
                 return;
               }
               try {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
                 resolve({
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- JSON.parse returns unknown
                   data: JSON.parse(data) as PlacesSearchResponse,

@@ -1,4 +1,5 @@
 import https from 'node:https';
+import type { IncomingHttpHeaders } from 'node:http';
 
 import { describe, expect, it } from 'vitest';
 
@@ -8,10 +9,10 @@ const METERS_PER_MILE = 1609.34;
 const SEARCH_RADIUS = Math.round(2 * METERS_PER_MILE);
 const FOURSQUARE_API_KEY = process.env.FOURSQUARE_API_KEY ?? 'YOUR_FOURSQUARE_API_KEY';
 
-function livePlacesSearch(
+async function livePlacesSearch(
   url: string,
-): Promise<{ body: string; headers: https.IncomingHttpHeaders; statusCode?: number }> {
-  return new Promise((resolve, reject) => {
+): Promise<{ body: string; headers: IncomingHttpHeaders; statusCode?: number }> {
+  return await new Promise((resolve, reject) => {
     const req = https.get(
       url,
       {
