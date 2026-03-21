@@ -141,6 +141,8 @@ function mapToRestaurant(place: Place): Restaurant {
 }
 
 async function geocodeAddress(address: string): Promise<string> {
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Foursquare: geocode start');
   const { data } = await foursquareGet('/v3/places/search', {
     near: address,
     query: 'restaurants',
@@ -154,10 +156,14 @@ async function geocodeAddress(address: string): Promise<string> {
     throw new Error(`Could not geocode address: ${address}`);
   }
 
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Foursquare: geocode complete');
   return `${center.latitude.toString()},${center.longitude.toString()}`;
 }
 
 export async function findRestaurants(address: string, radius: number, maxPriceDollars: string): Promise<Restaurant[]> {
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Foursquare: findRestaurants start');
   const ll = await geocodeAddress(address);
   const maxPrice = maxPriceDollars.length;
 
@@ -166,6 +172,8 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
   const visitedPageUrls = new Set<string>();
 
   let nextPageUrl: string | undefined;
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Foursquare: first search start');
   let response = await foursquareGet('/v3/places/search', {
     query: 'restaurants',
     ll,
@@ -175,8 +183,16 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
     max_price: maxPrice,
     fields: FIELDS,
   });
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Foursquare: first search complete');
 
   while (true) {
+    // eslint-disable-next-line no-console -- serverless function diagnostics
+    console.log('Foursquare: processing page', {
+      pageSize: response.data.results?.length ?? 0,
+      resultsSoFar: results.length,
+      hasNextPage: !!response.nextPageUrl,
+    });
     for (const place of response.data.results ?? []) {
       const restaurant = mapToRestaurant(place);
       if (!restaurant.id || seenRestaurantIds.has(restaurant.id)) {
@@ -187,6 +203,8 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
       results.push(restaurant);
 
       if (results.length >= MAX_RESULTS) {
+        // eslint-disable-next-line no-console -- serverless function diagnostics
+        console.log('Foursquare: reached max results');
         return results;
       }
     }
@@ -197,9 +215,15 @@ export async function findRestaurants(address: string, radius: number, maxPriceD
     }
 
     visitedPageUrls.add(nextPageUrl);
+    // eslint-disable-next-line no-console -- serverless function diagnostics
+    console.log('Foursquare: next page start');
     response = await foursquareGetByUrl(nextPageUrl);
+    // eslint-disable-next-line no-console -- serverless function diagnostics
+    console.log('Foursquare: next page complete');
   }
 
+  // eslint-disable-next-line no-console -- serverless function diagnostics
+  console.log('Foursquare: findRestaurants complete', { totalResults: results.length });
   return results;
 }
 
