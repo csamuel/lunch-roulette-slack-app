@@ -12,7 +12,7 @@ export default [
       'public/',
       'pnpm-lock.yaml',
       'node_modules/',
-      'api/types/foursquare-api.d.ts',
+      'packages/api/types/foursquare-api.d.ts',
     ],
   },
   {
