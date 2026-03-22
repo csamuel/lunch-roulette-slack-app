@@ -49,15 +49,11 @@ async function connectToDatabase(): Promise<Db> {
   }
 
   if (!cachedClientPromise) {
-    // eslint-disable-next-line no-console -- serverless function diagnostics
-    console.log('Mongo: starting connect');
     cachedClientPromise = withTimeout('Mongo connect', createMongoClient().connect(), MONGO_OPERATION_TIMEOUT_MS);
   }
 
   try {
     const client = await cachedClientPromise;
-    // eslint-disable-next-line no-console -- serverless function diagnostics
-    console.log('Mongo: connected');
     cachedDb = client.db(MONGO_DB_NAME);
     return cachedDb;
   } catch (error) {
@@ -118,13 +114,9 @@ export async function getGame(gameId: string): Promise<GameState | null> {
 export async function saveGame(gameState: GameState) {
   const db = await connectToDatabase();
   const configurationCollection = db.collection<GameState>(MONGO_GAMESTATE_COLLECTION);
-  // eslint-disable-next-line no-console -- serverless function diagnostics
-  console.log('Mongo: saveGame updateOne start');
   await withTimeout(
     'Mongo saveGame updateOne',
     configurationCollection.updateOne({ id: gameState.id }, { $set: gameState }, { upsert: true }),
     MONGO_OPERATION_TIMEOUT_MS,
   );
-  // eslint-disable-next-line no-console -- serverless function diagnostics
-  console.log('Mongo: saveGame updateOne complete');
 }

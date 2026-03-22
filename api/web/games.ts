@@ -47,14 +47,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     let game;
     try {
-      // eslint-disable-next-line no-console -- serverless function diagnostics
-      console.log('Create game: starting createGame');
       ({ game } = await createGame({ id: gameId, displayName: spinnerName }, config, {
         source: 'web',
         spinnerToken,
       }));
-      // eslint-disable-next-line no-console -- serverless function diagnostics
-      console.log('Create game: createGame complete');
     } catch (error: unknown) {
       // eslint-disable-next-line no-console -- serverless function error logging
       console.error('Error creating game during createGame:', toErrorMessage(error));
@@ -63,11 +59,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     const savedGame = { ...game, id: gameId };
     try {
-      // eslint-disable-next-line no-console -- serverless function diagnostics
-      console.log('Create game: saveGame start');
       await saveGame(savedGame);
-      // eslint-disable-next-line no-console -- serverless function diagnostics
-      console.log('Create game: saveGame complete');
     } catch (error: unknown) {
       // eslint-disable-next-line no-console -- serverless function error logging
       console.error('Error creating game during saveGame:', toErrorMessage(error));
