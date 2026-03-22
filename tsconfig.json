@@ -8,7 +8,7 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es6"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node"]
   },
   "include": ["api/**/*.ts", "eslint.config.ts", "*.d.ts", "vitest.config.ts", "vitest.integration.config.ts", "test-setup.ts"],
