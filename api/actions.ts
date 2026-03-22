@@ -3,11 +3,17 @@ import { WebClient } from '@slack/web-api';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { toRestaurantBlock, toSlackMessageBlocks } from './lib/blocks';
-import { RESPIN_ID } from './lib/constants';
-import { getRandomElements } from './lib/utils';
-import { getGame, saveConfiguration, saveGame } from './service/mongodb';
-import { getRestaurant } from './service/yelp';
-import { type ActionType, type BasePayload, EventType, type ValuesType, type ViewSubmissionPayload , type ActionPayload, type GameState, type Message, type Vote } from './types/lunchr';
+import { addVote, finalize, respin } from './service/game';
+import { saveConfiguration } from './service/mongodb';
+import {
+  type ActionType,
+  type BasePayload,
+  EventType,
+  type ValuesType,
+  type ViewSubmissionPayload,
+  type ActionPayload,
+  type Message,
+} from './types/lunchr';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? 'YOUR_SLACK_BOT_TOKEN';
 const SLACK_VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN ?? 'YOUR_SLACK_VERIFICATION_TOKEN';
@@ -82,7 +88,13 @@ async function handleViewSubmission(payload: ViewSubmissionPayload) {
 
   const { address, radius, minRating, maxPrice } = extractConfig(values);
   if (address && radius && minRating && maxPrice && channelId) {
-    await saveConfiguration({ address, radius: parseInt(radius), minRating: parseFloat(minRating), maxPrice, channelId });
+    await saveConfiguration({
+      address,
+      radius: parseInt(radius),
+      minRating: parseFloat(minRating),
+      maxPrice,
+      channelId,
+    });
     await slackClient.chat.postMessage({
       channel: channelId,
       text: `Now using location ${address} with search radius of ${radius} meters, minimum rating of ${minRating}, and maximum price range of ${maxPrice}.`,
@@ -112,76 +124,21 @@ async function handleBlockActions(payload: ActionPayload) {
   }
 }
 
-function getTopVotedRestaurantId(votes: Vote[]): {
-  restaurantId: string;
-  votes: number;
-} {
-  if (votes.length === 0) {
-    return { restaurantId: '', votes: 0 };
-  } else {
-    const [restaurantId, voteCount] = Object.entries(
-      votes.reduce<Record<string, number>>(
-        (acc, { restaurantId }) => {
-          acc[restaurantId] = (acc[restaurantId] || 0) + 1;
-          return acc;
-        },
-        {},
-      ),
-    ).reduce((a, b) => (a[1] >= b[1] ? a : b));
-
-    return { restaurantId, votes: voteCount };
-  }
-}
-
 async function handleFinalize(userId: string, message: Message, channelId: string): Promise<void> {
   const { ts: gameId } = message;
-  const game = await getGame(gameId);
 
-  if (!game) {
-    return;
-  }
+  const { game: updatedGame, winner, error } = await finalize(gameId, userId, 'slack');
 
-  const { status, votes = [], spinner } = game;
-  const { id: spinnerId, displayName } = spinner;
-
-  if (spinnerId !== userId) {
+  if (error) {
     await slackClient.chat.postEphemeral({
       channel: channelId,
       user: userId,
-      text: `Only the game owner (${displayName}) can finalize the voting!`,
+      text: error,
     });
     return;
   }
 
-  // No-op if there are no votes or if game already finalized
-  if (votes.length === 0 || status === 'finalized') {
-    await slackClient.chat.postEphemeral({
-      channel: channelId,
-      user: userId,
-      text: `Slow down turbo, nobody has voted yet!`,
-    });
-    return;
-  }
-
-  const { restaurantId: topVotedRestaurantId, votes: winnerVotes } = getTopVotedRestaurantId(votes);
-
-  if (topVotedRestaurantId === RESPIN_ID) {
-    await slackClient.chat.postEphemeral({
-      channel: channelId,
-      user: userId,
-      text: `Spin again has the most votes, cannot finalize game.`,
-    });
-    return;
-  }
-
-  const winner = await getRestaurant(topVotedRestaurantId);
-
-  const updatedGame: GameState = {
-    ...game,
-    status: 'finalized',
-  };
-
-  await saveGame(updatedGame);
+  if (!updatedGame || !winner) return;
 
   try {
     await slackClient.chat.update({
@@ -195,9 +152,14 @@ async function handleFinalize(userId: string, message: Message, channelId: strin
     console.error('Error updating message:', JSON.stringify(error));
   }
 
-  const dividerBlock = {
-    type: 'divider',
-  } as DividerBlock;
+  const votes = updatedGame.votes;
+  const voteCounts = votes.reduce<Record<string, number>>((acc, v) => {
+    acc[v.restaurantId] = (acc[v.restaurantId] || 0) + 1;
+    return acc;
+  }, {});
+  const winnerVotes = voteCounts[winner.id] ?? 0;
+
+  const dividerBlock = { type: 'divider' } as DividerBlock;
 
   const winnerBlock = {
     type: 'header',
@@ -242,26 +204,8 @@ async function handleFinalize(userId: string, message: Message, channelId: strin
 async function handleVote(userId: string, message: Message, restaurantId: string, channelId: string): Promise<void> {
   const { ts: messageTs } = message;
 
-  const game = await getGame(messageTs);
-
-  if (!game) {
-    return;
-  }
-
-  const { votes = [] } = game;
-
-  const updatedVotes = [
-    // Remove any previous votes by the user
-    ...votes.filter((vote) => vote.userId !== userId),
-    { messageTs, restaurantId, userId },
-  ];
-
-  const updatedGame: GameState = {
-    ...game,
-    votes: updatedVotes,
-  };
-
-  await saveGame(updatedGame);
+  const updatedGame = await addVote(messageTs, userId, restaurantId);
+  if (!updatedGame) return;
 
   try {
     await slackClient.chat.update({
@@ -278,49 +222,19 @@ async function handleVote(userId: string, message: Message, restaurantId: string
 
 export async function handleRespin(userId: string, channelId: string, message: Message): Promise<void> {
   const { ts: messageTs } = message;
-  const game = await getGame(messageTs);
 
-  if (!game) {
-    return;
-  }
+  const { game: updatedGame, error } = await respin(messageTs, userId, 'slack');
 
-  const { spinner, possibleOptions, spins = 1 } = game;
-
-  const { id: spinnerId, displayName } = spinner;
-
-  if (spinnerId !== userId) {
+  if (error) {
     await slackClient.chat.postEphemeral({
       channel: channelId,
       user: userId,
-      text: `Only the game owner (${displayName}) can respin the wheel.`,
+      text: error,
     });
     return;
   }
 
-  if (possibleOptions.length === 0) {
-    await slackClient.chat.postEphemeral({
-      channel: channelId,
-      user: userId,
-      text: 'Cannot respin as there are no more remaining options.',
-    });
-    return;
-  }
-
-  const newSelectedRestaurants = getRandomElements(possibleOptions, 3);
-
-  const remainingOptions = possibleOptions.filter(
-    (restaurant: { id: string }) => !newSelectedRestaurants.map((restaurant) => restaurant.id).includes(restaurant.id),
-  );
-
-  const updatedGame: GameState = {
-    ...game,
-    spins: spins + 1,
-    votes: [],
-    currentOptions: newSelectedRestaurants,
-    possibleOptions: remainingOptions,
-  };
-
-  await saveGame(updatedGame);
+  if (!updatedGame) return;
 
   await slackClient.chat.update({
     channel: channelId,
@@ -328,6 +242,4 @@ export async function handleRespin(userId: string, channelId: string, message: M
     blocks: toSlackMessageBlocks(updatedGame),
     as_user: true,
   });
-
-  
 }

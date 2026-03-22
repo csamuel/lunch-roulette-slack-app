@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "./public",
@@ -8,8 +8,9 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es6"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node"]
   },
-  "include": ["api/**/*.ts", "eslint.config.ts", "*.d.ts"]
+  "include": ["api/**/*.ts", "eslint.config.ts", "*.d.ts", "vitest.config.ts", "vitest.integration.config.ts", "test-setup.ts"],
+  "exclude": ["node_modules", "public"]
 }

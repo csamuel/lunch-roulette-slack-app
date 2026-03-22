@@ -1,6 +1,6 @@
 import type { AnyBlock, ModalView } from '@slack/types';
 
-import type { Restaurant } from '../yelp';
+import type { Restaurant } from '../restaurant';
 
 interface GameState {
   id?: string;
@@ -11,12 +11,14 @@ interface GameState {
   currentOptions: Restaurant[];
   possibleOptions: Restaurant[];
   spins: number;
+  spinnerToken?: string;
+  source?: 'slack' | 'web';
 }
 
 interface Configuration {
   address: string;
   radius: number;
-  channelId: string;
+  channelId?: string;
   minRating: number;
   maxPrice: string;
 }
@@ -69,12 +71,15 @@ interface ActionType {
   selected_option?: { value: string };
 }
 
-type ValuesType = Record<string, {
+type ValuesType = Record<
+  string,
+  {
     'address-action'?: ActionType;
     'radius-action'?: ActionType;
     'min-rating-action'?: ActionType;
     'max-price-action'?: ActionType;
-  }>;
+  }
+>;
 
 interface ModalViewWithState extends ModalView {
   state: { values: ValuesType };

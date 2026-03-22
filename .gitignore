@@ -1,6 +1,9 @@
 .vercel
 .env
 node_modules
-/dist
+dist
 .DS_Store
 /public
+/.vscode
+.env.local
+/.pnpm-store

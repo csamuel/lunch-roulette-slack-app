@@ -1,7 +1,7 @@
 import type { ActionsBlock, AnyBlock, ContextBlock, DividerBlock, HeaderBlock, SectionBlock } from '@slack/types';
 
 import type { GameState } from '../types/lunchr';
-import type { Restaurant } from '../types/yelp';
+import type { Restaurant } from '../types/restaurant';
 
 import { RESPIN_ID } from './constants';
 
@@ -190,9 +190,7 @@ export function toRestaurantBlock(
   const categoryNames = categories.map((c) => c.title).join(', ');
   const menuDisplay = menu_url ? `*<${menu_url}|View menu>*` : '';
 
-  const voterNames = voters
-    ? voters.map((voter) => `<@${voter}>`)
-    : [];
+  const voterNames = voters ? voters.map((voter) => `<@${voter}>`) : [];
 
   const voteText = `\n*Votes: ${voteCount}*\n${voterNames.length > 0 ? voterNames.join('\n') : ''}`;
 
