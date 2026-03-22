@@ -1,14 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm --filter lunch-roulette-web run build",
-  "outputDirectory": "packages/web/dist",
+  "outputDirectory": "web/dist",
   "functions": {
-    "packages/api/**/*": {
+    "api/**/*": {
       "maxDuration": 30
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/packages/api/$1" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

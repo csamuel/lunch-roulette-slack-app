@@ -11,6 +11,6 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node"]
   },
-  "include": ["packages/api/**/*.ts", "packages/shared/src/**/*.ts", "eslint.config.ts", "*.d.ts", "vitest.config.ts", "vitest.integration.config.ts", "test-setup.ts"],
+  "include": ["api/**/*.ts", "eslint.config.ts", "*.d.ts", "vitest.config.ts", "vitest.integration.config.ts", "test-setup.ts"],
   "exclude": ["node_modules", "public"]
 }
