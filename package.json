@@ -31,7 +31,7 @@
     "eslint-plugin-promise": "7.2.1",
     "jiti": "2.6.1",
     "prettier": "3.8.1",
-    "typescript": "5.9.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.59.0",
     "vercel": "50.44.0"
   },
